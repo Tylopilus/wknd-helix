@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
- :root {
+:root {
   /* colors */
   --color-yellow: #ffea00;
   --link-color: black;
@@ -25,9 +25,11 @@
   --highlight-text-color: var(--text-color);
 
   /* fonts */
-  --body-font-family: 'Source Sans Pro', 'helvetica neue', helvetica, ubuntu, roboto, noto, sans-serif;
+  --body-font-family: 'Source Sans Pro', 'helvetica neue', helvetica, ubuntu,
+    roboto, noto, sans-serif;
   --heading-font-family: asar, georgia, 'Times New Roman', times, serif;
-  --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
+  --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono',
+    monospace;
 
   /* body sizes */
   --body-font-size-m: 22px;
@@ -81,13 +83,17 @@ main {
   display: none;
 }
 
-h1, h2, h3,
-h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--heading-font-family);
   font-weight: 400;
   line-height: 1.25;
   margin-top: 1em;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   scroll-margin: calc(var(--nav-height) + 1em);
 }
 
@@ -102,7 +108,7 @@ body.activity h1::after {
   display: block;
   width: 84px;
   padding-top: 8px;
-  content: "";
+  content: '';
   border-bottom: 2px solid var(--color-yellow);
 }
 
@@ -110,17 +116,32 @@ body.article h2::after {
   display: block;
   width: 84px;
   padding-top: 8px;
-  content: "";
+  content: '';
   border-bottom: 2px solid var(--heading-highlight-color);
 }
 
-h2 { font-size: var(--heading-font-size-xl) }
-h3 { font-size: var(--heading-font-size-l) }
-h4 { font-size: var(--heading-font-size-m) }
-h5 { font-size: var(--heading-font-size-s) }
-h6 { font-size: var(--heading-font-size-xs) }
+h2 {
+  font-size: var(--heading-font-size-xl);
+}
+h3 {
+  font-size: var(--heading-font-size-l);
+}
+h4 {
+  font-size: var(--heading-font-size-m);
+}
+h5 {
+  font-size: var(--heading-font-size-s);
+}
+h6 {
+  font-size: var(--heading-font-size-xs);
+}
 
-p, dl, ol, ul, pre, blockquote {
+p,
+dl,
+ol,
+ul,
+pre,
+blockquote {
   margin-top: 1em;
   margin-bottom: 1em;
 }
@@ -141,13 +162,16 @@ a:hover {
   color: var(--link-hover-color);
 }
 
-code, pre, samp {
+code,
+pre,
+samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
 }
 
-code, samp {
-  padding: .125em;
+code,
+samp {
+  padding: 0.125em;
 }
 
 pre {
@@ -156,7 +180,8 @@ pre {
 
 /* buttons */
 
-a.button:any-link, button {
+a.button:any-link,
+button {
   color: var(--button-text-color);
   background-color: var(--button-background-color);
   text-transform: uppercase;
@@ -179,17 +204,22 @@ a.button:any-link, button {
   line-height: 1.5;
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus  {
+a.button:hover,
+a.button:focus,
+button:hover,
+button:focus {
   /* background-color: var(--link-hover-color); */
   cursor: pointer;
 }
 
-button:disabled, button:disabled:hover {
+button:disabled,
+button:disabled:hover {
   /* background-color: var(--overlay-background-color); */
   cursor: unset;
 }
 
-a.button.secondary, button.secondary {
+a.button.secondary,
+button.secondary {
   background-color: unset;
   border: 2px solid currentcolor;
   color: unset;
@@ -197,11 +227,13 @@ a.button.secondary, button.secondary {
 
 body.activity main {
   display: grid;
-  grid-template-columns: 25% 75%;
+  grid-template-columns: 1fr min(calc(1200px * 0.25), 25%) min(
+      calc(1200px * 0.75),
+      75%
+    ) 1fr;
   grid-template-areas:
-    "bread bread"
-    "hero hero"
-    "left main";
+    'hero hero hero hero'
+    'padl left main padr';
 }
 
 main input {
@@ -229,7 +261,7 @@ main .section {
 main pre {
   background-color: var(--overlay-background-color);
   padding: 1em;
-  border-radius: .25em;
+  border-radius: 0.25em;
   overflow-x: auto;
   white-space: pre;
 }
@@ -298,14 +330,14 @@ main .section.full-bleed > div {
 
 .icon-wknd-logo-dk {
   display: inline-block;
-  width:128px;
+  width: 128px;
   margin-top: 14px;
   margin-bottom: 7px;
 }
 
 .icon-wknd-logo-light {
   display: inline-block;
-  width:128px;
+  width: 128px;
   margin-top: 14px;
   margin-bottom: 7px;
 }
@@ -324,11 +356,12 @@ main .section[data-section-status='initialized'] {
   font-family: var(--body-font-family);
 }
 
-.cc-highlight .cc-btn.cc-customize, .cc-policies-links.cc-link {
+.cc-highlight .cc-btn.cc-customize,
+.cc-policies-links.cc-link {
   color: var(--highlight-text-color);
 }
 
-.cc-highlight .cc-btn+.cc-btn {
+.cc-highlight .cc-btn + .cc-btn {
   padding: 13px 29px;
   background-color: var(--highlight-background-color);
   color: var(--highlight-text-color);

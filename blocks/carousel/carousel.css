@@ -27,7 +27,7 @@ main .carousel img {
   height: 100%;
   object-position: 90%;
 }
-  
+
 main .carousel > div {
   width: 100%;
   flex-shrink: 0;
@@ -53,17 +53,16 @@ main .carousel div.carousel-text p {
 
 main .carousel div.carousel-text h2 {
   margin: 0;
-  margin-top: 16px; 
+  margin-top: 16px;
 }
 
 main .carousel div.carousel-text .button {
   margin: 0;
 }
-  
 
 main .carousel::-webkit-scrollbar {
-    display: none;
-  }
+  display: none;
+}
 
 main .carousel-wrapper {
   max-width: unset;
@@ -91,4 +90,8 @@ main .carousel-buttons button {
 
 main .carousel-buttons button.selected {
   background-color: var(--link-color);
+}
+
+body.activity .carousel-container {
+  grid-area: hero;
 }

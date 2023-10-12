@@ -1,13 +1,14 @@
 /**
  * @typedef TabInfo
  * @property {string} name
- * @property {HTMLElement} $tab
- * @property {HTMLElement} $content
+ * @property {HTMLLIElement} $tab
+ * @property {string | null} title
+ * @property {HTMLElement | null} $content
  */
 
 /**
  * @param {HTMLElement} $block
- * @return {TabInfo[]}
+ * @return {TabInfo[] | null}
  */
 export function createTabs($block) {
   const $ul = $block.querySelector('ul');
@@ -17,11 +18,12 @@ export function createTabs($block) {
   /** @type TabInfo[] */
   const tabs = [...$ul.querySelectorAll('li')].map(($li) => {
     const title = $li.textContent;
-    const name = title.toLowerCase().trim();
+    const name = title?.toLowerCase().trim() || '';
     return {
       title,
       name,
       $tab: $li,
+      $content: null,
     };
   });
   // move $ul below section div
@@ -29,7 +31,7 @@ export function createTabs($block) {
 
   // search referenced sections and move them inside the tab-container
   const $wrapper = $block.parentElement;
-  const $container = $wrapper.parentElement;
+  const $container = $wrapper?.parentElement || undefined;
   const $sections = document.querySelectorAll('[data-tab]');
 
   // move the tab's sections before the tab riders.
@@ -82,10 +84,10 @@ export default function decorate($block) {
           } else {
             t.$content.classList.add('hidden');
           }
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth',
-          });
+          // window.scrollTo({
+          //   top: offsetPosition,
+          //   behavior: 'smooth',
+          // });
         });
       }
     });
