@@ -227,10 +227,9 @@ button.secondary {
 
 body.activity main {
   display: grid;
-  grid-template-columns: 1fr min(calc(1200px * 0.25), 25%) min(
-      calc(1200px * 0.75),
-      75%
-    ) 1fr;
+  grid-template-columns:
+    1fr min(calc(1200px * 0.25), 25%) min(calc(1200px * 0.75), 75%)
+    1fr;
   grid-template-areas:
     'hero hero hero hero'
     'padl left main padr';
@@ -255,7 +254,10 @@ main input:hover {
 }
 
 main .section {
-  padding: 64px 16px;
+  padding-inline: 16px;
+}
+main > .section + .section {
+  margin-block-start: 6rem;
 }
 
 main pre {
@@ -290,7 +292,7 @@ img {
 
 @media (min-width: 600px) {
   main .section {
-    padding: 64px 32px;
+    padding-inline: 2rem;
   }
 }
 

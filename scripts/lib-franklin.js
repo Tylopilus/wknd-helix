@@ -18,31 +18,40 @@
 export function sampleRUM(checkpoint, data = {}) {
   sampleRUM.defer = sampleRUM.defer || [];
   const defer = (fnname) => {
-    sampleRUM[fnname] = sampleRUM[fnname]
-      || ((...args) => sampleRUM.defer.push({ fnname, args }));
+    sampleRUM[fnname] =
+      sampleRUM[fnname] ||
+      ((...args) => sampleRUM.defer.push({ fnname, args }));
   };
-  sampleRUM.drain = sampleRUM.drain
-    || ((dfnname, fn) => {
+  sampleRUM.drain =
+    sampleRUM.drain ||
+    ((dfnname, fn) => {
       sampleRUM[dfnname] = fn;
       sampleRUM.defer
         .filter(({ fnname }) => dfnname === fnname)
         .forEach(({ fnname, args }) => sampleRUM[fnname](...args));
     });
   sampleRUM.always = sampleRUM.always || [];
-  sampleRUM.always.on = (chkpnt, fn) => { sampleRUM.always[chkpnt] = fn; };
-  sampleRUM.on = (chkpnt, fn) => { sampleRUM.cases[chkpnt] = fn; };
+  sampleRUM.always.on = (chkpnt, fn) => {
+    sampleRUM.always[chkpnt] = fn;
+  };
+  sampleRUM.on = (chkpnt, fn) => {
+    sampleRUM.cases[chkpnt] = fn;
+  };
   defer('observe');
   defer('cwv');
   try {
     window.hlx = window.hlx || {};
     if (!window.hlx.rum) {
       const usp = new URLSearchParams(window.location.search);
-      const weight = (usp.get('rum') === 'on') ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
+      const weight = usp.get('rum') === 'on' ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
       // eslint-disable-next-line no-bitwise
-      const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
-      const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
+      const hashCode = (s) =>
+        s.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
+      const id = `${hashCode(
+        window.location.href
+      )}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
       const random = Math.random();
-      const isSelected = (random * weight < 1);
+      const isSelected = random * weight < 1;
       // eslint-disable-next-line object-curly-newline
       window.hlx.rum = { weight, id, random, isSelected, sampleRUM };
     }
@@ -50,7 +59,14 @@ export function sampleRUM(checkpoint, data = {}) {
     if (window.hlx && window.hlx.rum && window.hlx.rum.isSelected) {
       const sendPing = (pdata = data) => {
         // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
-        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: window.hlx.RUM_GENERATION, checkpoint, ...data });
+        const body = JSON.stringify({
+          weight,
+          id,
+          referer: window.location.href,
+          generation: window.hlx.RUM_GENERATION,
+          checkpoint,
+          ...data,
+        });
         const url = `https://rum.hlx.page/.rum/${weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
@@ -62,15 +78,20 @@ export function sampleRUM(checkpoint, data = {}) {
         lazy: () => {
           // use classic script to avoid CORS issues
           const script = document.createElement('script');
-          script.src = 'https://rum.hlx.page/.rum/@adobe/helix-rum-enhancer@^1/src/index.js';
+          script.src =
+            'https://rum.hlx.page/.rum/@adobe/helix-rum-enhancer@^1/src/index.js';
           document.head.appendChild(script);
           return true;
         },
       };
       sendPing(data);
-      if (sampleRUM.cases[checkpoint]) { sampleRUM.cases[checkpoint](); }
+      if (sampleRUM.cases[checkpoint]) {
+        sampleRUM.cases[checkpoint]();
+      }
     }
-    if (sampleRUM.always[checkpoint]) { sampleRUM.always[checkpoint](data); }
+    if (sampleRUM.always[checkpoint]) {
+      sampleRUM.always[checkpoint](data);
+    }
   } catch (error) {
     // something went wrong
   }
@@ -102,7 +123,9 @@ export function loadCSS(href, callback) {
  */
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
-  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  const meta = [...document.head.querySelectorAll(`meta[${attr}="${name}"]`)]
+    .map((m) => m.content)
+    .join(', ');
   return meta || '';
 }
 
@@ -113,7 +136,11 @@ export function getMetadata(name) {
  */
 export function toClassName(name) {
   return typeof name === 'string'
-    ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+    ? name
+        .toLowerCase()
+        .replace(/[^0-9a-z]/gi, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
     : '';
 }
 
@@ -194,7 +221,11 @@ export function getPlaceholderOrDefault(key, defaultText) {
     return defaultText || '';
   }
 
-  return window.placeholders?.[`/${document.documentElement.lang}`]?.[key] || defaultText || '';
+  return (
+    window.placeholders?.[`/${document.documentElement.lang}`]?.[key] ||
+    defaultText ||
+    ''
+  );
 }
 
 /**
@@ -217,7 +248,7 @@ export function decorateBlock(block) {
 /**
  * Extracts the config from a block.
  * @param {Element} block The block element
- * @returns {object} The block config
+ * @returns {Record<string, string|number>} The block config
  */
 export function readBlockConfig(block) {
   const config = {};
@@ -284,7 +315,9 @@ export function decorateSections(main) {
       const meta = readBlockConfig(sectionMeta);
       Object.keys(meta).forEach((key) => {
         if (key === 'style') {
-          const styles = meta.style.split(',').map((style) => toClassName(style.trim()));
+          const styles = meta.style
+            .split(',')
+            .map((style) => toClassName(style.trim()));
           styles.forEach((style) => section.classList.add(style));
         } else {
           section.dataset[toCamelCase(key)] = meta[key];
@@ -305,7 +338,9 @@ export function updateSectionsStatus(main) {
     const section = sections[i];
     const status = section.getAttribute('data-section-status');
     if (status !== 'loaded') {
-      const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+      const loadingBlock = section.querySelector(
+        '.block[data-block-status="initialized"], .block[data-block-status="loading"]'
+      );
       if (loadingBlock) {
         section.setAttribute('data-section-status', 'loading');
         break;
@@ -321,9 +356,7 @@ export function updateSectionsStatus(main) {
  * @param {Element} main The container element
  */
 export function decorateBlocks(main) {
-  main
-    .querySelectorAll('div.section > div > div')
-    .forEach(decorateBlock);
+  main.querySelectorAll('div.section > div > div').forEach(decorateBlock);
 }
 
 /**
@@ -354,7 +387,7 @@ export function buildBlock(blockName, content) {
     });
     blockEl.appendChild(rowEl);
   });
-  return (blockEl);
+  return blockEl;
 }
 
 /**
@@ -375,7 +408,7 @@ function getBlockConfig(block) {
 
   return window.hlx.patchBlockConfig.reduce(
     (config, fn) => (typeof fn === 'function' ? fn(config) : config),
-    { blockName, cssPath, jsPath },
+    { blockName, cssPath, jsPath }
   );
 }
 
@@ -435,7 +468,15 @@ export async function loadBlocks(main) {
  * @param {boolean} eager load image eager
  * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
  */
-export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+export function createOptimizedPicture(
+  src,
+  alt = '',
+  eager = false,
+  breakpoints = [
+    { media: '(min-width: 400px)', width: '2000' },
+    { width: '750' },
+  ]
+) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
@@ -446,7 +487,10 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
     const source = document.createElement('source');
     if (br.media) source.setAttribute('media', br.media);
     source.setAttribute('type', 'image/webp');
-    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+    source.setAttribute(
+      'srcset',
+      `${pathname}?width=${br.width}&format=webply&optimize=medium`
+    );
     picture.appendChild(source);
   });
 
@@ -455,14 +499,20 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
     if (i < breakpoints.length - 1) {
       const source = document.createElement('source');
       if (br.media) source.setAttribute('media', br.media);
-      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      source.setAttribute(
+        'srcset',
+        `${pathname}?width=${br.width}&format=${ext}&optimize=medium`
+      );
       picture.appendChild(source);
     } else {
       const img = document.createElement('img');
       img.setAttribute('loading', eager ? 'eager' : 'lazy');
       img.setAttribute('alt', alt);
       picture.appendChild(img);
-      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      img.setAttribute(
+        'src',
+        `${pathname}?width=${br.width}&format=${ext}&optimize=medium`
+      );
     }
   });
 
@@ -524,17 +574,28 @@ export function decorateButtons(element) {
       const up = a.parentElement;
       const twoup = a.parentElement.parentElement;
       if (!a.querySelector('img')) {
-        if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+        if (
+          up.childNodes.length === 1 &&
+          (up.tagName === 'P' || up.tagName === 'DIV')
+        ) {
           a.className = 'button primary'; // default
           up.classList.add('button-container');
         }
-        if (up.childNodes.length === 1 && up.tagName === 'STRONG'
-          && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
+        if (
+          up.childNodes.length === 1 &&
+          up.tagName === 'STRONG' &&
+          twoup.childNodes.length === 1 &&
+          twoup.tagName === 'P'
+        ) {
           a.className = 'button primary';
           twoup.classList.add('button-container');
         }
-        if (up.childNodes.length === 1 && up.tagName === 'EM'
-          && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
+        if (
+          up.childNodes.length === 1 &&
+          up.tagName === 'EM' &&
+          twoup.childNodes.length === 1 &&
+          twoup.tagName === 'P'
+        ) {
           a.className = 'button secondary';
           twoup.classList.add('button-container');
         }
@@ -548,7 +609,8 @@ export function decorateButtons(element) {
  */
 export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector('.block');
-  const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+  const hasLCPBlock =
+    block && lcpBlocks.includes(block.getAttribute('data-block-name'));
   if (hasLCPBlock) await loadBlock(block);
 
   document.querySelector('body').classList.add('appear');
@@ -590,13 +652,16 @@ export function loadFooter(footer) {
 export function setup() {
   window.hlx = window.hlx || {};
   window.hlx.codeBasePath = '';
-  window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+  window.hlx.lighthouse =
+    new URLSearchParams(window.location.search).get('lighthouse') === 'on';
   window.hlx.patchBlockConfig = [];
 
   const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
   if (scriptEl) {
     try {
-      [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
+      [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split(
+        '/scripts/scripts.js'
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
@@ -614,7 +679,10 @@ function init() {
   window.addEventListener('load', () => sampleRUM('load'));
 
   window.addEventListener('unhandledrejection', (event) => {
-    sampleRUM('error', { source: event.reason.sourceURL, target: event.reason.line });
+    sampleRUM('error', {
+      source: event.reason.sourceURL,
+      target: event.reason.line,
+    });
   });
 
   window.addEventListener('error', (event) => {

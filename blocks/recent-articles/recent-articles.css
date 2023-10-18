@@ -1,1 +1,33 @@
 /* stylelint-disable */
+.recent-articles {
+  > * + * {
+    margin-block-start: 4rem;
+  }
+  > .article {
+    &:nth-child(2n) {
+      flex-direction: row-reverse;
+    }
+    display: flex;
+    justify-items: center;
+    gap: 2rem;
+    > .content-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+    > .image-wrapper {
+      flex: 1;
+      > a {
+        display: block;
+        height: 100%;
+        > img {
+          height: 100%;
+          object-fit: cover;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
