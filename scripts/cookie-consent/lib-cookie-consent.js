@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Loads and configures the cookie consent library:
  *

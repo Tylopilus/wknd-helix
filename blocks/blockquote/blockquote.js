@@ -1,5 +1,10 @@
+/**
+ *
+ * @param {HTMLElement} block InputHtmlElement
+ */
 export default function decorate(block) {
   const quoteDiv = block.querySelector('div:last-of-type');
+  if (!quoteDiv) return;
   const blockquote = document.createElement('blockquote');
   blockquote.innerHTML = `<strong>${quoteDiv.innerHTML}</strong>`;
   quoteDiv.replaceWith(blockquote);

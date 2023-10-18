@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable */
 /*
  * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -24,7 +26,9 @@ export function getExperimentDetails() {
   if (!window.hlx || !window.hlx.experiment) {
     return null;
   }
-  const { id: experimentId, selectedVariant: experimentVariant } = window.hlx.experiment;
+  // eslint-disable-next-line operator-linebreak
+  const { id: experimentId, selectedVariant: experimentVariant } =
+    window.hlx.experiment;
   return { experimentId, experimentVariant };
 }
 
@@ -135,13 +139,15 @@ export async function analyticsSetConsent(approved) {
   }
   // eslint-disable-next-line no-undef
   return alloy('setConsent', {
-    consent: [{
-      standard: 'Adobe',
-      version: '1.0',
-      value: {
-        general: approved ? 'in' : 'out',
+    consent: [
+      {
+        standard: 'Adobe',
+        version: '1.0',
+        value: {
+          general: approved ? 'in' : 'out',
+        },
       },
-    }],
+    ],
   });
 }
 
@@ -151,7 +157,10 @@ export async function analyticsSetConsent(approved) {
  * @param additionalXdmFields
  * @returns {Promise<*>}
  */
-export async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
+export async function analyticsTrackPageViews(
+  document,
+  additionalXdmFields = {}
+) {
   const xdmData = {
     eventType: 'web.webpagedetails.pageViews',
     web: {
@@ -175,7 +184,12 @@ export async function analyticsTrackPageViews(document, additionalXdmFields = {}
  * @returns {Promise<void>}
  */
 export async function initAnalyticsTrackingQueue() {
-  createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
+  createInlineScript(
+    document,
+    document.body,
+    getAlloyInitScript(),
+    'text/javascript'
+  );
 }
 
 /**
@@ -208,14 +222,24 @@ export async function setupAnalyticsTrackingWithAlloy(document) {
  * @param additionalXdmFields
  * @returns {Promise<*>}
  */
-export async function analyticsTrackLinkClicks(element, linkType = 'other', additionalXdmFields = {}) {
+export async function analyticsTrackLinkClicks(
+  element,
+  linkType = 'other',
+  additionalXdmFields = {}
+) {
   const xdmData = {
     eventType: 'web.webinteraction.linkClicks',
     web: {
       webInteraction: {
         URL: `${element.href}`,
         // eslint-disable-next-line no-nested-ternary
-        name: `${element.text ? element.text.trim() : (element.innerHTML ? element.innerHTML.trim() : '')}`,
+        name: `${
+          element.text
+            ? element.text.trim()
+            : element.innerHTML
+            ? element.innerHTML.trim()
+            : ''
+        }`,
         linkClicks: {
           value: 1,
         },
@@ -320,7 +344,13 @@ export async function analyticsTrackConversion(data, additionalXdmFields = {}) {
       webInteraction: {
         URL: `${element.href}`,
         // eslint-disable-next-line no-nested-ternary
-        name: `${element.text ? element.text.trim() : (element.innerHTML ? element.innerHTML.trim() : '')}`,
+        name: `${
+          element.text
+            ? element.text.trim()
+            : element.innerHTML
+            ? element.innerHTML.trim()
+            : ''
+        }`,
         linkClicks: {
           // don't count as link click, as this event should be tracked separately,
           // track only the details of the link with the conversion
@@ -340,7 +370,10 @@ export async function analyticsTrackConversion(data, additionalXdmFields = {}) {
  * @param additionalXdmFields
  * @returns {Promise<*>}
  */
-export async function analyticsTrackFormSubmission(element, additionalXdmFields = {}) {
+export async function analyticsTrackFormSubmission(
+  element,
+  additionalXdmFields = {}
+) {
   const formId = element?.id || element?.dataset?.action;
   const xdmData = {
     eventType: 'web.formFilledOut',
@@ -362,9 +395,10 @@ export async function analyticsTrackFormSubmission(element, additionalXdmFields 
  * @param additionalXdmFields
  * @returns {Promise<*>}
  */
-export async function analyticsTrackVideo({
-  id, name, type, hasStarted, hasCompleted, progressMarker,
-}, additionalXdmFields) {
+export async function analyticsTrackVideo(
+  { id, name, type, hasStarted, hasCompleted, progressMarker },
+  additionalXdmFields
+) {
   const primaryAssetReference = {
     id: `${id}`,
     dc: {
@@ -384,11 +418,15 @@ export async function analyticsTrackVideo({
   };
 
   if (hasStarted) {
-    baseXdm[CUSTOM_SCHEMA_NAMESPACE].media.mediaTimed.impressions = { value: 1 };
+    baseXdm[CUSTOM_SCHEMA_NAMESPACE].media.mediaTimed.impressions = {
+      value: 1,
+    };
   } else if (hasCompleted) {
     baseXdm[CUSTOM_SCHEMA_NAMESPACE].media.mediaTimed.completes = { value: 1 };
   } else if (progressMarker) {
-    baseXdm[CUSTOM_SCHEMA_NAMESPACE].media.mediaTimed[progressMarker] = { value: 1 };
+    baseXdm[CUSTOM_SCHEMA_NAMESPACE].media.mediaTimed[progressMarker] = {
+      value: 1,
+    };
   } else {
     return Promise.resolve();
   }

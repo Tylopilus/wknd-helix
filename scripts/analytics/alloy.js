@@ -1,3 +1,5 @@
+// @ts-nocheck
+// @ts-ignore
 /**
  * Copyright 2019 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -13,11 +15,13 @@
 (function () {
   'use strict';
 
+  // @ts-ignore
   if (document.documentMode && document.documentMode < 11) {
-    console.warn('The Adobe Experience Cloud Web SDK does not support IE 10 and below.');
+    console.warn(
+      'The Adobe Experience Cloud Web SDK does not support IE 10 and below.'
+    );
     return;
   }
-
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -30,7 +34,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createInstanceFunction = (function (executeCommand) {
+  // @ts-ignore
+  var createInstanceFunction = function (executeCommand) {
+    // @ts-ignore
     return function (args) {
       // Would use destructuring, but destructuring doesn't work on IE
       // without polyfilling Symbol.
@@ -42,7 +48,7 @@
       var options = userProvidedArgs[1];
       executeCommand(commandName, options).then(resolve, reject);
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -55,13 +61,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var CHROME = "Chrome";
-  var EDGE$1 = "Edge";
-  var EDGE_CHROMIUM = "EdgeChromium";
-  var FIREFOX = "Firefox";
-  var IE = "IE";
-  var SAFARI = "Safari";
-  var UNKNOWN = "Unknown";
+  var CHROME = 'Chrome';
+  var EDGE$1 = 'Edge';
+  var EDGE_CHROMIUM = 'EdgeChromium';
+  var FIREFOX = 'Firefox';
+  var IE = 'IE';
+  var SAFARI = 'Safari';
+  var UNKNOWN = 'Unknown';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -81,9 +87,9 @@
    * @param {*} item The item for which to search.
    * @returns {boolean}
    */
-  var includes = (function (arr, item) {
+  var includes = function (arr, item) {
     return arr.indexOf(item) !== -1;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -99,10 +105,17 @@
   // we don't know. We also assume "unknown" browsers support third-party cookies,
   // though we don't really know that either. We're making best guesses.
 
-  var browsersSupportingThirdPartyCookie = [CHROME, EDGE$1, EDGE_CHROMIUM, IE, UNKNOWN];
-  var areThirdPartyCookiesSupportedByDefault = (function (browser) {
+  var browsersSupportingThirdPartyCookie = [
+    CHROME,
+    EDGE$1,
+    EDGE_CHROMIUM,
+    IE,
+    UNKNOWN,
+  ];
+  // @ts-ignore
+  var areThirdPartyCookiesSupportedByDefault = function (browser) {
     return includes(browsersSupportingThirdPartyCookie, browser);
-  });
+  };
 
   /*
   object-assign
@@ -115,9 +128,12 @@
   var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
   var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
+  // @ts-ignore
   function toObject(val) {
     if (val === null || val === undefined) {
-      throw new TypeError('Object.assign cannot be called with null or undefined');
+      throw new TypeError(
+        'Object.assign cannot be called with null or undefined'
+      );
     }
 
     return Object(val);
@@ -130,23 +146,24 @@
       } // Detect buggy property enumeration order in older V8 versions.
       // https://bugs.chromium.org/p/v8/issues/detail?id=4118
 
-
       var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
 
+      // @ts-ignore
       test1[5] = 'de';
 
       if (Object.getOwnPropertyNames(test1)[0] === '5') {
         return false;
       } // https://bugs.chromium.org/p/v8/issues/detail?id=3056
 
-
       var test2 = {};
 
       for (var i = 0; i < 10; i++) {
+        // @ts-ignore
         test2['_' + String.fromCharCode(i)] = i;
       }
 
       var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+        // @ts-ignore
         return test2[n];
       });
 
@@ -154,13 +171,16 @@
         return false;
       } // https://bugs.chromium.org/p/v8/issues/detail?id=3056
 
-
       var test3 = {};
       'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+        // @ts-ignore
         test3[letter] = letter;
       });
 
-      if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+      if (
+        Object.keys(Object.assign({}, test3)).join('') !==
+        'abcdefghijklmnopqrst'
+      ) {
         return false;
       }
 
@@ -171,57 +191,77 @@
     }
   }
 
-  var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
-    var from;
-    var to = toObject(target);
-    var symbols;
+  var objectAssign = shouldUseNative()
+    ? Object.assign
+    : // @ts-ignore
+      function (target, source) {
+        var from;
+        var to = toObject(target);
+        var symbols;
 
-    for (var s = 1; s < arguments.length; s++) {
-      from = Object(arguments[s]);
+        for (var s = 1; s < arguments.length; s++) {
+          from = Object(arguments[s]);
 
-      for (var key in from) {
-        if (hasOwnProperty$1.call(from, key)) {
-          to[key] = from[key];
-        }
-      }
+          for (var key in from) {
+            if (hasOwnProperty$1.call(from, key)) {
+              to[key] = from[key];
+            }
+          }
 
-      if (getOwnPropertySymbols) {
-        symbols = getOwnPropertySymbols(from);
+          if (getOwnPropertySymbols) {
+            symbols = getOwnPropertySymbols(from);
 
-        for (var i = 0; i < symbols.length; i++) {
-          if (propIsEnumerable.call(from, symbols[i])) {
-            to[symbols[i]] = from[symbols[i]];
+            for (var i = 0; i < symbols.length; i++) {
+              if (propIsEnumerable.call(from, symbols[i])) {
+                to[symbols[i]] = from[symbols[i]];
+              }
+            }
           }
         }
-      }
-    }
 
-    return to;
-  };
+        return to;
+      };
 
   var reactorObjectAssign = objectAssign;
 
-  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+  var commonjsGlobal =
+    typeof globalThis !== 'undefined'
+      ? globalThis
+      : typeof window !== 'undefined'
+      ? window
+      : typeof global !== 'undefined'
+      ? global
+      : typeof self !== 'undefined'
+      ? self
+      : {};
 
+  // @ts-ignore
   function createCommonjsModule(fn, module) {
-  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+    return (
+      (module = { exports: {} }), fn(module, module.exports), module.exports
+    );
   }
 
+  // @ts-ignore
   var js_cookie = createCommonjsModule(function (module, exports) {
-
     (function (factory) {
       var registeredInModuleLoader;
 
       {
+        // @ts-ignore
         module.exports = factory();
         registeredInModuleLoader = true;
       }
 
       if (!registeredInModuleLoader) {
+        // @ts-ignore
         var OldCookies = window.Cookies;
-        var api = window.Cookies = factory();
+        // @ts-ignore
+        var api = (window.Cookies = factory());
 
+        // @ts-ignore
         api.noConflict = function () {
+          // @ts-ignore
           window.Cookies = OldCookies;
           return api;
         };
@@ -235,6 +275,7 @@
           var attributes = arguments[i];
 
           for (var key in attributes) {
+            // @ts-ignore
             result[key] = attributes[key];
           }
         }
@@ -242,28 +283,39 @@
         return result;
       }
 
+      // @ts-ignore
       function decode(s) {
         return s.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
       }
 
+      // @ts-ignore
       function init(converter) {
         function api() {}
 
+        // @ts-ignore
         function set(key, value, attributes) {
           if (typeof document === 'undefined') {
             return;
           }
 
-          attributes = extend({
-            path: '/'
-          }, api.defaults, attributes);
+          attributes = extend(
+            {
+              path: '/',
+            },
+            api.defaults,
+            attributes
+          );
 
           if (typeof attributes.expires === 'number') {
-            attributes.expires = new Date(new Date() * 1 + attributes.expires * 864e+5);
+            attributes.expires = new Date(
+              // @ts-ignore
+              new Date() * 1 + attributes.expires * 864e5
+            );
           } // We're using "expires" because "max-age" is not supported by IE
 
-
-          attributes.expires = attributes.expires ? attributes.expires.toUTCString() : '';
+          attributes.expires = attributes.expires
+            ? attributes.expires.toUTCString()
+            : '';
 
           try {
             var result = JSON.stringify(value);
@@ -273,8 +325,15 @@
             }
           } catch (e) {}
 
-          value = converter.write ? converter.write(value, key) : encodeURIComponent(String(value)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
-          key = encodeURIComponent(String(key)).replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent).replace(/[\(\)]/g, escape);
+          value = converter.write
+            ? converter.write(value, key)
+            : encodeURIComponent(String(value)).replace(
+                /%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,
+                decodeURIComponent
+              );
+          key = encodeURIComponent(String(key))
+            .replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent)
+            .replace(/[\(\)]/g, escape);
           var stringifiedAttributes = '';
 
           for (var attributeName in attributes) {
@@ -294,13 +353,14 @@
             // not including, the first %x3B (";") character.
             // ...
 
-
-            stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+            stringifiedAttributes +=
+              '=' + attributes[attributeName].split(';')[0];
           }
 
-          return document.cookie = key + '=' + value + stringifiedAttributes;
+          return (document.cookie = key + '=' + value + stringifiedAttributes);
         }
 
+        // @ts-ignore
         function get(key, json) {
           if (typeof document === 'undefined') {
             return;
@@ -322,7 +382,8 @@
 
             try {
               var name = decode(parts[0]);
-              cookie = (converter.read || converter)(cookie, name) || decode(cookie);
+              cookie =
+                (converter.read || converter)(cookie, name) || decode(cookie);
 
               if (json) {
                 try {
@@ -330,6 +391,7 @@
                 } catch (e) {}
               }
 
+              // @ts-ignore
               jar[name] = cookie;
 
               if (key === name) {
@@ -338,27 +400,39 @@
             } catch (e) {}
           }
 
+          // @ts-ignore
           return key ? jar[key] : jar;
         }
 
         api.set = set;
 
+        // @ts-ignore
         api.get = function (key) {
-          return get(key, false
-          /* read as raw */
+          return get(
+            key,
+            false
+            /* read as raw */
           );
         };
 
+        // @ts-ignore
         api.getJSON = function (key) {
-          return get(key, true
-          /* read as json */
+          return get(
+            key,
+            true
+            /* read as json */
           );
         };
 
+        // @ts-ignore
         api.remove = function (key, attributes) {
-          set(key, '', extend(attributes, {
-            expires: -1
-          }));
+          set(
+            key,
+            '',
+            extend(attributes, {
+              expires: -1,
+            })
+          );
         };
 
         api.defaults = {};
@@ -385,7 +459,7 @@
     get: js_cookie.get,
     set: js_cookie.set,
     remove: js_cookie.remove,
-    withConverter: js_cookie.withConverter
+    withConverter: js_cookie.withConverter,
   };
 
   /*
@@ -405,53 +479,87 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isNil = (function (value) {
+  var isNil = function (value) {
     return value == null;
-  });
+  };
 
+  // @ts-ignore
   function ownKeys(object, enumerableOnly) {
     var keys = Object.keys(object);
 
     if (Object.getOwnPropertySymbols) {
       var symbols = Object.getOwnPropertySymbols(object);
-      enumerableOnly && (symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      })), keys.push.apply(keys, symbols);
+      enumerableOnly &&
+        (symbols = symbols.filter(function (sym) {
+          // @ts-ignore
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        })),
+        // @ts-ignore
+        keys.push.apply(keys, symbols);
     }
 
     return keys;
   }
 
+  // @ts-ignore
   function _objectSpread2(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = null != arguments[i] ? arguments[i] : {};
-      i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
+      i % 2
+        ? ownKeys(Object(source), !0).forEach(function (key) {
+            _defineProperty(target, key, source[key]);
+          })
+        : Object.getOwnPropertyDescriptors
+        ? Object.defineProperties(
+            target,
+            Object.getOwnPropertyDescriptors(source)
+          )
+        : ownKeys(Object(source)).forEach(function (key) {
+            Object.defineProperty(
+              target,
+              key,
+              // @ts-ignore
+              Object.getOwnPropertyDescriptor(source, key)
+            );
+          });
     }
 
     return target;
   }
 
+  // @ts-ignore
   function _typeof(obj) {
-    "@babel/helpers - typeof";
+    '@babel/helpers - typeof';
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    return (
+      // @ts-ignore
+      (_typeof =
+        'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+          ? // @ts-ignore
+            function (obj) {
+              return typeof obj;
+            }
+          : // @ts-ignore
+            function (obj) {
+              return obj &&
+                'function' == typeof Symbol &&
+                obj.constructor === Symbol &&
+                obj !== Symbol.prototype
+                ? 'symbol'
+                : typeof obj;
+            }),
+      _typeof(obj)
+    );
   }
 
+  // @ts-ignore
   function _defineProperty(obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
         value: value,
         enumerable: true,
         configurable: true,
-        writable: true
+        writable: true,
       });
     } else {
       obj[key] = value;
@@ -460,6 +568,7 @@
     return obj;
   }
 
+  // @ts-ignore
   function _objectWithoutPropertiesLoose(source, excluded) {
     if (source == null) return {};
     var target = {};
@@ -469,12 +578,14 @@
     for (i = 0; i < sourceKeys.length; i++) {
       key = sourceKeys[i];
       if (excluded.indexOf(key) >= 0) continue;
+      // @ts-ignore
       target[key] = source[key];
     }
 
     return target;
   }
 
+  // @ts-ignore
   function _objectWithoutProperties(source, excluded) {
     if (source == null) return {};
 
@@ -489,6 +600,7 @@
         key = sourceSymbolKeys[i];
         if (excluded.indexOf(key) >= 0) continue;
         if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+        // @ts-ignore
         target[key] = source[key];
       }
     }
@@ -496,28 +608,52 @@
     return target;
   }
 
+  // @ts-ignore
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+    return (
+      _arrayWithHoles(arr) ||
+      _iterableToArrayLimit(arr, i) ||
+      _unsupportedIterableToArray(arr, i) ||
+      _nonIterableRest()
+    );
   }
 
+  // @ts-ignore
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+    return (
+      _arrayWithoutHoles(arr) ||
+      _iterableToArray(arr) ||
+      _unsupportedIterableToArray(arr) ||
+      _nonIterableSpread()
+    );
   }
 
+  // @ts-ignore
   function _arrayWithoutHoles(arr) {
     if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
+  // @ts-ignore
   function _arrayWithHoles(arr) {
     if (Array.isArray(arr)) return arr;
   }
 
+  // @ts-ignore
   function _iterableToArray(iter) {
-    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+    if (
+      (typeof Symbol !== 'undefined' && iter[Symbol.iterator] != null) ||
+      iter['@@iterator'] != null
+    )
+      return Array.from(iter);
   }
 
+  // @ts-ignore
   function _iterableToArrayLimit(arr, i) {
-    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+    var _i =
+      arr == null
+        ? null
+        : (typeof Symbol !== 'undefined' && arr[Symbol.iterator]) ||
+          arr['@@iterator'];
 
     if (_i == null) return;
     var _arr = [];
@@ -537,7 +673,7 @@
       _e = err;
     } finally {
       try {
-        if (!_n && _i["return"] != null) _i["return"]();
+        if (!_n && _i['return'] != null) _i['return']();
       } finally {
         if (_d) throw _e;
       }
@@ -546,15 +682,18 @@
     return _arr;
   }
 
+  // @ts-ignore
   function _unsupportedIterableToArray(o, minLen) {
     if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    if (typeof o === 'string') return _arrayLikeToArray(o, minLen);
     var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+    if (n === 'Object' && o.constructor) n = o.constructor.name;
+    if (n === 'Map' || n === 'Set') return Array.from(o);
+    if (n === 'Arguments' || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
+      return _arrayLikeToArray(o, minLen);
   }
 
+  // @ts-ignore
   function _arrayLikeToArray(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
 
@@ -564,11 +703,15 @@
   }
 
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    throw new TypeError(
+      'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+    );
   }
 
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    throw new TypeError(
+      'Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+    );
   }
 
   /**
@@ -577,9 +720,11 @@
    * @returns {boolean}
    */
 
-  var isObject = (function (value) {
-    return !isNil(value) && !Array.isArray(value) && _typeof(value) === "object";
-  });
+  var isObject = function (value) {
+    return (
+      !isNil(value) && !Array.isArray(value) && _typeof(value) === 'object'
+    );
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -593,6 +738,7 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var deepAssignObject = function deepAssignObject(target, source) {
     Object.keys(source).forEach(function (key) {
       if (isObject(target[key]) && isObject(source[key])) {
@@ -612,15 +758,20 @@
    * // { a: 'a', b: 'B', c: 'c' }
    */
 
-
-  var deepAssign = (function (target) {
+  var deepAssign = function (target) {
     if (isNil(target)) {
       throw new TypeError('deepAssign "target" cannot be null or undefined');
     }
 
     var result = Object(target);
 
-    for (var _len = arguments.length, sources = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    for (
+      var _len = arguments.length,
+        sources = new Array(_len > 1 ? _len - 1 : 0),
+        _key = 1;
+      _key < _len;
+      _key++
+    ) {
       sources[_key - 1] = arguments[_key];
     }
 
@@ -628,7 +779,7 @@
       return deepAssignObject(result, Object(source));
     });
     return result;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -650,16 +801,23 @@
    * @returns {Function}
    */
 
-  var createMerger = (function (content, key) {
+  var createMerger = function (content, key) {
+    // @ts-ignore
     return function (updates) {
-      var propertyPath = key.split(".");
-      var hostObjectForUpdates = propertyPath.reduce(function (obj, propertyName) {
+      var propertyPath = key.split('.');
+      var hostObjectForUpdates = propertyPath.reduce(function (
+        obj,
+        propertyName
+      ) {
+        // @ts-ignore
         obj[propertyName] = obj[propertyName] || {};
+        // @ts-ignore
         return obj[propertyName];
-      }, content);
+      },
+      content);
       deepAssign(hostObjectForUpdates, updates);
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -677,14 +835,20 @@
    * Allows callbacks to be registered and then later called. When the
    * callbacks are called, their responses are combined into a single promise.
    */
-  var createCallbackAggregator = (function () {
+  var createCallbackAggregator = function () {
+    // @ts-ignore
     var callbacks = [];
     return {
+      // @ts-ignore
       add: function add(callback) {
         callbacks.push(callback);
       },
       call: function call() {
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        for (
+          var _len = arguments.length, args = new Array(_len), _key = 0;
+          _key < _len;
+          _key++
+        ) {
           args[_key] = arguments[_key];
         }
 
@@ -692,12 +856,15 @@
         // Promise.all, it's currently useful everywhere this is used and
         // reduces repetitive code. We can factor it out later if we want
         // to make this utility more "pure".
-        return Promise.all(callbacks.map(function (callback) {
-          return callback.apply(void 0, args);
-        }));
-      }
+        return Promise.all(
+          // @ts-ignore
+          callbacks.map(function (callback) {
+            return callback.apply(void 0, args);
+          })
+        );
+      },
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -710,19 +877,31 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createLoggingCookieJar = (function (_ref) {
+  // @ts-ignore
+  var createLoggingCookieJar = function (_ref) {
     var logger = _ref.logger,
-        cookieJar = _ref.cookieJar;
-    return _objectSpread2(_objectSpread2({}, cookieJar), {}, {
-      set: function set(key, value, options) {
-        logger.info("Setting cookie", _objectSpread2({
-          name: key,
-          value: value
-        }, options));
-        cookieJar.set(key, value, options);
+      cookieJar = _ref.cookieJar;
+    return _objectSpread2(
+      _objectSpread2({}, cookieJar),
+      {},
+      {
+        // @ts-ignore
+        set: function set(key, value, options) {
+          logger.info(
+            'Setting cookie',
+            _objectSpread2(
+              {
+                name: key,
+                value: value,
+              },
+              options
+            )
+          );
+          cookieJar.set(key, value, options);
+        },
       }
-    });
-  });
+    );
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -739,7 +918,7 @@
   /**
    * Sequences tasks.
    */
-  var createTaskQueue = (function () {
+  var createTaskQueue = function () {
     var queueLength = 0;
     var lastPromiseInQueue = Promise.resolve();
     return {
@@ -755,13 +934,17 @@
       addTask: function addTask(task) {
         queueLength += 1;
 
-        var lastPromiseFulfilledHandler = function lastPromiseFulfilledHandler() {
-          return task().finally(function () {
-            queueLength -= 1;
-          });
-        };
+        var lastPromiseFulfilledHandler =
+          function lastPromiseFulfilledHandler() {
+            return task().finally(function () {
+              queueLength -= 1;
+            });
+          };
 
-        lastPromiseInQueue = lastPromiseInQueue.then(lastPromiseFulfilledHandler, lastPromiseFulfilledHandler);
+        lastPromiseInQueue = lastPromiseInQueue.then(
+          lastPromiseFulfilledHandler,
+          lastPromiseFulfilledHandler
+        );
         return lastPromiseInQueue;
       },
 
@@ -772,10 +955,9 @@
        */
       get length() {
         return queueLength;
-      }
-
+      },
     };
-  });
+  };
 
   /* eslint-disable */
 
@@ -788,19 +970,21 @@
     The polynomial used in calculation is 0xedb88320. 
     This polynomial is used in Ethernet, Gzip, PNG, SATA and many other technologies.
   */
-  var crc32 = function () {
+  var crc32 = (function () {
+    // @ts-ignore
     var table = [];
 
     for (var i = 0; i < 256; i++) {
       var c = i;
 
       for (var j = 0; j < 8; j++) {
-        c = c & 1 ? 0xedb88320 ^ c >>> 1 : c >>> 1;
+        c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
       }
 
       table.push(c);
     }
 
+    // @ts-ignore
     return function (str, crc) {
       str = unescape(encodeURIComponent(str));
       if (!crc) crc = 0;
@@ -808,13 +992,14 @@
 
       for (var _i = 0; _i < str.length; _i++) {
         var y = (crc ^ str.charCodeAt(_i)) & 0xff;
-        crc = crc >>> 8 ^ table[y];
+        // @ts-ignore
+        crc = (crc >>> 8) ^ table[y];
       }
 
       crc = crc ^ -1;
       return crc >>> 0;
     };
-  }();
+  })();
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -832,14 +1017,16 @@
    * A simple utility for managing a promise's state outside of
    * the promise's "executor" (the function passed into the constructor).
    */
-  var defer = (function () {
+  var defer = function () {
     var deferred = {};
     deferred.promise = new Promise(function (resolve, reject) {
+      // @ts-ignore
       deferred.resolve = resolve;
+      // @ts-ignore
       deferred.reject = reject;
     });
     return deferred;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -859,9 +1046,9 @@
    * @param {String} suffix The string to search for.
    * @returns {boolean}
    */
-  var endsWith = (function (str, suffix) {
+  var endsWith = function (str, suffix) {
     return str.substr(-suffix.length) === suffix;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -882,7 +1069,7 @@
    * will be the item, the item index, then the array itself.
    * @returns {*}
    */
-  var find = (function (arr, predicate) {
+  var find = function (arr, predicate) {
     for (var i = 0; i < arr.length; i += 1) {
       var item = arr[i];
 
@@ -892,7 +1079,7 @@
     }
 
     return undefined;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -905,9 +1092,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var appendNode = (function (parent, node) {
+  // @ts-ignore
+  var appendNode = function (parent, node) {
     return parent.appendChild(node);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -921,10 +1109,15 @@
   governing permissions and limitations under the License.
   */
 
-  var populateElementProperties = function populateElementProperties(element, props) {
+  var populateElementProperties = function populateElementProperties(
+    // @ts-ignore
+    element,
+    // @ts-ignore
+    props
+  ) {
     Object.keys(props).forEach(function (key) {
       // The following is to support setting style properties to avoid CSP errors.
-      if (key === "style" && isObject(props[key])) {
+      if (key === 'style' && isObject(props[key])) {
         var styleProps = props[key];
         Object.keys(styleProps).forEach(function (styleKey) {
           element.style[styleKey] = styleProps[styleKey];
@@ -935,11 +1128,18 @@
     });
   };
 
-  var createNode = (function (tag) {
-    var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var children = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-    var doc = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : document;
+  // @ts-ignore
+  var createNode = function (tag) {
+    var attrs =
+      arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var props =
+      arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var children =
+      arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+    var doc =
+      arguments.length > 4 && arguments[4] !== undefined
+        ? arguments[4]
+        : document;
     var result = doc.createElement(tag);
     Object.keys(attrs).forEach(function (key) {
       // TODO: To highlight CSP problems consider throwing a descriptive error
@@ -947,11 +1147,12 @@
       result.setAttribute(key, attrs[key]);
     });
     populateElementProperties(result, props);
+    // @ts-ignore
     children.forEach(function (child) {
       return appendNode(result, child);
     });
     return result;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -964,13 +1165,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var BODY = "BODY";
-  var IFRAME = "IFRAME";
-  var IMG = "IMG";
-  var DIV = "DIV";
-  var STYLE = "STYLE";
-  var SCRIPT = "SCRIPT";
-  var HEAD = "HEAD";
+  var BODY = 'BODY';
+  var IFRAME = 'IFRAME';
+  var IMG = 'IMG';
+  var DIV = 'DIV';
+  var STYLE = 'STYLE';
+  var SCRIPT = 'SCRIPT';
+  var HEAD = 'HEAD';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -990,22 +1191,24 @@
    * @returns {Promise}
    */
 
-  var fireImageInDocument = (function (_ref) {
+  // @ts-ignore
+  var fireImageInDocument = function (_ref) {
     var src = _ref.src,
-        _ref$currentDocument = _ref.currentDocument,
-        currentDocument = _ref$currentDocument === void 0 ? document : _ref$currentDocument;
+      _ref$currentDocument = _ref.currentDocument,
+      currentDocument =
+        _ref$currentDocument === void 0 ? document : _ref$currentDocument;
     return new Promise(function (resolve, reject) {
       var attrs = {
-        src: src
+        src: src,
       };
       var props = {
         onload: resolve,
         onerror: reject,
-        onabort: reject
+        onabort: reject,
       };
       createNode(IMG, attrs, props, [], currentDocument);
     });
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1024,9 +1227,9 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isFunction = (function (value) {
-    return typeof value === "function";
-  });
+  var isFunction = function (value) {
+    return typeof value === 'function';
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1045,9 +1248,9 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isNonEmptyArray = (function (value) {
+  var isNonEmptyArray = function (value) {
     return Array.isArray(value) && value.length > 0;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1060,7 +1263,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var toArray = (function (value) {
+  // @ts-ignore
+  var toArray = function (value) {
     if (Array.isArray(value)) {
       return value;
     }
@@ -1070,7 +1274,7 @@
     }
 
     return [].slice.call(value);
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -1084,21 +1288,22 @@
   governing permissions and limitations under the License.
   */
   var SIBLING_PATTERN = /^\s*>/;
-  var querySelectorAll = (function (context, selector) {
+  // @ts-ignore
+  var querySelectorAll = function (context, selector) {
     if (!SIBLING_PATTERN.test(selector)) {
       return toArray(context.querySelectorAll(selector));
     }
 
-    var tag = "alloy-" + Date.now(); // We could use a :scope selector here, but we want to be IE compliant
+    var tag = 'alloy-' + Date.now(); // We could use a :scope selector here, but we want to be IE compliant
     // so we add a dummy css class to be able to select the children
 
     try {
       context.classList.add(tag);
-      return toArray(context.querySelectorAll("." + tag + " " + selector));
+      return toArray(context.querySelectorAll('.' + tag + ' ' + selector));
     } finally {
       context.classList.remove(tag);
     }
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -1118,9 +1323,9 @@
    * @param {String} prefix The string to search for.
    * @returns {boolean}
    */
-  var startsWith = (function (str, prefix) {
+  var startsWith = function (str, prefix) {
     return str.substr(0, prefix.length) === prefix;
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -1133,7 +1338,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var SHADOW_SEPARATOR = ":shadow";
+  var SHADOW_SEPARATOR = ':shadow';
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -1147,32 +1352,38 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var splitWithShadow = function splitWithShadow(selector) {
     return selector.split(SHADOW_SEPARATOR);
   };
 
+  // @ts-ignore
   var transformPrefix = function transformPrefix(parent, selector) {
     var result = selector.trim();
-    var hasChildCombinatorPrefix = startsWith(result, ">");
+    var hasChildCombinatorPrefix = startsWith(result, '>');
 
     if (!hasChildCombinatorPrefix) {
       return result;
     } // IE doesn't support :scope
 
-
+    // @ts-ignore
     if (window.document.documentMode) {
       return result.substring(1).trim();
     }
 
-    var prefix = parent instanceof Element || parent instanceof HTMLDocument ? ":scope" : ":host"; // see https://bugs.webkit.org/show_bug.cgi?id=233380
+    var prefix =
+      parent instanceof Element || parent instanceof HTMLDocument
+        ? ':scope'
+        : ':host'; // see https://bugs.webkit.org/show_bug.cgi?id=233380
 
-    return prefix + " " + result;
+    return prefix + ' ' + result;
   };
 
-  var selectNodesWithShadow = (function (context, selector) {
+  // @ts-ignore
+  var selectNodesWithShadow = function (context, selector) {
     // Shadow DOM should be supported
     if (!window.document.documentElement.attachShadow) {
-      return querySelectorAll(context, selector.replace(SHADOW_SEPARATOR, ""));
+      return querySelectorAll(context, selector.replace(SHADOW_SEPARATOR, ''));
     }
 
     var parts = splitWithShadow(selector);
@@ -1181,7 +1392,6 @@
       return querySelectorAll(context, selector);
     } // split the selector into parts separated by :shadow pseudo-selectors
     // find each subselector element based on the previously selected node's shadowRoot
-
 
     var parent = context;
 
@@ -1197,7 +1407,7 @@
     }
 
     return undefined;
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -1210,9 +1420,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var isShadowSelector = (function (str) {
+  // @ts-ignore
+  var isShadowSelector = function (str) {
     return str.indexOf(SHADOW_SEPARATOR) !== -1;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1232,15 +1443,19 @@
    * @returns {Array} an array of DOM nodes
    */
 
-  var selectNodes = (function (selector) {
-    var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+  var selectNodes = function (selector) {
+    var context =
+      arguments.length > 1 && arguments[1] !== undefined
+        ? arguments[1]
+        : document;
 
     if (!isShadowSelector(selector)) {
       return querySelectorAll(context, selector);
     }
 
+    // @ts-ignore
     return selectNodesWithShadow(context, selector);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1253,29 +1468,44 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var MUTATION_OBSERVER = "MutationObserver";
-  var RAF = "requestAnimationFrame";
+  var MUTATION_OBSERVER = 'MutationObserver';
+  var RAF = 'requestAnimationFrame';
   var MUTATION_OBSERVER_CONFIG = {
     childList: true,
-    subtree: true
+    subtree: true,
   };
-  var VISIBILITY_STATE = "visibilityState";
-  var VISIBLE = "visible";
+  var VISIBILITY_STATE = 'visibilityState';
+  var VISIBLE = 'visible';
   var DELAY = 100;
   var MAX_POLLING_TIMEOUT = 5000;
 
+  // @ts-ignore
   var createError = function createError(selector) {
-    return new Error("Could not find: " + selector);
+    return new Error('Could not find: ' + selector);
   };
 
+  // @ts-ignore
   var createPromise = function createPromise(executor) {
     return new Promise(executor);
   };
 
+  // @ts-ignore
   var canUseMutationObserver = function canUseMutationObserver(win) {
     return isFunction(win[MUTATION_OBSERVER]);
   };
-  var awaitUsingMutationObserver = function awaitUsingMutationObserver(win, doc, selector, timeout, selectFunc) {
+  var awaitUsingMutationObserver = function awaitUsingMutationObserver(
+    // @ts-ignore
+    win,
+    // @ts-ignore
+    doc,
+    // @ts-ignore
+    selector,
+    // @ts-ignore
+    timeout,
+    // @ts-ignore
+    selectFunc
+  ) {
+    // @ts-ignore
     return createPromise(function (resolve, reject) {
       var mutationObserver = new win[MUTATION_OBSERVER](function () {
         var nodes = selectFunc(selector);
@@ -1292,10 +1522,21 @@
       mutationObserver.observe(doc, MUTATION_OBSERVER_CONFIG);
     });
   };
+  // @ts-ignore
   var canUseRequestAnimationFrame = function canUseRequestAnimationFrame(doc) {
     return doc[VISIBILITY_STATE] === VISIBLE;
   };
-  var awaitUsingRequestAnimation = function awaitUsingRequestAnimation(win, selector, timeout, selectFunc) {
+  var awaitUsingRequestAnimation = function awaitUsingRequestAnimation(
+    // @ts-ignore
+    win,
+    // @ts-ignore
+    selector,
+    // @ts-ignore
+    timeout,
+    // @ts-ignore
+    selectFunc
+  ) {
+    // @ts-ignore
     return createPromise(function (resolve, reject) {
       var execute = function execute() {
         var nodes = selectFunc(selector);
@@ -1314,7 +1555,15 @@
       }, timeout);
     });
   };
-  var awaitUsingTimer = function awaitUsingTimer(selector, timeout, selectFunc) {
+  var awaitUsingTimer = function awaitUsingTimer(
+    // @ts-ignore
+    selector,
+    // @ts-ignore
+    timeout,
+    // @ts-ignore
+    selectFunc
+  ) {
+    // @ts-ignore
     return createPromise(function (resolve, reject) {
       var execute = function execute() {
         var nodes = selectFunc(selector);
@@ -1333,11 +1582,24 @@
       }, timeout);
     });
   };
-  var awaitSelector = (function (selector) {
-    var selectFunc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : selectNodes;
-    var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : MAX_POLLING_TIMEOUT;
-    var win = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : window;
-    var doc = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : document;
+  // @ts-ignore
+  var awaitSelector = function (selector) {
+    var selectFunc =
+      arguments.length > 1 && arguments[1] !== undefined
+        ? arguments[1]
+        : selectNodes;
+    var timeout =
+      arguments.length > 2 && arguments[2] !== undefined
+        ? arguments[2]
+        : MAX_POLLING_TIMEOUT;
+    var win =
+      arguments.length > 3 && arguments[3] !== undefined
+        ? arguments[3]
+        : window;
+    var doc =
+      arguments.length > 4 && arguments[4] !== undefined
+        ? arguments[4]
+        : document;
     var nodes = selectFunc(selector);
 
     if (isNonEmptyArray(nodes)) {
@@ -1345,7 +1607,13 @@
     }
 
     if (canUseMutationObserver(win)) {
-      return awaitUsingMutationObserver(win, doc, selector, timeout, selectFunc);
+      return awaitUsingMutationObserver(
+        win,
+        doc,
+        selector,
+        timeout,
+        selectFunc
+      );
     }
 
     if (canUseRequestAnimationFrame(doc)) {
@@ -1353,7 +1621,7 @@
     }
 
     return awaitUsingTimer(selector, timeout, selectFunc);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1373,14 +1641,16 @@
    * @param {Node} [element]
    * @returns {Boolean}
    */
-  var matchesSelector = (function (selector, element) {
+  var matchesSelector = function (selector, element) {
+    // @ts-ignore
     if (element.matches) {
+      // @ts-ignore
       return element.matches(selector);
     } // Making IE 11 happy
 
-
+    // @ts-ignore
     return element.msMatchesSelector(selector);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1393,7 +1663,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var removeNode = (function (node) {
+  // @ts-ignore
+  var removeNode = function (node) {
     var parent = node.parentNode;
 
     if (parent) {
@@ -1401,37 +1672,44 @@
     }
 
     return null;
-  });
+  };
 
   var IFRAME_ATTRS = {
-    name: "Adobe Alloy"
+    name: 'Adobe Alloy',
   };
   var IFRAME_PROPS = {
     style: {
-      display: "none",
+      display: 'none',
       width: 0,
-      height: 0
-    }
+      height: 0,
+    },
   };
-  var injectFireReferrerHideableImage = (function () {
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref$appendNode = _ref.appendNode,
-        appendNode$1 = _ref$appendNode === void 0 ? appendNode : _ref$appendNode,
-        _ref$awaitSelector = _ref.awaitSelector,
-        awaitSelector$1 = _ref$awaitSelector === void 0 ? awaitSelector : _ref$awaitSelector,
-        _ref$createNode = _ref.createNode,
-        createNode$1 = _ref$createNode === void 0 ? createNode : _ref$createNode,
-        _ref$fireImage = _ref.fireImage,
-        fireImage = _ref$fireImage === void 0 ? fireImageInDocument : _ref$fireImage;
+  var injectFireReferrerHideableImage = function () {
+    var _ref =
+        arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$appendNode = _ref.appendNode,
+      appendNode$1 = _ref$appendNode === void 0 ? appendNode : _ref$appendNode,
+      _ref$awaitSelector = _ref.awaitSelector,
+      awaitSelector$1 =
+        _ref$awaitSelector === void 0 ? awaitSelector : _ref$awaitSelector,
+      _ref$createNode = _ref.createNode,
+      createNode$1 = _ref$createNode === void 0 ? createNode : _ref$createNode,
+      _ref$fireImage = _ref.fireImage,
+      fireImage =
+        _ref$fireImage === void 0 ? fireImageInDocument : _ref$fireImage;
 
     var fireOnPage = fireImage;
+    // @ts-ignore
     var hiddenIframe;
 
     var createIframe = function createIframe() {
+      // @ts-ignore
       return awaitSelector$1(BODY).then(function (_ref2) {
         var _ref3 = _slicedToArray(_ref2, 1),
-            body = _ref3[0];
+          // @ts-ignore
+          body = _ref3[0];
 
+        // @ts-ignore
         if (hiddenIframe) {
           return hiddenIframe;
         }
@@ -1441,27 +1719,32 @@
       });
     };
 
+    // @ts-ignore
     var fireInIframe = function fireInIframe(_ref4) {
       var src = _ref4.src;
+      // @ts-ignore
       return createIframe().then(function (iframe) {
         var currentDocument = iframe.contentWindow.document;
         return fireImage({
           src: src,
-          currentDocument: currentDocument
+          currentDocument: currentDocument,
         });
       });
     };
 
+    // @ts-ignore
     return function (request) {
       var hideReferrer = request.hideReferrer,
-          url = request.url;
-      return hideReferrer ? fireInIframe({
-        src: url
-      }) : fireOnPage({
-        src: url
-      });
+        url = request.url;
+      return hideReferrer
+        ? fireInIframe({
+            src: url,
+          })
+        : fireOnPage({
+            src: url,
+          });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1480,9 +1763,9 @@
    * @returns {boolean}
    */
 
-  var isEmptyObject = (function (value) {
+  var isEmptyObject = function (value) {
     return isObject(value) && Object.keys(value).length === 0;
-  });
+  };
 
   /**
    * Given an object and a function that takes a value and returns a predicate, filter out
@@ -1496,6 +1779,7 @@
    * @returns A copy of the original object with the values that fail the predicate, filtered out.
    */
 
+  // @ts-ignore
   var filterObject = function filterObject(obj, predicate) {
     if (isNil(obj) || !isObject(obj)) {
       return obj;
@@ -1506,18 +1790,26 @@
 
       if (isObject(value)) {
         // value is object, go deeper
+        // @ts-ignore
         var filteredValue = filterObject(value, predicate);
 
         if (isEmptyObject(filteredValue)) {
           return result;
         }
 
-        return _objectSpread2(_objectSpread2({}, result), {}, _defineProperty({}, key, filteredValue));
+        return _objectSpread2(
+          _objectSpread2({}, result),
+          {},
+          _defineProperty({}, key, filteredValue)
+        );
       } // value is not an object, test predicate
 
-
       if (predicate(value)) {
-        return _objectSpread2(_objectSpread2({}, result), {}, _defineProperty({}, key, value));
+        return _objectSpread2(
+          _objectSpread2({}, result),
+          {},
+          _defineProperty({}, key, value)
+        );
       }
 
       return result;
@@ -1535,9 +1827,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var flatMap = (function (array, mapFunction) {
+  // @ts-ignore
+  var flatMap = function (array, mapFunction) {
     return Array.prototype.concat.apply([], array.map(mapFunction));
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1550,7 +1843,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var baseNamespace = "com.adobe.alloy.";
+  var baseNamespace = 'com.adobe.alloy.';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1570,9 +1863,9 @@
    * @param {number} itemCount
    * @returns {Array}
    */
-  var getLastArrayItems = (function (arr, itemCount) {
+  var getLastArrayItems = function (arr, itemCount) {
     return arr.slice(-itemCount);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1585,7 +1878,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var cookieName = baseNamespace + "getTld";
+  var cookieName = baseNamespace + 'getTld';
   /**
    * Of the current web page's hostname, this is the top-most domain that is
    * not a "public suffix" as outlined in https://publicsuffix.org/. In other
@@ -1595,25 +1888,29 @@
    * @returns {string}
    */
 
-  var getApexDomain = (function (window, cookieJar) {
-    var topLevelCookieDomain = ""; // If hostParts.length === 1, we may be on localhost.
+  var getApexDomain = function (window, cookieJar) {
+    var topLevelCookieDomain = ''; // If hostParts.length === 1, we may be on localhost.
 
-    var hostParts = window.location.hostname.toLowerCase().split(".");
+    // @ts-ignore
+    var hostParts = window.location.hostname.toLowerCase().split('.');
     var i = 1;
 
+    // @ts-ignore
     while (i < hostParts.length && !cookieJar.get(cookieName)) {
       i += 1;
-      topLevelCookieDomain = getLastArrayItems(hostParts, i).join(".");
+      topLevelCookieDomain = getLastArrayItems(hostParts, i).join('.');
+      // @ts-ignore
       cookieJar.set(cookieName, cookieName, {
-        domain: topLevelCookieDomain
+        domain: topLevelCookieDomain,
       });
     }
 
+    // @ts-ignore
     cookieJar.remove(cookieName, {
-      domain: topLevelCookieDomain
+      domain: topLevelCookieDomain,
     });
     return topLevelCookieDomain;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1627,7 +1924,7 @@
   governing permissions and limitations under the License.
   */
   // Remember to also incorporate the org ID wherever cookies are read or written.
-  var COOKIE_NAME_PREFIX = "kndctr";
+  var COOKIE_NAME_PREFIX = 'kndctr';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1640,9 +1937,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var sanitizeOrgIdForCookieName = (function (orgId) {
-    return orgId.replace("@", "_");
-  });
+  // @ts-ignore
+  var sanitizeOrgIdForCookieName = function (orgId) {
+    return orgId.replace('@', '_');
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1655,9 +1953,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getNamespacedCookieName = (function (orgId, key) {
-    return COOKIE_NAME_PREFIX + "_" + sanitizeOrgIdForCookieName(orgId) + "_" + key;
-  });
+  // @ts-ignore
+  var getNamespacedCookieName = function (orgId, key) {
+    return (
+      COOKIE_NAME_PREFIX + '_' + sanitizeOrgIdForCookieName(orgId) + '_' + key
+    );
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1670,9 +1971,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var IDENTITY = "identity";
-  var CONSENT = "consent";
-  var CLUSTER = "cluster";
+  var IDENTITY = 'identity';
+  var CONSENT = 'consent';
+  var CLUSTER = 'cluster';
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -1685,7 +1986,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectDoesIdentityCookieExist = (function (_ref) {
+  // @ts-ignore
+  var injectDoesIdentityCookieExist = function (_ref) {
     var orgId = _ref.orgId;
     var identityCookieName = getNamespacedCookieName(orgId, IDENTITY);
     /**
@@ -1695,7 +1997,7 @@
     return function () {
       return Boolean(cookieJar.get(identityCookieName));
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1709,7 +2011,14 @@
   governing permissions and limitations under the License.
   */
 
-  var getStorageByType = function getStorageByType(context, storageType, namespace) {
+  var getStorageByType = function getStorageByType(
+    // @ts-ignore
+    context,
+    // @ts-ignore
+    storageType,
+    // @ts-ignore
+    namespace
+  ) {
     // When storage is disabled on Safari, the mere act of referencing
     // window.localStorage or window.sessionStorage throws an error.
     // For this reason, we wrap in a try-catch.
@@ -1723,6 +2032,7 @@
         try {
           return context[storageType].getItem(namespace + name);
         } catch (e) {
+          // @ts-ignore
           return null;
         }
       },
@@ -1756,19 +2066,21 @@
         } catch (e) {
           return false;
         }
-      }
+      },
     };
   };
 
-  var injectStorage = (function (context) {
+  // @ts-ignore
+  var injectStorage = function (context) {
+    // @ts-ignore
     return function (additionalNamespace) {
       var finalNamespace = baseNamespace + additionalNamespace;
       return {
-        session: getStorageByType(context, "sessionStorage", finalNamespace),
-        persistent: getStorageByType(context, "localStorage", finalNamespace)
+        session: getStorageByType(context, 'sessionStorage', finalNamespace),
+        persistent: getStorageByType(context, 'localStorage', finalNamespace),
       };
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1788,11 +2100,11 @@
    * @returns {Array}
    */
 
-  var intersection = (function (a, b) {
+  var intersection = function (a, b) {
     return a.filter(function (x) {
       return includes(b, x);
     });
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1811,9 +2123,9 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isBoolean = (function (value) {
-    return typeof value === "boolean";
-  });
+  var isBoolean = function (value) {
+    return typeof value === 'boolean';
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1833,9 +2145,9 @@
    * @returns {boolean}
    */
   // eslint-disable-next-line no-restricted-globals
-  var isNumber = (function (value) {
-    return typeof value === "number" && !isNaN(value);
-  });
+  var isNumber = function (value) {
+    return typeof value === 'number' && !isNaN(value);
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1854,10 +2166,10 @@
    * @returns {boolean}
    */
 
-  var isInteger = (function (value) {
+  var isInteger = function (value) {
     var parsed = parseInt(value, 10);
     return isNumber(parsed) && value === parsed;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1878,9 +2190,13 @@
    * @returns {boolean}
    */
 
-  var isNamespacedCookieName = (function (orgId, name) {
-    return name.indexOf(COOKIE_NAME_PREFIX + "_" + sanitizeOrgIdForCookieName(orgId) + "_") === 0;
-  });
+  var isNamespacedCookieName = function (orgId, name) {
+    return (
+      name.indexOf(
+        COOKIE_NAME_PREFIX + '_' + sanitizeOrgIdForCookieName(orgId) + '_'
+      ) === 0
+    );
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1899,9 +2215,9 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isString = (function (value) {
-    return typeof value === "string";
-  });
+  var isString = function (value) {
+    return typeof value === 'string';
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1920,9 +2236,9 @@
    * @returns {boolean}
    */
 
-  var isNonEmptyString = (function (value) {
+  var isNonEmptyString = function (value) {
     return isString(value) && value.length > 0;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1946,10 +2262,14 @@
    * @param {Function} [keyResolver] The function to resolve the cache key.
    * @returns {Function} The new memoized function.
    */
-  var memoize = (function (fn, keyResolver) {
+  var memoize = function (fn, keyResolver) {
     var map = new Map();
     return function () {
-      var key = keyResolver ? keyResolver.apply(void 0, arguments) : arguments.length <= 0 ? undefined : arguments[0];
+      var key = keyResolver
+        ? keyResolver.apply(void 0, arguments)
+        : arguments.length <= 0
+        ? undefined
+        : arguments[0];
 
       if (map.has(key)) {
         return map.get(key);
@@ -1959,7 +2279,7 @@
       map.set(key, result);
       return result;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1976,7 +2296,7 @@
   /**
    * A function that performs no operations.
    */
-  var noop$1 = (function () {});
+  var noop$1 = function () {};
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -1990,11 +2310,15 @@
   governing permissions and limitations under the License.
   */
   // adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
-  var padStart = (function (string, targetLength, padString) {
+  // @ts-ignore
+  var padStart = function (string, targetLength, padString) {
     var originalString = String(string);
     var repeatedPadString = String(padString);
 
-    if (originalString.length >= targetLength || repeatedPadString.length === 0) {
+    if (
+      originalString.length >= targetLength ||
+      repeatedPadString.length === 0
+    ) {
       return originalString;
     }
 
@@ -2005,17 +2329,18 @@
     }
 
     return repeatedPadString.slice(0, lengthToAdd) + originalString;
-  });
+  };
 
   // to be able to add overrides in the future without us needing to make
   // any changes to the Web SDK
 
-  var prepareConfigOverridesForEdge = (function (configuration) {
-    if (isNil(configuration) || _typeof(configuration) !== "object") {
+  // @ts-ignore
+  var prepareConfigOverridesForEdge = function (configuration) {
+    if (isNil(configuration) || _typeof(configuration) !== 'object') {
       return null;
     } // remove entries that are empty strings or arrays
 
-
+    // @ts-ignore
     var configOverrides = filterObject(configuration, function (value) {
       if (isNil(value)) {
         return false;
@@ -2045,16 +2370,18 @@
     }
 
     return configOverrides;
-  });
+  };
 
   // Copyright Joyent, Inc. and other Node contributors.
   // obj.hasOwnProperty(prop) will break.
   // See: https://github.com/joyent/node/issues/1707
 
+  // @ts-ignore
   function hasOwnProperty(obj, prop) {
     return Object.prototype.hasOwnProperty.call(obj, prop);
   }
 
+  // @ts-ignore
   var decode = function decode(qs, sep, eq, options) {
     sep = sep || '&';
     eq = eq || '=';
@@ -2080,11 +2407,11 @@
 
     for (var i = 0; i < len; ++i) {
       var x = qs[i].replace(regexp, '%20'),
-          idx = x.indexOf(eq),
-          kstr,
-          vstr,
-          k,
-          v;
+        idx = x.indexOf(eq),
+        kstr,
+        vstr,
+        k,
+        v;
 
       if (idx >= 0) {
         kstr = x.substr(0, idx);
@@ -2098,10 +2425,14 @@
       v = decodeURIComponent(vstr);
 
       if (!hasOwnProperty(obj, k)) {
+        // @ts-ignore
         obj[k] = v;
+        // @ts-ignore
       } else if (Array.isArray(obj[k])) {
+        // @ts-ignore
         obj[k].push(v);
       } else {
+        // @ts-ignore
         obj[k] = [obj[k], v];
       }
     }
@@ -2111,6 +2442,7 @@
 
   // Copyright Joyent, Inc. and other Node contributors.
 
+  // @ts-ignore
   var stringifyPrimitive = function stringifyPrimitive(v) {
     switch (_typeof(v)) {
       case 'string':
@@ -2127,6 +2459,7 @@
     }
   };
 
+  // @ts-ignore
   var encode = function encode(obj, sep, eq, name) {
     sep = sep || '&';
     eq = eq || '=';
@@ -2136,25 +2469,36 @@
     }
 
     if (_typeof(obj) === 'object') {
-      return Object.keys(obj).map(function (k) {
-        var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      return Object.keys(obj)
+        .map(function (k) {
+          var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
 
-        if (Array.isArray(obj[k])) {
-          return obj[k].map(function (v) {
-            return ks + encodeURIComponent(stringifyPrimitive(v));
-          }).join(sep);
-        } else {
-          return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
-        }
-      }).join(sep);
+          if (Array.isArray(obj[k])) {
+            return (
+              obj[k]
+                // @ts-ignore
+                .map(function (v) {
+                  return ks + encodeURIComponent(stringifyPrimitive(v));
+                })
+                .join(sep)
+            );
+          } else {
+            return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+          }
+        })
+        .join(sep);
     }
 
     if (!name) return '';
-    return encodeURIComponent(stringifyPrimitive(name)) + eq + encodeURIComponent(stringifyPrimitive(obj));
+    return (
+      encodeURIComponent(stringifyPrimitive(name)) +
+      eq +
+      encodeURIComponent(stringifyPrimitive(obj))
+    );
   };
 
+  // @ts-ignore
   var querystring = createCommonjsModule(function (module, exports) {
-
     exports.decode = exports.parse = decode;
     exports.encode = exports.stringify = encode;
   });
@@ -2167,8 +2511,8 @@
   // having to worry about breaking extensions. If extensions demand additional functionality, we
   // can make adjustments as needed.
 
-
   var reactorQueryString = {
+    // @ts-ignore
     parse: function parse(string) {
       //
       if (typeof string === 'string') {
@@ -2179,9 +2523,10 @@
 
       return querystring.parse(string);
     },
+    // @ts-ignore
     stringify: function stringify(object) {
       return querystring.stringify(object);
-    }
+    },
   };
 
   /*
@@ -2202,9 +2547,9 @@
    * @param {*} value
    * @returns {Error}
    */
-  var toError = (function (value) {
+  var toError = function (value) {
     return value instanceof Error ? value : new Error(value);
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2217,16 +2562,18 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var updateErrorMessage = (function (_ref) {
+  // @ts-ignore
+  var updateErrorMessage = function (_ref) {
     var error = _ref.error,
-        message = _ref.message;
+      message = _ref.message;
 
     try {
       error.message = message;
-    } catch (e) {// We'll set a new message when we can, but some errors, like DOMException,
+    } catch (e) {
+      // We'll set a new message when we can, but some errors, like DOMException,
       // have a read-only message property, which limits our options.
     }
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2247,17 +2594,18 @@
    * @returns {*}
    */
 
-  var stackError = (function (_ref) {
+  // @ts-ignore
+  var stackError = function (_ref) {
     var error = _ref.error,
-        message = _ref.message;
+      message = _ref.message;
     var errorToStack = toError(error);
-    var newMessage = message + "\nCaused by: " + errorToStack.message;
+    var newMessage = message + '\nCaused by: ' + errorToStack.message;
     updateErrorMessage({
       error: errorToStack,
-      message: newMessage
+      message: newMessage,
     });
     return errorToStack;
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -2270,9 +2618,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var stringToBoolean = (function (str) {
-    return isString(str) && str.toLowerCase() === "true";
-  });
+  // @ts-ignore
+  var stringToBoolean = function (str) {
+    return isString(str) && str.toLowerCase() === 'true';
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -2291,7 +2640,8 @@
    * The coersion is attempted if value is a number or string.
    */
 
-  var toInteger = (function (value, defaultValue) {
+  // @ts-ignore
+  var toInteger = function (value, defaultValue) {
     if (isNumber(value) || isString(value)) {
       var n = Math.round(Number(value)); // eslint-disable-next-line no-restricted-globals
 
@@ -2301,7 +2651,7 @@
     }
 
     return defaultValue;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2320,24 +2670,43 @@
    * @returns {string}
    */
 
-  var toISOStringLocal = (function (date) {
+  var toISOStringLocal = function (date) {
     var YYYY = date.getFullYear();
-    var MM = padStart(date.getMonth() + 1, 2, "0");
-    var DD = padStart(date.getDate(), 2, "0");
-    var hh = padStart(date.getHours(), 2, "0");
-    var mm = padStart(date.getMinutes(), 2, "0");
-    var ss = padStart(date.getSeconds(), 2, "0");
-    var mmm = padStart(date.getMilliseconds(), 3, "0"); // The time-zone offset is the difference, in minutes, from local time to UTC. Note that this
+    var MM = padStart(date.getMonth() + 1, 2, '0');
+    var DD = padStart(date.getDate(), 2, '0');
+    var hh = padStart(date.getHours(), 2, '0');
+    var mm = padStart(date.getMinutes(), 2, '0');
+    var ss = padStart(date.getSeconds(), 2, '0');
+    var mmm = padStart(date.getMilliseconds(), 3, '0'); // The time-zone offset is the difference, in minutes, from local time to UTC. Note that this
     // means that the offset is positive if the local timezone is behind UTC and negative if it is
     // ahead. For example, for time zone UTC+10:00, -600 will be returned.
 
     var timezoneOffset = toInteger(date.getTimezoneOffset(), 0);
-    var ts = timezoneOffset > 0 ? "-" : "+";
-    var th = padStart(Math.floor(Math.abs(timezoneOffset) / 60), 2, "0");
-    var tm = padStart(Math.abs(timezoneOffset) % 60, 2, "0");
-    return YYYY + "-" + MM + "-" + DD + "T" + hh + ":" + mm + ":" + ss + "." + mmm + ts + th + ":" + tm;
-  });
+    var ts = timezoneOffset > 0 ? '-' : '+';
+    var th = padStart(Math.floor(Math.abs(timezoneOffset) / 60), 2, '0');
+    var tm = padStart(Math.abs(timezoneOffset) % 60, 2, '0');
+    return (
+      YYYY +
+      '-' +
+      MM +
+      '-' +
+      DD +
+      'T' +
+      hh +
+      ':' +
+      mm +
+      ':' +
+      ss +
+      '.' +
+      mmm +
+      ts +
+      th +
+      ':' +
+      tm
+    );
+  };
 
+  // @ts-ignore
   var rngBrowser = createCommonjsModule(function (module) {
     // Unique ID creation requires a high quality random # generator.  In the
     // browser this is a little complicated due to unknown quality of Math.random()
@@ -2345,12 +2714,22 @@
     // feature-detection
     // getRandomValues needs to be invoked in a context where "this" is a Crypto
     // implementation. Also, find the complete implementation of crypto on IE11.
-    var getRandomValues = typeof crypto != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto);
+    var getRandomValues =
+      (typeof crypto != 'undefined' &&
+        crypto.getRandomValues &&
+        crypto.getRandomValues.bind(crypto)) ||
+      // @ts-ignore
+      (typeof msCrypto != 'undefined' &&
+        // @ts-ignore
+        typeof window.msCrypto.getRandomValues == 'function' &&
+        // @ts-ignore
+        msCrypto.getRandomValues.bind(msCrypto));
 
     if (getRandomValues) {
       // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
       var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
 
+      // @ts-ignore
       module.exports = function whatwgRNG() {
         getRandomValues(rnds8);
         return rnds8;
@@ -2362,10 +2741,12 @@
       // quality.
       var rnds = new Array(16);
 
+      // @ts-ignore
       module.exports = function mathRNG() {
         for (var i = 0, r; i < 16; i++) {
           if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
-          rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+          // @ts-ignore
+          rnds[i] = (r >>> ((i & 0x03) << 3)) & 0xff;
         }
 
         return rnds;
@@ -2377,23 +2758,48 @@
    * Convert array of 16 byte values to UUID string format of the form:
    * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
    */
+  // @ts-ignore
   var byteToHex = [];
 
   for (var i = 0; i < 256; ++i) {
     byteToHex[i] = (i + 0x100).toString(16).substr(1);
   }
 
+  // @ts-ignore
   function bytesToUuid(buf, offset) {
     var i = offset || 0;
+    // @ts-ignore
     var bth = byteToHex; // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
 
-    return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
+    return [
+      bth[buf[i++]],
+      bth[buf[i++]],
+      bth[buf[i++]],
+      bth[buf[i++]],
+      '-',
+      bth[buf[i++]],
+      bth[buf[i++]],
+      '-',
+      bth[buf[i++]],
+      bth[buf[i++]],
+      '-',
+      bth[buf[i++]],
+      bth[buf[i++]],
+      '-',
+      bth[buf[i++]],
+      bth[buf[i++]],
+      bth[buf[i++]],
+      bth[buf[i++]],
+      bth[buf[i++]],
+      bth[buf[i++]],
+    ].join('');
   }
 
   var bytesToUuid_1 = bytesToUuid;
 
+  // @ts-ignore
   function v4(options, buf, offset) {
-    var i = buf && offset || 0;
+    var i = (buf && offset) || 0;
 
     if (typeof options == 'string') {
       buf = options === 'binary' ? new Array(16) : null;
@@ -2403,8 +2809,8 @@
     options = options || {};
     var rnds = options.random || (options.rng || rngBrowser)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
 
-    rnds[6] = rnds[6] & 0x0f | 0x40;
-    rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+    rnds[6] = (rnds[6] & 0x0f) | 0x40;
+    rnds[8] = (rnds[8] & 0x3f) | 0x80; // Copy bytes to buffer, if provided
 
     if (buf) {
       for (var ii = 0; ii < 16; ++ii) {
@@ -2471,20 +2877,22 @@
    * after any of the exposed validator functions are called.
    */
 
-  var chain = (function (leftValidator, rightValidator) {
-    var additionalMethods = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  // @ts-ignore
+  var chain = function (leftValidator, rightValidator) {
+    var additionalMethods =
+      arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     // combine the two validators, calling left first and then right.
     // pass the return value from left into right.
+    // @ts-ignore
     var combinedValidator = function combinedValidator(value, path) {
       return rightValidator(leftValidator(value, path), path);
     }; // add the methods already defined on the left validator, and the additionalMethods
     // to the new combined validator function.
 
-
     reactorObjectAssign(combinedValidator, leftValidator, additionalMethods);
     return combinedValidator;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2512,13 +2920,25 @@
    * function allows you to chain a rightValidator that needs to have a null check.
    */
 
-  var nullSafeChain = (function (leftValidator, rightValidator, additionalMethods) {
-    var rightValidatorWithNullCheck = function rightValidatorWithNullCheck(value, path) {
+  var nullSafeChain = function (
+    // @ts-ignore
+    leftValidator,
+    // @ts-ignore
+    rightValidator,
+    // @ts-ignore
+    additionalMethods
+  ) {
+    var rightValidatorWithNullCheck = function rightValidatorWithNullCheck(
+      // @ts-ignore
+      value,
+      // @ts-ignore
+      path
+    ) {
       return value == null ? value : rightValidator(value, path);
     };
 
     return chain(leftValidator, rightValidatorWithNullCheck, additionalMethods);
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2531,11 +2951,20 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var assertValid = (function (isValid, value, path, message) {
+  // @ts-ignore
+  var assertValid = function (isValid, value, path, message) {
     if (!isValid) {
-      throw new Error("'" + path + "': Expected " + message + ", but got " + JSON.stringify(value) + ".");
+      throw new Error(
+        "'" +
+          path +
+          "': Expected " +
+          message +
+          ', but got ' +
+          JSON.stringify(value) +
+          '.'
+      );
     }
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2548,10 +2977,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var booleanValidator = (function (value, path) {
-    assertValid(isBoolean(value), value, path, "true or false");
+  // @ts-ignore
+  var booleanValidator = function (value, path) {
+    assertValid(isBoolean(value), value, path, 'true or false');
     return value;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2564,10 +2994,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var callbackValidator = (function (value, path) {
-    assertValid(isFunction(value), value, path, "a function");
+  // @ts-ignore
+  var callbackValidator = function (value, path) {
+    assertValid(isFunction(value), value, path, 'a function');
     return value;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2580,26 +3011,32 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createArrayOfValidator = (function (elementValidator) {
+  // @ts-ignore
+  var createArrayOfValidator = function (elementValidator) {
+    // @ts-ignore
     return function (value, path) {
-      assertValid(Array.isArray(value), value, path, "an array");
+      assertValid(Array.isArray(value), value, path, 'an array');
+      // @ts-ignore
       var errors = [];
+      // @ts-ignore
       var validatedArray = value.map(function (subValue, i) {
         try {
-          return elementValidator(subValue, path + "[" + i + "]");
+          return elementValidator(subValue, path + '[' + i + ']');
         } catch (e) {
+          // @ts-ignore
           errors.push(e.message);
           return undefined;
         }
       });
 
       if (errors.length) {
-        throw new Error(errors.join("\n"));
+        // @ts-ignore
+        throw new Error(errors.join('\n'));
       }
 
       return validatedArray;
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2612,7 +3049,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createDefaultValidator = (function (defaultValue) {
+  // @ts-ignore
+  var createDefaultValidator = function (defaultValue) {
+    // @ts-ignore
     return function (value) {
       if (value == null) {
         return defaultValue;
@@ -2620,7 +3059,7 @@
 
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2633,12 +3072,14 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createLiteralValidator = (function (literalValue) {
+  // @ts-ignore
+  var createLiteralValidator = function (literalValue) {
+    // @ts-ignore
     return function (value, path) {
-      assertValid(value === literalValue, value, path, "" + literalValue);
+      assertValid(value === literalValue, value, path, '' + literalValue);
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2651,33 +3092,39 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createMapOfValuesValidator = (function (valueValidator) {
+  // @ts-ignore
+  var createMapOfValuesValidator = function (valueValidator) {
+    // @ts-ignore
     return function (value, path) {
-      assertValid(isObject(value), value, path, "an object");
+      assertValid(isObject(value), value, path, 'an object');
+      // @ts-ignore
       var errors = [];
       var validatedObject = {};
       Object.keys(value).forEach(function (subKey) {
         var subValue = value[subKey];
-        var subPath = path ? path + "." + subKey : subKey;
+        var subPath = path ? path + '.' + subKey : subKey;
 
         try {
           var validatedValue = valueValidator(subValue, subPath);
 
           if (validatedValue !== undefined) {
+            // @ts-ignore
             validatedObject[subKey] = validatedValue;
           }
         } catch (e) {
+          // @ts-ignore
           errors.push(e.message);
         }
       });
 
       if (errors.length) {
-        throw new Error(errors.join("\n"));
+        // @ts-ignore
+        throw new Error(errors.join('\n'));
       }
 
       return validatedObject;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2690,12 +3137,19 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createMinimumValidator = (function (typeName, minimum) {
+  // @ts-ignore
+  var createMinimumValidator = function (typeName, minimum) {
+    // @ts-ignore
     return function (value, path) {
-      assertValid(value >= minimum, value, path, typeName + " greater than or equal to " + minimum);
+      assertValid(
+        value >= minimum,
+        value,
+        path,
+        typeName + ' greater than or equal to ' + minimum
+      );
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2708,23 +3162,27 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createNoUnknownFieldsValidator = (function (schema) {
+  // @ts-ignore
+  var createNoUnknownFieldsValidator = function (schema) {
+    // @ts-ignore
     return function (value, path) {
+      // @ts-ignore
       var errors = [];
       Object.keys(value).forEach(function (subKey) {
         if (!schema[subKey]) {
-          var subPath = path ? path + "." + subKey : subKey;
+          var subPath = path ? path + '.' + subKey : subKey;
           errors.push("'" + subPath + "': Unknown field.");
         }
       });
 
       if (errors.length) {
-        throw new Error(errors.join("\n"));
+        // @ts-ignore
+        throw new Error(errors.join('\n'));
       }
 
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2737,7 +3195,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createNonEmptyValidator = (function (message) {
+  // @ts-ignore
+  var createNonEmptyValidator = function (message) {
+    // @ts-ignore
     return function (value, path) {
       if (isObject(value)) {
         assertValid(!isEmptyObject(value), value, path, message);
@@ -2747,7 +3207,7 @@
 
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2760,40 +3220,47 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createObjectOfValidator = (function (schema) {
+  // @ts-ignore
+  var createObjectOfValidator = function (schema) {
+    // @ts-ignore
     return function (value, path) {
-      assertValid(isObject(value), value, path, "an object");
+      assertValid(isObject(value), value, path, 'an object');
+      // @ts-ignore
       var errors = [];
       var validatedObject = {};
       Object.keys(schema).forEach(function (subKey) {
         var subValue = value[subKey];
         var subSchema = schema[subKey];
-        var subPath = path ? path + "." + subKey : subKey;
+        var subPath = path ? path + '.' + subKey : subKey;
 
         try {
           var validatedValue = subSchema(subValue, subPath);
 
           if (validatedValue !== undefined) {
+            // @ts-ignore
             validatedObject[subKey] = validatedValue;
           }
         } catch (e) {
+          // @ts-ignore
           errors.push(e.message);
         }
       }); // copy over unknown properties
 
       Object.keys(value).forEach(function (subKey) {
         if (!Object.prototype.hasOwnProperty.call(validatedObject, subKey)) {
+          // @ts-ignore
           validatedObject[subKey] = value[subKey];
         }
       });
 
       if (errors.length) {
-        throw new Error(errors.join("\n"));
+        // @ts-ignore
+        throw new Error(errors.join('\n'));
       }
 
       return validatedObject;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2806,8 +3273,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createAnyOfValidator = (function (validators, message) {
+  // @ts-ignore
+  var createAnyOfValidator = function (validators, message) {
+    // @ts-ignore
     return function (value, path) {
+      // @ts-ignore
       var valid = find(validators, function (validator) {
         try {
           validator(value, path);
@@ -2819,7 +3289,7 @@
       assertValid(valid, value, path, message);
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2832,14 +3302,22 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createUniqueValidator = (function () {
+  var createUniqueValidator = function () {
+    // @ts-ignore
     var values = [];
+    // @ts-ignore
     return function (value, path) {
-      assertValid(values.indexOf(value) === -1, value, path, "a unique value across instances");
+      assertValid(
+        // @ts-ignore
+        values.indexOf(value) === -1,
+        value,
+        path,
+        'a unique value across instances'
+      );
       values.push(value);
       return value;
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -2858,7 +3336,8 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isUnique = (function (values) {
+  // @ts-ignore
+  var isUnique = function (values) {
     var storedVals = Object.create(null);
 
     for (var i = 0; i < values.length; i += 1) {
@@ -2872,7 +3351,7 @@
     }
 
     return true;
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -2885,11 +3364,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createUniqueItemsValidator = (function () {
+  var createUniqueItemsValidator = function () {
+    // @ts-ignore
     return function (value, path) {
-      assertValid(isUnique(value), value, path, "array values to be unique");
+      assertValid(isUnique(value), value, path, 'array values to be unique');
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2903,10 +3383,11 @@
   governing permissions and limitations under the License.
   */
   var DOMAIN_REGEX = /^[a-z0-9.-]{1,}$/i;
-  var domainValidator = (function (value, path) {
-    assertValid(DOMAIN_REGEX.test(value), value, path, "a valid domain");
+  // @ts-ignore
+  var domainValidator = function (value, path) {
+    assertValid(DOMAIN_REGEX.test(value), value, path, 'a valid domain');
     return value;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2919,10 +3400,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var integerValidator = (function (value, path) {
-    assertValid(isInteger(value), value, path, "an integer");
+  // @ts-ignore
+  var integerValidator = function (value, path) {
+    assertValid(isInteger(value), value, path, 'an integer');
     return value;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2935,10 +3417,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var numberValidator = (function (value, path) {
-    assertValid(isNumber(value), value, path, "a number");
+  // @ts-ignore
+  var numberValidator = function (value, path) {
+    assertValid(isNumber(value), value, path, 'a number');
     return value;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2957,13 +3440,13 @@
    * @param {*} value
    * @returns {boolean}
    */
-  var isValidRegExp = (function (value) {
+  var isValidRegExp = function (value) {
     try {
       return new RegExp(value) !== null;
     } catch (e) {
       return false;
     }
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -2976,10 +3459,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var regexpValidator = (function (value, path) {
-    assertValid(isValidRegExp(value), value, path, "a regular expression");
+  // @ts-ignore
+  var regexpValidator = function (value, path) {
+    assertValid(isValidRegExp(value), value, path, 'a regular expression');
     return value;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -2992,13 +3476,14 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var requiredValidator = (function (value, path) {
+  // @ts-ignore
+  var requiredValidator = function (value, path) {
     if (value == null) {
       throw new Error("'" + path + "' is a required option");
     }
 
     return value;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -3011,10 +3496,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var stringValidator = (function (value, path) {
-    assertValid(isString(value), value, path, "a string");
+  // @ts-ignore
+  var stringValidator = function (value, path) {
+    assertValid(isString(value), value, path, 'a string');
     return value;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -3028,12 +3514,13 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var base = function base(value) {
     return value;
   }; // The 'default' and 'required' methods are available after any data-type method
   // Don't use the nullSafeChain because they need to handle the null or undefined case
 
-
+  // @ts-ignore
   base.default = function _default(defaultValue) {
     return chain(this, createDefaultValidator(defaultValue));
   };
@@ -3042,110 +3529,136 @@
     return chain(this, requiredValidator);
   }; // helper validators
 
-
   var domain = function domain() {
+    // @ts-ignore
     return nullSafeChain(this, domainValidator);
   };
 
+  // @ts-ignore
   var minimumInteger = function minimumInteger(minValue) {
-    return nullSafeChain(this, createMinimumValidator("an integer", minValue));
+    // @ts-ignore
+    return nullSafeChain(this, createMinimumValidator('an integer', minValue));
   };
 
+  // @ts-ignore
   var minimumNumber = function minimumNumber(minValue) {
-    return nullSafeChain(this, createMinimumValidator("a number", minValue));
+    // @ts-ignore
+    return nullSafeChain(this, createMinimumValidator('a number', minValue));
   };
 
   var integer = function integer() {
+    // @ts-ignore
     return nullSafeChain(this, integerValidator, {
-      minimum: minimumInteger
+      minimum: minimumInteger,
     });
   };
 
   var nonEmptyString = function nonEmptyString() {
-    return nullSafeChain(this, createNonEmptyValidator("a non-empty string"));
+    // @ts-ignore
+    return nullSafeChain(this, createNonEmptyValidator('a non-empty string'));
   };
 
   var nonEmptyArray = function nonEmptyArray() {
-    return nullSafeChain(this, createNonEmptyValidator("a non-empty array"));
+    // @ts-ignore
+    return nullSafeChain(this, createNonEmptyValidator('a non-empty array'));
   };
 
   var nonEmptyObject = function nonEmptyObject() {
-    return nullSafeChain(this, createNonEmptyValidator("a non-empty object"));
+    // @ts-ignore
+    return nullSafeChain(this, createNonEmptyValidator('a non-empty object'));
   };
 
   var regexp = function regexp() {
+    // @ts-ignore
     return nullSafeChain(this, regexpValidator);
   };
 
   var unique = function createUnique() {
+    // @ts-ignore
     return nullSafeChain(this, createUniqueValidator());
   };
 
   var uniqueItems = function createUniqueItems() {
+    // @ts-ignore
     return nullSafeChain(this, createUniqueItemsValidator());
   }; // top-level validators.  These are the first functions that are called to create a validator.
 
-
+  // @ts-ignore
   var anyOf = function anyOf(validators, message) {
     // use chain here because we don't want to accept null or undefined unless at least
     // one of the validators accept null or undefined.
+    // @ts-ignore
     return chain(this, createAnyOfValidator(validators, message));
   };
 
   var anything = function anything() {
+    // @ts-ignore
     return nullSafeChain(this, base);
   };
 
+  // @ts-ignore
   var arrayOf = function arrayOf(elementValidator) {
+    // @ts-ignore
     return nullSafeChain(this, createArrayOfValidator(elementValidator), {
       nonEmpty: nonEmptyArray,
-      uniqueItems: uniqueItems
+      uniqueItems: uniqueItems,
     });
   };
 
   var boolean = function boolean() {
+    // @ts-ignore
     return nullSafeChain(this, booleanValidator);
   };
 
   var callback = function callback() {
+    // @ts-ignore
     return nullSafeChain(this, callbackValidator);
   };
 
+  // @ts-ignore
   var literal = function literal(literalValue) {
+    // @ts-ignore
     return nullSafeChain(this, createLiteralValidator(literalValue));
   };
 
   var number = function number() {
+    // @ts-ignore
     return nullSafeChain(this, numberValidator, {
       minimum: minimumNumber,
       integer: integer,
-      unique: unique
+      unique: unique,
     });
   };
 
+  // @ts-ignore
   var mapOfValues = function mapOfValues(valuesValidator) {
+    // @ts-ignore
     return nullSafeChain(this, createMapOfValuesValidator(valuesValidator), {
-      nonEmpty: nonEmptyObject
+      nonEmpty: nonEmptyObject,
     });
   };
 
+  // @ts-ignore
   var objectOf = function objectOf(schema) {
     var noUnknownFields = function noUnknownFields() {
+      // @ts-ignore
       return nullSafeChain(this, createNoUnknownFieldsValidator(schema));
     };
 
+    // @ts-ignore
     return nullSafeChain(this, createObjectOfValidator(schema), {
       noUnknownFields: noUnknownFields,
-      nonEmpty: nonEmptyObject
+      nonEmpty: nonEmptyObject,
     });
   };
 
   var string = function string() {
+    // @ts-ignore
     return nullSafeChain(this, stringValidator, {
       regexp: regexp,
       domain: domain,
       nonEmpty: nonEmptyString,
-      unique: unique
+      unique: unique,
     });
   };
 
@@ -3161,11 +3674,18 @@
   var boundString = string.bind(base); // compound validators
 
   var boundEnumOf = function boundEnumOf() {
-    for (var _len = arguments.length, values = new Array(_len), _key = 0; _key < _len; _key++) {
+    for (
+      var _len = arguments.length, values = new Array(_len), _key = 0;
+      _key < _len;
+      _key++
+    ) {
       values[_key] = arguments[_key];
     }
 
-    return boundAnyOf(values.map(boundLiteral), "one of these values: [" + JSON.stringify(values) + "]");
+    return boundAnyOf(
+      values.map(boundLiteral),
+      'one of these values: [' + JSON.stringify(values) + ']'
+    );
   };
 
   /*
@@ -3179,9 +3699,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var AMBIGUOUS = "ambiguous";
-  var AUTHENTICATED = "authenticated";
-  var LOGGED_OUT = "loggedOut";
+  var AMBIGUOUS = 'ambiguous';
+  var AUTHENTICATED = 'authenticated';
+  var LOGGED_OUT = 'loggedOut';
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -3194,15 +3714,22 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var validateIdentityMap = boundMapOfValues(boundArrayOf(boundObjectOf({
-    authenticatedState: boundEnumOf(AMBIGUOUS, AUTHENTICATED, LOGGED_OUT),
-    id: boundString(),
-    namespace: boundObjectOf({
-      code: boundString()
-    }).noUnknownFields(),
-    primary: boundBoolean(),
-    xid: boundString()
-  }).noUnknownFields()).required());
+  var validateIdentityMap = boundMapOfValues(
+    boundArrayOf(
+      boundObjectOf({
+        authenticatedState: boundEnumOf(AMBIGUOUS, AUTHENTICATED, LOGGED_OUT),
+        id: boundString(),
+        namespace: boundObjectOf({
+          code: boundString(),
+          // @ts-ignore
+        }).noUnknownFields(),
+        primary: boundBoolean(),
+        xid: boundString(),
+        // @ts-ignore
+      }).noUnknownFields()
+      // @ts-ignore
+    ).required()
+  );
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -3228,7 +3755,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var debugQueryParam = "alloy_debug";
+  var debugQueryParam = 'alloy_debug';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -3241,23 +3768,25 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createLogController = (function (_ref) {
+  // @ts-ignore
+  var createLogController = function (_ref) {
     var console = _ref.console,
-        locationSearch = _ref.locationSearch,
-        createLogger = _ref.createLogger,
-        instanceName = _ref.instanceName,
-        createNamespacedStorage = _ref.createNamespacedStorage,
-        getMonitors = _ref.getMonitors;
+      locationSearch = _ref.locationSearch,
+      createLogger = _ref.createLogger,
+      instanceName = _ref.instanceName,
+      createNamespacedStorage = _ref.createNamespacedStorage,
+      getMonitors = _ref.getMonitors;
     var parsedQueryString = reactorQueryString.parse(locationSearch);
-    var storage = createNamespacedStorage("instance." + instanceName + ".");
-    var debugSessionValue = storage.session.getItem("debug");
-    var debugEnabled = debugSessionValue === "true";
+    var storage = createNamespacedStorage('instance.' + instanceName + '.');
+    var debugSessionValue = storage.session.getItem('debug');
+    var debugEnabled = debugSessionValue === 'true';
     var debugEnabledWritableFromConfig = debugSessionValue === null;
 
     var getDebugEnabled = function getDebugEnabled() {
       return debugEnabled;
     };
 
+    // @ts-ignore
     var setDebugEnabled = function setDebugEnabled(value, _ref2) {
       var fromConfig = _ref2.fromConfig;
 
@@ -3267,14 +3796,14 @@
 
       if (!fromConfig) {
         // Web storage only allows strings, so we explicitly convert to string.
-        storage.session.setItem("debug", value.toString());
+        storage.session.setItem('debug', value.toString());
         debugEnabledWritableFromConfig = false;
       }
     };
 
     if (parsedQueryString[debugQueryParam] !== undefined) {
       setDebugEnabled(stringToBoolean(parsedQueryString[debugQueryParam]), {
-        fromConfig: false
+        fromConfig: false,
       });
     }
 
@@ -3283,24 +3812,25 @@
       logger: createLogger({
         getDebugEnabled: getDebugEnabled,
         context: {
-          instanceName: instanceName
+          instanceName: instanceName,
         },
         getMonitors: getMonitors,
-        console: console
+        console: console,
       }),
+      // @ts-ignore
       createComponentLogger: function createComponentLogger(componentName) {
         return createLogger({
           getDebugEnabled: getDebugEnabled,
           context: {
             instanceName: instanceName,
-            componentName: componentName
+            componentName: componentName,
           },
           getMonitors: getMonitors,
-          console: console
+          console: console,
         });
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -3314,31 +3844,43 @@
   governing permissions and limitations under the License.
   */
   // TO-DOCUMENT: Lifecycle hooks and their params.
-  var hookNames = [// Called after all components have been registered.
-  "onComponentsRegistered", // Called before an event is sent on a data collection request
-  "onBeforeEvent", // Called before each request is made to the edge.
-  "onBeforeRequest", // Called after each response is returned from the edge with a successful
-  // status code
-  "onResponse", // Called after a network request to the edge fails. Either the request
-  // didn't make it to the edge, didn't make it to Konductor, or Konductor
-  // failed to return a regularly-structured response. (In this case { error }
-  // is passed as the parameter)
-  // Also called when the respone returns a 400 or 500 error. (In this case
-  // { response } is passed as the parameter)
-  "onRequestFailure", // A user clicked on an element.
-  "onClick"];
+  var hookNames = [
+    // Called after all components have been registered.
+    'onComponentsRegistered', // Called before an event is sent on a data collection request
+    'onBeforeEvent', // Called before each request is made to the edge.
+    'onBeforeRequest', // Called after each response is returned from the edge with a successful
+    // status code
+    'onResponse', // Called after a network request to the edge fails. Either the request
+    // didn't make it to the edge, didn't make it to Konductor, or Konductor
+    // failed to return a regularly-structured response. (In this case { error }
+    // is passed as the parameter)
+    // Also called when the respone returns a 400 or 500 error. (In this case
+    // { response } is passed as the parameter)
+    'onRequestFailure', // A user clicked on an element.
+    'onClick',
+  ];
 
+  // @ts-ignore
   var createHook = function createHook(componentRegistry, hookName) {
     return function () {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      for (
+        var _len = arguments.length, args = new Array(_len), _key = 0;
+        _key < _len;
+        _key++
+      ) {
         args[_key] = arguments[_key];
       }
 
-      return Promise.all(componentRegistry.getLifecycleCallbacks(hookName).map(function (callback) {
-        return new Promise(function (resolve) {
-          resolve(callback.apply(void 0, args));
-        });
-      }));
+      return Promise.all(
+        componentRegistry
+          .getLifecycleCallbacks(hookName)
+          // @ts-ignore
+          .map(function (callback) {
+            return new Promise(function (resolve) {
+              resolve(callback.apply(void 0, args));
+            });
+          })
+      );
     };
   };
   /**
@@ -3349,10 +3891,14 @@
    * @returns {function}
    */
 
-
+  // @ts-ignore
   var guardHook = function guardHook(fn) {
     return function () {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      for (
+        var _len2 = arguments.length, args = new Array(_len2), _key2 = 0;
+        _key2 < _len2;
+        _key2++
+      ) {
         args[_key2] = arguments[_key2];
       }
 
@@ -3362,12 +3908,14 @@
     };
   };
 
-  var createLifecycle = (function (componentRegistry) {
+  // @ts-ignore
+  var createLifecycle = function (componentRegistry) {
     return hookNames.reduce(function (memo, hookName) {
+      // @ts-ignore
       memo[hookName] = guardHook(createHook(componentRegistry, hookName));
       return memo;
     }, {});
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -3381,6 +3929,7 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var wrapForErrorHandling = function wrapForErrorHandling(fn, stackMessage) {
     return function () {
       var result;
@@ -3390,7 +3939,7 @@
       } catch (error) {
         throw stackError({
           error: error,
-          message: stackMessage
+          message: stackMessage,
         });
       }
 
@@ -3398,7 +3947,7 @@
         result = result.catch(function (error) {
           throw stackError({
             error: error,
-            message: stackMessage
+            message: stackMessage,
           });
         });
       }
@@ -3407,71 +3956,118 @@
     };
   }; // TO-DOCUMENT: All public commands and their signatures.
 
-
-  var createComponentRegistry = (function () {
+  var createComponentRegistry = function () {
     var componentsByNamespace = {};
     var commandsByName = {};
     var lifecycleCallbacksByName = {};
 
-    var registerComponentCommands = function registerComponentCommands(namespace) {
-      var componentCommandsByName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var conflictingCommandNames = intersection(Object.keys(commandsByName), Object.keys(componentCommandsByName));
+    var registerComponentCommands = function registerComponentCommands(
+      // @ts-ignore
+      namespace
+    ) {
+      var componentCommandsByName =
+        arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var conflictingCommandNames = intersection(
+        Object.keys(commandsByName),
+        Object.keys(componentCommandsByName)
+      );
 
       if (conflictingCommandNames.length) {
-        throw new Error("[ComponentRegistry] Could not register " + namespace + " " + ("because it has existing command(s): " + conflictingCommandNames.join(",")));
+        throw new Error(
+          '[ComponentRegistry] Could not register ' +
+            namespace +
+            ' ' +
+            ('because it has existing command(s): ' +
+              conflictingCommandNames.join(','))
+        );
       }
 
       Object.keys(componentCommandsByName).forEach(function (commandName) {
         var command = componentCommandsByName[commandName];
         command.commandName = commandName;
-        command.run = wrapForErrorHandling(command.run, "[" + namespace + "] An error occurred while executing the " + commandName + " command.");
+        command.run = wrapForErrorHandling(
+          command.run,
+          '[' +
+            namespace +
+            '] An error occurred while executing the ' +
+            commandName +
+            ' command.'
+        );
+        // @ts-ignore
         commandsByName[commandName] = command;
       });
     };
 
-    var registerLifecycleCallbacks = function registerLifecycleCallbacks(namespace) {
-      var componentLifecycleCallbacksByName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      Object.keys(componentLifecycleCallbacksByName).forEach(function (hookName) {
-        lifecycleCallbacksByName[hookName] = lifecycleCallbacksByName[hookName] || [];
-        lifecycleCallbacksByName[hookName].push(wrapForErrorHandling(componentLifecycleCallbacksByName[hookName], "[" + namespace + "] An error occurred while executing the " + hookName + " lifecycle hook."));
+    var registerLifecycleCallbacks = function registerLifecycleCallbacks(
+      // @ts-ignore
+      namespace
+    ) {
+      var componentLifecycleCallbacksByName =
+        arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      Object.keys(componentLifecycleCallbacksByName).forEach(function (
+        hookName
+      ) {
+        // @ts-ignore
+        lifecycleCallbacksByName[hookName] =
+          // @ts-ignore
+          lifecycleCallbacksByName[hookName] || [];
+        // @ts-ignore
+        lifecycleCallbacksByName[hookName].push(
+          wrapForErrorHandling(
+            componentLifecycleCallbacksByName[hookName],
+            '[' +
+              namespace +
+              '] An error occurred while executing the ' +
+              hookName +
+              ' lifecycle hook.'
+          )
+        );
       });
     };
 
     return {
+      // @ts-ignore
       register: function register(namespace, component) {
         var commands = component.commands,
-            lifecycle = component.lifecycle;
+          lifecycle = component.lifecycle;
         registerComponentCommands(namespace, commands);
         registerLifecycleCallbacks(namespace, lifecycle);
+        // @ts-ignore
         componentsByNamespace[namespace] = component;
       },
+      // @ts-ignore
       getCommand: function getCommand(commandName) {
+        // @ts-ignore
         return commandsByName[commandName];
       },
       getCommandNames: function getCommandNames() {
         return Object.keys(commandsByName);
       },
+      // @ts-ignore
       getLifecycleCallbacks: function getLifecycleCallbacks(hookName) {
+        // @ts-ignore
         return lifecycleCallbacksByName[hookName] || [];
-      }
+      },
     };
-  });
+  };
 
-  var injectSendNetworkRequest = (function (_ref) {
+  // @ts-ignore
+  var injectSendNetworkRequest = function (_ref) {
     var logger = _ref.logger,
-        sendFetchRequest = _ref.sendFetchRequest,
-        sendBeaconRequest = _ref.sendBeaconRequest,
-        isRequestRetryable = _ref.isRequestRetryable,
-        getRequestRetryDelay = _ref.getRequestRetryDelay;
+      sendFetchRequest = _ref.sendFetchRequest,
+      sendBeaconRequest = _ref.sendBeaconRequest,
+      isRequestRetryable = _ref.isRequestRetryable,
+      getRequestRetryDelay = _ref.getRequestRetryDelay;
 
     /**
      * Send a network request and returns details about the response.
      */
+    // @ts-ignore
     return function (_ref2) {
       var requestId = _ref2.requestId,
-          url = _ref2.url,
-          payload = _ref2.payload,
-          useSendBeacon = _ref2.useSendBeacon;
+        url = _ref2.url,
+        payload = _ref2.payload,
+        useSendBeacon = _ref2.useSendBeacon;
       // We want to log raw payload and event data rather than
       // our fancy wrapper objects. Calling payload.toJSON() is
       // insufficient to get all the nested raw data, because it's
@@ -3483,22 +4079,26 @@
       logger.logOnBeforeNetworkRequest({
         url: url,
         requestId: requestId,
-        payload: parsedPayload
+        payload: parsedPayload,
       });
 
       var executeRequest = function executeRequest() {
-        var retriesAttempted = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-        var requestMethod = useSendBeacon ? sendBeaconRequest : sendFetchRequest;
+        var retriesAttempted =
+          arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var requestMethod = useSendBeacon
+          ? sendBeaconRequest
+          : sendFetchRequest;
+        // @ts-ignore
         return requestMethod(url, stringifiedPayload).then(function (response) {
           var requestIsRetryable = isRequestRetryable({
             response: response,
-            retriesAttempted: retriesAttempted
+            retriesAttempted: retriesAttempted,
           });
 
           if (requestIsRetryable) {
             var requestRetryDelay = getRequestRetryDelay({
               response: response,
-              retriesAttempted: retriesAttempted
+              retriesAttempted: retriesAttempted,
             });
             return new Promise(function (resolve) {
               setTimeout(function () {
@@ -3511,40 +4111,51 @@
 
           try {
             parsedBody = JSON.parse(response.body);
-          } catch (e) {// Non-JSON. Something went wrong.
+          } catch (e) {
+            // Non-JSON. Something went wrong.
           }
 
-          logger.logOnNetworkResponse(_objectSpread2(_objectSpread2({
-            requestId: requestId,
-            url: url,
-            payload: parsedPayload
-          }, response), {}, {
-            parsedBody: parsedBody,
-            retriesAttempted: retriesAttempted
-          }));
+          logger.logOnNetworkResponse(
+            _objectSpread2(
+              _objectSpread2(
+                {
+                  requestId: requestId,
+                  url: url,
+                  payload: parsedPayload,
+                },
+                response
+              ),
+              {},
+              {
+                parsedBody: parsedBody,
+                retriesAttempted: retriesAttempted,
+              }
+            )
+          );
           return {
             statusCode: response.statusCode,
             body: response.body,
             parsedBody: parsedBody,
-            getHeader: response.getHeader
+            getHeader: response.getHeader,
           };
         });
       };
 
+      // @ts-ignore
       return executeRequest().catch(function (error) {
         logger.logOnNetworkError({
           requestId: requestId,
           url: url,
           payload: parsedPayload,
-          error: error
+          error: error,
         });
         throw stackError({
           error: error,
-          message: "Network request failed."
+          message: 'Network request failed.',
         });
       });
     };
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -3557,11 +4168,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectExtractEdgeInfo = (function (_ref) {
+  // @ts-ignore
+  var injectExtractEdgeInfo = function (_ref) {
     var logger = _ref.logger;
+    // @ts-ignore
     return function (adobeEdgeHeader) {
       if (adobeEdgeHeader) {
-        var headerParts = adobeEdgeHeader.split(";");
+        var headerParts = adobeEdgeHeader.split(';');
 
         if (headerParts.length >= 2 && headerParts[1].length > 0) {
           try {
@@ -3574,19 +4187,20 @@
 
             if (!isNaN(regionId)) {
               return {
-                regionId: regionId
+                regionId: regionId,
               };
             }
-          } catch (e) {// No need to do anything. The log statement below will log an error
+          } catch (e) {
+            // No need to do anything. The log statement below will log an error
           }
         }
 
-        logger.warn("Invalid adobe edge: \"" + adobeEdgeHeader + "\"");
+        logger.warn('Invalid adobe edge: "' + adobeEdgeHeader + '"');
       }
 
       return {};
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -3599,9 +4213,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var IN = "in";
-  var OUT = "out";
-  var PENDING = "pending";
+  var IN = 'in';
+  var OUT = 'out';
+  var PENDING = 'pending';
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -3614,7 +4228,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var GENERAL = "general";
+  var GENERAL = 'general';
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -3627,36 +4241,46 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var DECLINED_CONSENT_ERROR_CODE = "declinedConsent";
-  var CONSENT_SOURCE_DEFAULT = "default";
-  var CONSENT_SOURCE_INITIAL = "initial";
-  var CONSENT_SOURCE_NEW = "new";
+  var DECLINED_CONSENT_ERROR_CODE = 'declinedConsent';
+  var CONSENT_SOURCE_DEFAULT = 'default';
+  var CONSENT_SOURCE_INITIAL = 'initial';
+  var CONSENT_SOURCE_NEW = 'new';
 
-  var createDeclinedConsentError = function createDeclinedConsentError(errorMessage) {
+  var createDeclinedConsentError = function createDeclinedConsentError(
+    // @ts-ignore
+    errorMessage
+  ) {
     var error = new Error(errorMessage);
+    // @ts-ignore
     error.code = DECLINED_CONSENT_ERROR_CODE;
     error.message = errorMessage;
     return error;
   };
 
-  var createConsentStateMachine = (function (_ref) {
+  // @ts-ignore
+  var createConsentStateMachine = function (_ref) {
     var logger = _ref.logger;
+    // @ts-ignore
     var deferreds = [];
 
     var runAll = function runAll() {
       while (deferreds.length) {
+        // @ts-ignore
         deferreds.shift().resolve();
       }
     };
 
     var discardAll = function discardAll() {
       while (deferreds.length) {
-        deferreds.shift().reject(createDeclinedConsentError("The user declined consent."));
+        // @ts-ignore
+        deferreds
+          .shift()
+          .reject(createDeclinedConsentError('The user declined consent.'));
       }
     };
 
     var awaitInitial = function awaitInitial() {
-      return Promise.reject(new Error("Consent has not been initialized."));
+      return Promise.reject(new Error('Consent has not been initialized.'));
     };
 
     var awaitInDefault = function awaitInDefault() {
@@ -3668,16 +4292,21 @@
     };
 
     var awaitOutDefault = function awaitOutDefault() {
-      return Promise.reject(createDeclinedConsentError("No consent preferences have been set."));
+      return Promise.reject(
+        createDeclinedConsentError('No consent preferences have been set.')
+      );
     };
 
     var awaitOut = function awaitOut() {
-      return Promise.reject(createDeclinedConsentError("The user declined consent."));
+      return Promise.reject(
+        createDeclinedConsentError('The user declined consent.')
+      );
     };
 
+    // @ts-ignore
     var awaitPending = function awaitPending(returnImmediately) {
       if (returnImmediately) {
-        return Promise.reject(new Error("Consent is pending."));
+        return Promise.reject(new Error('Consent is pending.'));
       }
 
       var deferred = defer();
@@ -3686,48 +4315,69 @@
     };
 
     return {
+      // @ts-ignore
       in: function _in(source) {
         if (source === CONSENT_SOURCE_DEFAULT) {
+          // @ts-ignore
           this.awaitConsent = awaitInDefault;
         } else {
           if (source === CONSENT_SOURCE_INITIAL) {
-            logger.info("Loaded user consent preferences. The user previously consented.");
-          } else if (source === CONSENT_SOURCE_NEW && this.awaitConsent !== awaitIn) {
-            logger.info("User consented.");
+            logger.info(
+              'Loaded user consent preferences. The user previously consented.'
+            );
+          } else if (
+            source === CONSENT_SOURCE_NEW &&
+            this.awaitConsent !== awaitIn
+          ) {
+            logger.info('User consented.');
           }
 
           runAll();
+          // @ts-ignore
           this.awaitConsent = awaitIn;
         }
       },
+      // @ts-ignore
       out: function out(source) {
         if (source === CONSENT_SOURCE_DEFAULT) {
-          logger.warn("User consent preferences not found. Default consent of out will be used.");
+          logger.warn(
+            'User consent preferences not found. Default consent of out will be used.'
+          );
           this.awaitConsent = awaitOutDefault;
         } else {
           if (source === CONSENT_SOURCE_INITIAL) {
-            logger.warn("Loaded user consent preferences. The user previously declined consent.");
-          } else if (source === CONSENT_SOURCE_NEW && this.awaitConsent !== awaitOut) {
-            logger.warn("User declined consent.");
+            logger.warn(
+              'Loaded user consent preferences. The user previously declined consent.'
+            );
+          } else if (
+            source === CONSENT_SOURCE_NEW &&
+            this.awaitConsent !== awaitOut
+          ) {
+            logger.warn('User declined consent.');
           }
 
           discardAll();
           this.awaitConsent = awaitOut;
         }
       },
+      // @ts-ignore
       pending: function pending(source) {
         if (source === CONSENT_SOURCE_DEFAULT) {
-          logger.info("User consent preferences not found. Default consent of pending will be used. Some commands may be delayed.");
+          logger.info(
+            'User consent preferences not found. Default consent of pending will be used. Some commands may be delayed.'
+          );
         }
 
+        // @ts-ignore
         this.awaitConsent = awaitPending;
       },
       awaitConsent: awaitInitial,
       withConsent: function withConsent() {
+        // @ts-ignore
         return this.awaitConsent(true);
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -3740,10 +4390,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createConsent = (function (_ref) {
+  // @ts-ignore
+  var createConsent = function (_ref) {
     var generalConsentState = _ref.generalConsentState,
-        logger = _ref.logger;
+      logger = _ref.logger;
 
+    // @ts-ignore
     var _setConsent = function setConsent(consentByPurpose, source) {
       switch (consentByPurpose[GENERAL]) {
         case IN:
@@ -3759,19 +4411,25 @@
           break;
 
         default:
-          logger.warn("Unknown consent value: " + consentByPurpose[GENERAL]);
+          logger.warn('Unknown consent value: ' + consentByPurpose[GENERAL]);
           break;
       }
     };
 
     return {
-      initializeConsent: function initializeConsent(defaultConsentByPurpose, storedConsentByPurpose) {
+      initializeConsent: function initializeConsent(
+        // @ts-ignore
+        defaultConsentByPurpose,
+        // @ts-ignore
+        storedConsentByPurpose
+      ) {
         if (storedConsentByPurpose[GENERAL]) {
           _setConsent(storedConsentByPurpose, CONSENT_SOURCE_INITIAL);
         } else {
           _setConsent(defaultConsentByPurpose, CONSENT_SOURCE_DEFAULT);
         }
       },
+      // @ts-ignore
       setConsent: function setConsent(consentByPurpose) {
         _setConsent(consentByPurpose, CONSENT_SOURCE_NEW);
       },
@@ -3783,9 +4441,9 @@
       },
       withConsent: function withConsent() {
         return generalConsentState.withConsent();
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -3798,72 +4456,85 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createEvent = (function () {
+  var createEvent = function () {
     var content = {};
+    // @ts-ignore
     var userXdm;
+    // @ts-ignore
     var userData;
     var _documentMayUnload = false;
     var isFinalized = false;
     var shouldSendEvent = true;
 
+    // @ts-ignore
     var throwIfEventFinalized = function throwIfEventFinalized(methodName) {
       if (isFinalized) {
-        throw new Error(methodName + " cannot be called after event is finalized.");
+        throw new Error(
+          methodName + ' cannot be called after event is finalized.'
+        );
       }
     };
 
     var event = {
+      // @ts-ignore
       setUserXdm: function setUserXdm(value) {
-        throwIfEventFinalized("setUserXdm");
+        throwIfEventFinalized('setUserXdm');
         userXdm = value;
       },
+      // @ts-ignore
       setUserData: function setUserData(value) {
-        throwIfEventFinalized("setUserData");
+        throwIfEventFinalized('setUserData');
         userData = value;
       },
+      // @ts-ignore
       mergeXdm: function mergeXdm(xdm) {
-        throwIfEventFinalized("mergeXdm");
+        throwIfEventFinalized('mergeXdm');
 
         if (xdm) {
           deepAssign(content, {
-            xdm: xdm
+            xdm: xdm,
           });
         }
       },
+      // @ts-ignore
       mergeMeta: function mergeMeta(meta) {
-        throwIfEventFinalized("mergeMeta");
+        throwIfEventFinalized('mergeMeta');
 
         if (meta) {
           deepAssign(content, {
-            meta: meta
+            meta: meta,
           });
         }
       },
+      // @ts-ignore
       mergeQuery: function mergeQuery(query) {
-        throwIfEventFinalized("mergeQuery");
+        throwIfEventFinalized('mergeQuery');
 
         if (query) {
           deepAssign(content, {
-            query: query
+            query: query,
           });
         }
       },
       documentMayUnload: function documentMayUnload() {
         _documentMayUnload = true;
       },
+      // @ts-ignore
       finalize: function finalize(onBeforeEventSend) {
         if (isFinalized) {
           return;
         }
 
+        // @ts-ignore
         if (userXdm) {
           event.mergeXdm(userXdm);
         }
 
+        // @ts-ignore
         if (userData) {
+          // @ts-ignore
           content.data = userData;
         } // the event should already be considered finalized in case onBeforeEventSend throws an error
-
 
         isFinalized = true;
 
@@ -3873,19 +4544,27 @@
           // on the object passed to the callback
 
           var tempContent = {
+            // @ts-ignore
             xdm: content.xdm || {},
-            data: content.data || {}
+            // @ts-ignore
+            data: content.data || {},
           };
           var result = onBeforeEventSend(tempContent);
           shouldSendEvent = result !== false;
+          // @ts-ignore
           content.xdm = tempContent.xdm || {};
+          // @ts-ignore
           content.data = tempContent.data || {};
 
+          // @ts-ignore
           if (isEmptyObject(content.xdm)) {
+            // @ts-ignore
             delete content.xdm;
           }
 
+          // @ts-ignore
           if (isEmptyObject(content.data)) {
+            // @ts-ignore
             delete content.data;
           }
         }
@@ -3894,12 +4573,19 @@
         return _documentMayUnload;
       },
       isEmpty: function isEmpty() {
-        return isEmptyObject(content) && (!userXdm || isEmptyObject(userXdm)) && (!userData || isEmptyObject(userData));
+        return (
+          isEmptyObject(content) &&
+          // @ts-ignore
+          (!userXdm || isEmptyObject(userXdm)) &&
+          // @ts-ignore
+          (!userData || isEmptyObject(userData))
+        );
       },
       shouldSend: function shouldSend() {
         return shouldSendEvent;
       },
       getViewName: function getViewName() {
+        // @ts-ignore
         if (!userXdm || !userXdm.web || !userXdm.web.webPageDetails) {
           return undefined;
         }
@@ -3908,14 +4594,14 @@
       },
       toJSON: function toJSON() {
         if (!isFinalized) {
-          throw new Error("toJSON called before finalize");
+          throw new Error('toJSON called before finalize');
         }
 
         return content;
-      }
+      },
     };
     return event;
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -3928,8 +4614,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var RETRY_AFTER = "Retry-After";
-  var ADOBE_EDGE = "x-adobe-edge";
+  var RETRY_AFTER = 'Retry-After';
+  var ADOBE_EDGE = 'x-adobe-edge';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -3948,18 +4634,20 @@
    * @returns Response
    */
 
-  var injectCreateResponse = (function (_ref) {
+  // @ts-ignore
+  var injectCreateResponse = function (_ref) {
     var extractEdgeInfo = _ref.extractEdgeInfo;
+    // @ts-ignore
     return function (_ref2) {
       var _ref2$content = _ref2.content,
-          content = _ref2$content === void 0 ? {} : _ref2$content,
-          getHeader = _ref2.getHeader;
+        content = _ref2$content === void 0 ? {} : _ref2$content,
+        getHeader = _ref2.getHeader;
       var _content$handle = content.handle,
-          handle = _content$handle === void 0 ? [] : _content$handle,
-          _content$errors = content.errors,
-          errors = _content$errors === void 0 ? [] : _content$errors,
-          _content$warnings = content.warnings,
-          warnings = _content$warnings === void 0 ? [] : _content$warnings;
+        handle = _content$handle === void 0 ? [] : _content$handle,
+        _content$errors = content.errors,
+        errors = _content$errors === void 0 ? [] : _content$errors,
+        _content$warnings = content.warnings,
+        warnings = _content$warnings === void 0 ? [] : _content$warnings;
       /**
        * Response object.
        * @typedef {Object} Response
@@ -3974,11 +4662,16 @@
          * getPayloadsByType("identity:persist")
          */
         getPayloadsByType: function getPayloadsByType(type) {
-          return flatMap(handle.filter(function (fragment) {
-            return fragment.type === type;
-          }), function (fragment) {
-            return fragment.payload;
-          });
+          return flatMap(
+            // @ts-ignore
+            handle.filter(function (fragment) {
+              return fragment.type === type;
+            }),
+            // @ts-ignore
+            function (fragment) {
+              return fragment.payload;
+            }
+          );
         },
 
         /**
@@ -4003,10 +4696,10 @@
         },
         toJSON: function toJSON() {
           return content;
-        }
+        },
       };
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -4019,8 +4712,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var CONFIGURE = "configure";
-  var SET_DEBUG = "setDebug";
+  var CONFIGURE = 'configure';
+  var SET_DEBUG = 'setDebug';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -4033,30 +4726,40 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectExecuteCommand = (function (_ref) {
+  // @ts-ignore
+  var injectExecuteCommand = function (_ref) {
     var logger = _ref.logger,
-        configureCommand = _ref.configureCommand,
-        setDebugCommand = _ref.setDebugCommand,
-        handleError = _ref.handleError,
-        validateCommandOptions = _ref.validateCommandOptions;
+      configureCommand = _ref.configureCommand,
+      setDebugCommand = _ref.setDebugCommand,
+      handleError = _ref.handleError,
+      validateCommandOptions = _ref.validateCommandOptions;
+    // @ts-ignore
     var configurePromise;
 
+    // @ts-ignore
     var getExecutor = function getExecutor(commandName, options) {
       var executor;
 
       if (commandName === CONFIGURE) {
+        // @ts-ignore
         if (configurePromise) {
-          throw new Error("The library has already been configured and may only be configured once.");
+          throw new Error(
+            'The library has already been configured and may only be configured once.'
+          );
         }
 
         executor = function executor() {
           configurePromise = configureCommand(options);
-          return configurePromise.then(function () {// Don't expose internals to the user.
+          return configurePromise.then(function () {
+            // Don't expose internals to the user.
           });
         };
       } else {
+        // @ts-ignore
         if (!configurePromise) {
-          throw new Error("The library must be configured first. Please do so by executing the configure command.");
+          throw new Error(
+            'The library must be configured first. Please do so by executing the configure command.'
+          );
         }
 
         if (commandName === SET_DEBUG) {
@@ -4065,30 +4768,47 @@
           };
         } else {
           executor = function executor() {
-            return configurePromise.then(function (componentRegistry) {
-              var command = componentRegistry.getCommand(commandName);
+            // @ts-ignore
+            return configurePromise.then(
+              // @ts-ignore
+              function (componentRegistry) {
+                var command = componentRegistry.getCommand(commandName);
 
-              if (!command || !isFunction(command.run)) {
-                var commandNames = [CONFIGURE, SET_DEBUG].concat(componentRegistry.getCommandNames()).join(", ");
-                throw new Error("The " + commandName + " command does not exist. List of available commands: " + commandNames + ".");
+                if (!command || !isFunction(command.run)) {
+                  var commandNames = [CONFIGURE, SET_DEBUG]
+                    .concat(componentRegistry.getCommandNames())
+                    .join(', ');
+                  throw new Error(
+                    'The ' +
+                      commandName +
+                      ' command does not exist. List of available commands: ' +
+                      commandNames +
+                      '.'
+                  );
+                }
+
+                var validatedOptions = validateCommandOptions({
+                  command: command,
+                  options: options,
+                });
+                return command.run(validatedOptions);
+              },
+              function () {
+                logger.warn(
+                  'An error during configuration is preventing the ' +
+                    commandName +
+                    ' command from executing.'
+                ); // If configuration failed, we prevent the configuration
+                // error from bubbling here because we don't want the
+                // configuration error to be reported in the console every
+                // time any command is executed. Only having it bubble
+                // once when the configure command runs is sufficient.
+                // Instead, for this command, we'll just return a promise
+                // that never gets resolved.
+
+                return new Promise(function () {});
               }
-
-              var validatedOptions = validateCommandOptions({
-                command: command,
-                options: options
-              });
-              return command.run(validatedOptions);
-            }, function () {
-              logger.warn("An error during configuration is preventing the " + commandName + " command from executing."); // If configuration failed, we prevent the configuration
-              // error from bubbling here because we don't want the
-              // configuration error to be reported in the console every
-              // time any command is executed. Only having it bubble
-              // once when the configure command runs is sufficient.
-              // Instead, for this command, we'll just return a promise
-              // that never gets resolved.
-
-              return new Promise(function () {});
-            });
+            );
           };
         }
       }
@@ -4096,38 +4816,43 @@
       return executor;
     };
 
+    // @ts-ignore
     return function (commandName) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var options =
+        arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       return new Promise(function (resolve) {
         // We have to wrap the getExecutor() call in the promise so the promise
         // will be rejected if getExecutor() throws errors.
         var executor = getExecutor(commandName, options);
         logger.logOnBeforeCommand({
           commandName: commandName,
-          options: options
+          options: options,
         });
         resolve(executor());
-      }).catch(function (error) {
-        return handleError(error, commandName + " command");
-      }).catch(function (error) {
-        logger.logOnCommandRejected({
-          commandName: commandName,
-          options: options,
-          error: error
+      })
+        .catch(function (error) {
+          return handleError(error, commandName + ' command');
+        })
+        .catch(function (error) {
+          logger.logOnCommandRejected({
+            commandName: commandName,
+            options: options,
+            error: error,
+          });
+          throw error;
+        })
+        .then(function (rawResult) {
+          // We should always be returning an object from every command.
+          var result = isObject(rawResult) ? rawResult : {};
+          logger.logOnCommandResolved({
+            commandName: commandName,
+            options: options,
+            result: result,
+          });
+          return result;
         });
-        throw error;
-      }).then(function (rawResult) {
-        // We should always be returning an object from every command.
-        var result = isObject(rawResult) ? rawResult : {};
-        logger.logOnCommandResolved({
-          commandName: commandName,
-          options: options,
-          result: result
-        });
-        return result;
-      });
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -4140,27 +4865,37 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var COMMAND_DOC_URI = "https://adobe.ly/3sHgQHb";
-  var validateCommandOptions = (function (_ref) {
+  var COMMAND_DOC_URI = 'https://adobe.ly/3sHgQHb';
+  // @ts-ignore
+  var validateCommandOptions = function (_ref) {
     var command = _ref.command,
-        options = _ref.options;
+      options = _ref.options;
     var commandName = command.commandName,
-        _command$documentatio = command.documentationUri,
-        documentationUri = _command$documentatio === void 0 ? COMMAND_DOC_URI : _command$documentatio,
-        optionsValidator = command.optionsValidator;
+      _command$documentatio = command.documentationUri,
+      documentationUri =
+        _command$documentatio === void 0
+          ? COMMAND_DOC_URI
+          : _command$documentatio,
+      optionsValidator = command.optionsValidator;
     var validatedOptions = options;
 
     if (optionsValidator) {
       try {
         validatedOptions = optionsValidator(options);
       } catch (validationError) {
-        var invalidOptionsMessage = "Invalid " + commandName + " command options:\n\t - " + validationError + " For command documentation see: " + documentationUri;
+        var invalidOptionsMessage =
+          'Invalid ' +
+          commandName +
+          ' command options:\n\t - ' +
+          validationError +
+          ' For command documentation see: ' +
+          documentationUri;
         throw new Error(invalidOptionsMessage);
       }
     }
 
     return validatedOptions;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -4179,28 +4914,35 @@
    * @returns {*} Validated options
    */
 
-  var validateUserEventOptions = (function (_ref) {
+  // @ts-ignore
+  var validateUserEventOptions = function (_ref) {
     var options = _ref.options;
     var eventOptionsValidator = boundObjectOf({
       type: boundString(),
       xdm: boundObjectOf({
         eventType: boundString(),
-        identityMap: validateIdentityMap
+        identityMap: validateIdentityMap,
       }),
       data: boundObjectOf({}),
       documentUnloading: boundBoolean(),
       renderDecisions: boundBoolean(),
+      // @ts-ignore
       decisionScopes: boundArrayOf(boundString()).uniqueItems(),
       personalization: boundObjectOf({
+        // @ts-ignore
         decisionScopes: boundArrayOf(boundString()).uniqueItems(),
-        surfaces: boundArrayOf(boundString()).uniqueItems()
+        // @ts-ignore
+        surfaces: boundArrayOf(boundString()).uniqueItems(),
       }),
       datasetId: boundString(),
       mergeId: boundString(),
-      edgeConfigOverrides: validateConfigOverride
-    }).required().noUnknownFields();
+      edgeConfigOverrides: validateConfigOverride,
+    })
+      // @ts-ignore
+      .required()
+      .noUnknownFields();
     return eventOptionsValidator(options);
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -4213,20 +4955,29 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var validateApplyResponse = (function (_ref) {
+  // @ts-ignore
+  var validateApplyResponse = function (_ref) {
     var options = _ref.options;
     var validator = boundObjectOf({
       renderDecisions: boundBoolean(),
+      // @ts-ignore
       responseHeaders: boundMapOfValues(boundString().required()),
       responseBody: boundObjectOf({
-        handle: boundArrayOf(boundObjectOf({
-          type: boundString().required(),
-          payload: boundAnything().required()
-        })).required()
-      }).required()
+        handle: boundArrayOf(
+          boundObjectOf({
+            // @ts-ignore
+            type: boundString().required(),
+            // @ts-ignore
+            payload: boundAnything().required(),
+          })
+          // @ts-ignore
+        ).required(),
+        // @ts-ignore
+      }).required(),
+      // @ts-ignore
     }).noUnknownFields();
     return validator(options);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -4240,33 +4991,44 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createDataCollector = function createDataCollector(_ref) {
     var eventManager = _ref.eventManager,
-        logger = _ref.logger;
+      logger = _ref.logger;
     return {
       commands: {
         sendEvent: {
-          documentationUri: "https://adobe.ly/3GQ3Q7t",
+          documentationUri: 'https://adobe.ly/3GQ3Q7t',
+          // @ts-ignore
           optionsValidator: function optionsValidator(options) {
             return validateUserEventOptions({
-              options: options
+              options: options,
             });
           },
+          // @ts-ignore
           run: function run(options) {
             var xdm = options.xdm,
-                data = options.data,
-                _options$documentUnlo = options.documentUnloading,
-                documentUnloading = _options$documentUnlo === void 0 ? false : _options$documentUnlo,
-                type = options.type,
-                mergeId = options.mergeId,
-                _options$renderDecisi = options.renderDecisions,
-                renderDecisions = _options$renderDecisi === void 0 ? false : _options$renderDecisi,
-                _options$decisionScop = options.decisionScopes,
-                decisionScopes = _options$decisionScop === void 0 ? [] : _options$decisionScop,
-                _options$personalizat = options.personalization,
-                personalization = _options$personalizat === void 0 ? {} : _options$personalizat,
-                datasetId = options.datasetId,
-                edgeConfigOverrides = options.edgeConfigOverrides;
+              data = options.data,
+              _options$documentUnlo = options.documentUnloading,
+              documentUnloading =
+                _options$documentUnlo === void 0
+                  ? false
+                  : _options$documentUnlo,
+              type = options.type,
+              mergeId = options.mergeId,
+              _options$renderDecisi = options.renderDecisions,
+              renderDecisions =
+                _options$renderDecisi === void 0
+                  ? false
+                  : _options$renderDecisi,
+              _options$decisionScop = options.decisionScopes,
+              decisionScopes =
+                _options$decisionScop === void 0 ? [] : _options$decisionScop,
+              _options$personalizat = options.personalization,
+              personalization =
+                _options$personalizat === void 0 ? {} : _options$personalizat,
+              datasetId = options.datasetId,
+              edgeConfigOverrides = options.edgeConfigOverrides;
             var event = eventManager.createEvent();
 
             if (documentUnloading) {
@@ -4278,72 +5040,86 @@
 
             if (type) {
               event.mergeXdm({
-                eventType: type
+                eventType: type,
               });
             }
 
             if (mergeId) {
               event.mergeXdm({
-                eventMergeId: mergeId
+                eventMergeId: mergeId,
               });
             }
 
             var sendEventOptions = {
               renderDecisions: renderDecisions,
               decisionScopes: decisionScopes,
-              personalization: personalization
+              personalization: personalization,
             };
 
             if (edgeConfigOverrides) {
+              // @ts-ignore
               sendEventOptions.edgeConfigOverrides = edgeConfigOverrides;
             }
 
             if (datasetId) {
-              logger.warn("The 'datasetId' option has been deprecated. Please use 'edgeConfigOverrides.experience_platform.datasets.event' instead.");
+              logger.warn(
+                "The 'datasetId' option has been deprecated. Please use 'edgeConfigOverrides.experience_platform.datasets.event' instead."
+              );
+              // @ts-ignore
               sendEventOptions.edgeConfigOverrides = edgeConfigOverrides || {};
+              // @ts-ignore
               deepAssign(sendEventOptions.edgeConfigOverrides, {
                 com_adobe_experience_platform: {
                   datasets: {
                     event: {
-                      datasetId: datasetId
-                    }
-                  }
-                }
+                      datasetId: datasetId,
+                    },
+                  },
+                },
               });
             }
 
             return eventManager.sendEvent(event, sendEventOptions);
-          }
+          },
         },
         applyResponse: {
-          documentationUri: "",
+          documentationUri: '',
+          // @ts-ignore
           optionsValidator: function optionsValidator(options) {
             return validateApplyResponse({
-              options: options
+              options: options,
             });
           },
+          // @ts-ignore
           run: function run(options) {
             var _options$renderDecisi2 = options.renderDecisions,
-                renderDecisions = _options$renderDecisi2 === void 0 ? false : _options$renderDecisi2,
-                _options$responseHead = options.responseHeaders,
-                responseHeaders = _options$responseHead === void 0 ? {} : _options$responseHead,
-                _options$responseBody = options.responseBody,
-                responseBody = _options$responseBody === void 0 ? {
-              handle: []
-            } : _options$responseBody;
+              renderDecisions =
+                _options$renderDecisi2 === void 0
+                  ? false
+                  : _options$renderDecisi2,
+              _options$responseHead = options.responseHeaders,
+              responseHeaders =
+                _options$responseHead === void 0 ? {} : _options$responseHead,
+              _options$responseBody = options.responseBody,
+              responseBody =
+                _options$responseBody === void 0
+                  ? {
+                      handle: [],
+                    }
+                  : _options$responseBody;
             var event = eventManager.createEvent();
             return eventManager.applyResponse(event, {
               renderDecisions: renderDecisions,
               responseHeaders: responseHeaders,
-              responseBody: responseBody
+              responseBody: responseBody,
             });
-          }
-        }
-      }
+          },
+        },
+      },
     };
   };
 
-  createDataCollector.namespace = "DataCollector";
+  createDataCollector.namespace = 'DataCollector';
   createDataCollector.configValidators = {};
 
   /*
@@ -4358,44 +5134,53 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createClickHandler = function createClickHandler(_ref) {
     var eventManager = _ref.eventManager,
-        lifecycle = _ref.lifecycle,
-        handleError = _ref.handleError;
+      lifecycle = _ref.lifecycle,
+      handleError = _ref.handleError;
+    // @ts-ignore
     return function (clickEvent) {
       // TODO: Consider safeguarding from the same object being clicked multiple times in rapid succession?
       var clickedElement = clickEvent.target;
       var event = eventManager.createEvent(); // this is to make sure a exit link personalization metric use send beacon
 
       event.documentMayUnload();
-      return lifecycle.onClick({
-        event: event,
-        clickedElement: clickedElement
-      }).then(function () {
-        if (event.isEmpty()) {
-          return Promise.resolve();
-        }
+      return (
+        lifecycle
+          .onClick({
+            event: event,
+            clickedElement: clickedElement,
+          })
+          .then(function () {
+            if (event.isEmpty()) {
+              return Promise.resolve();
+            }
 
-        return eventManager.sendEvent(event);
-      }) // eventManager.sendEvent() will return a promise resolved to an
-      // object and we want to avoid returning any value to the customer
-      .then(noop$1).catch(function (error) {
-        handleError(error, "click collection");
-      });
+            return eventManager.sendEvent(event);
+          }) // eventManager.sendEvent() will return a promise resolved to an
+          // object and we want to avoid returning any value to the customer
+          .then(noop$1)
+          // @ts-ignore
+          .catch(function (error) {
+            handleError(error, 'click collection');
+          })
+      );
     };
   };
 
-  var attachClickActivityCollector = (function (_ref2) {
+  // @ts-ignore
+  var attachClickActivityCollector = function (_ref2) {
     var eventManager = _ref2.eventManager,
-        lifecycle = _ref2.lifecycle,
-        handleError = _ref2.handleError;
+      lifecycle = _ref2.lifecycle,
+      handleError = _ref2.handleError;
     var clickHandler = createClickHandler({
       eventManager: eventManager,
       lifecycle: lifecycle,
-      handleError: handleError
+      handleError: handleError,
     });
-    document.addEventListener("click", clickHandler, true);
-  });
+    document.addEventListener('click', clickHandler, true);
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -4409,9 +5194,15 @@
   governing permissions and limitations under the License.
   */
   var configValidators$1 = {
+    // @ts-ignore
     clickCollectionEnabled: boundBoolean().default(true),
-    downloadLinkQualifier: boundString().regexp().default("\\.(exe|zip|wav|mp3|mov|mpg|avi|wmv|pdf|doc|docx|xls|xlsx|ppt|pptx)$"),
-    onBeforeLinkClickSend: boundCallback()
+    downloadLinkQualifier: boundString()
+      // @ts-ignore
+      .regexp()
+      .default(
+        '\\.(exe|zip|wav|mp3|mov|mpg|avi|wmv|pdf|doc|docx|xls|xlsx|ppt|pptx)$'
+      ),
+    onBeforeLinkClickSend: boundCallback(),
   };
 
   /*
@@ -4425,10 +5216,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createLinkClick = (function (_ref) {
+  // @ts-ignore
+  var createLinkClick = function (_ref) {
     var getLinkDetails = _ref.getLinkDetails,
-        config = _ref.config,
-        logger = _ref.logger;
+      config = _ref.config,
+      logger = _ref.logger;
     var clickCollectionEnabled = config.clickCollectionEnabled;
 
     if (!clickCollectionEnabled) {
@@ -4437,13 +5229,14 @@
       };
     }
 
+    // @ts-ignore
     return function (_ref2) {
       var targetElement = _ref2.targetElement,
-          event = _ref2.event;
+        event = _ref2.event;
       var linkDetails = getLinkDetails({
         targetElement: targetElement,
         config: config,
-        logger: logger
+        logger: logger,
       });
 
       if (linkDetails) {
@@ -4451,7 +5244,7 @@
         event.setUserData(linkDetails.data);
       }
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -4464,28 +5257,34 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createGetLinkDetails = (function (_ref) {
+  // @ts-ignore
+  var createGetLinkDetails = function (_ref) {
     var window = _ref.window,
-        getLinkName = _ref.getLinkName,
-        getLinkRegion = _ref.getLinkRegion,
-        getAbsoluteUrlFromAnchorElement = _ref.getAbsoluteUrlFromAnchorElement,
-        findSupportedAnchorElement = _ref.findSupportedAnchorElement,
-        determineLinkType = _ref.determineLinkType;
+      getLinkName = _ref.getLinkName,
+      getLinkRegion = _ref.getLinkRegion,
+      getAbsoluteUrlFromAnchorElement = _ref.getAbsoluteUrlFromAnchorElement,
+      findSupportedAnchorElement = _ref.findSupportedAnchorElement,
+      determineLinkType = _ref.determineLinkType;
+    // @ts-ignore
     return function (_ref2) {
       var targetElement = _ref2.targetElement,
-          config = _ref2.config,
-          logger = _ref2.logger;
+        config = _ref2.config,
+        logger = _ref2.logger;
       var anchorElement = findSupportedAnchorElement(targetElement);
 
       if (!anchorElement) {
-        logger.info("This link click event is not triggered because the HTML element is not an anchor.");
+        logger.info(
+          'This link click event is not triggered because the HTML element is not an anchor.'
+        );
         return undefined;
       }
 
       var linkUrl = getAbsoluteUrlFromAnchorElement(window, anchorElement);
 
       if (!linkUrl) {
-        logger.info("This link click event is not triggered because the HTML element doesn't have an URL.");
+        logger.info(
+          "This link click event is not triggered because the HTML element doesn't have an URL."
+        );
         return undefined;
       }
 
@@ -4495,7 +5294,7 @@
       var onBeforeLinkClickSend = config.onBeforeLinkClickSend;
       var options = {
         xdm: {
-          eventType: "web.webinteraction.linkClicks",
+          eventType: 'web.webinteraction.linkClicks',
           web: {
             webInteraction: {
               name: linkName,
@@ -4503,13 +5302,13 @@
               type: linkType,
               URL: linkUrl,
               linkClicks: {
-                value: 1
-              }
-            }
-          }
+                value: 1,
+              },
+            },
+          },
         },
         data: {},
-        clickedElement: targetElement
+        clickedElement: targetElement,
       };
 
       if (!onBeforeLinkClickSend) {
@@ -4522,10 +5321,12 @@
         return options;
       }
 
-      logger.info("This link click event is not triggered because it was canceled in onBeforeLinkClickSend.");
+      logger.info(
+        'This link click event is not triggered because it was canceled in onBeforeLinkClickSend.'
+      );
       return undefined;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -4538,54 +5339,72 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
+  // @ts-ignore
   var urlStartsWithScheme = function urlStartsWithScheme(url) {
     return url && /^[a-z0-9]+:\/\//i.test(url);
   };
 
-  var getAbsoluteUrlFromAnchorElement = function getAbsoluteUrlFromAnchorElement(window, element) {
-    var loc = window.location;
-    var url = element.href ? element.href : "";
-    var protocol = element.protocol,
+  var getAbsoluteUrlFromAnchorElement =
+    // @ts-ignore
+    function getAbsoluteUrlFromAnchorElement(window, element) {
+      var loc = window.location;
+      var url = element.href ? element.href : '';
+      var protocol = element.protocol,
         host = element.host;
 
-    if (!urlStartsWithScheme(url)) {
-      if (!protocol) {
-        protocol = loc.protocol ? loc.protocol : "";
+      if (!urlStartsWithScheme(url)) {
+        if (!protocol) {
+          protocol = loc.protocol ? loc.protocol : '';
+        }
+
+        protocol = protocol ? protocol + '//' : '';
+
+        if (!host) {
+          host = loc.host ? loc.host : '';
+        }
+
+        var path = '';
+
+        if (url.substring(0, 1) !== '/') {
+          var indx = loc.pathname.lastIndexOf('/');
+          indx = indx < 0 ? 0 : indx;
+          path = loc.pathname.substring(0, indx);
+        }
+
+        url = '' + protocol + host + path + '/' + url;
       }
 
-      protocol = protocol ? protocol + "//" : "";
+      return url;
+    };
 
-      if (!host) {
-        host = loc.host ? loc.host : "";
-      }
-
-      var path = "";
-
-      if (url.substring(0, 1) !== "/") {
-        var indx = loc.pathname.lastIndexOf("/");
-        indx = indx < 0 ? 0 : indx;
-        path = loc.pathname.substring(0, indx);
-      }
-
-      url = "" + protocol + host + path + "/" + url;
-    }
-
-    return url;
-  };
-
+  // @ts-ignore
   var isSupportedAnchorElement = function isSupportedAnchorElement(element) {
-    if (element.href && (element.tagName === "A" || element.tagName === "AREA") && (!element.onclick || !element.protocol || element.protocol.toLowerCase().indexOf("javascript") < 0)) {
+    if (
+      element.href &&
+      (element.tagName === 'A' || element.tagName === 'AREA') &&
+      (!element.onclick ||
+        !element.protocol ||
+        element.protocol.toLowerCase().indexOf('javascript') < 0)
+    ) {
       return true;
     }
 
     return false;
   };
 
-  var isDownloadLink = function isDownloadLink(downloadLinkQualifier, linkUrl, clickedObj) {
+  var isDownloadLink = function isDownloadLink(
+    // @ts-ignore
+    downloadLinkQualifier,
+    // @ts-ignore
+    linkUrl,
+    // @ts-ignore
+    clickedObj
+  ) {
     var re = new RegExp(downloadLinkQualifier);
     return clickedObj.download ? true : re.test(linkUrl.toLowerCase());
   };
 
+  // @ts-ignore
   var isExitLink = function isExitLink(window, linkUrl) {
     var currentHostname = window.location.hostname.toLowerCase();
 
@@ -4603,24 +5422,35 @@
    * @returns {string} Formatted string.
    */
 
-
   var truncateWhiteSpace = function truncateWhiteSpace(str) {
-    return str && str.replace(/\s+/g, " ").trim();
+    return str && str.replace(/\s+/g, ' ').trim();
   };
 
-  var determineLinkType = function determineLinkType(window, config, linkUrl, clickedObj) {
-    var linkType = "other";
+  var determineLinkType = function determineLinkType(
+    // @ts-ignore
+    window,
+    // @ts-ignore
+    config,
+    // @ts-ignore
+    linkUrl,
+    // @ts-ignore
+    clickedObj
+  ) {
+    var linkType = 'other';
 
     if (isDownloadLink(config.downloadLinkQualifier, linkUrl, clickedObj)) {
-      linkType = "download";
+      linkType = 'download';
     } else if (isExitLink(window, linkUrl)) {
-      linkType = "exit";
+      linkType = 'exit';
     }
 
     return linkType;
   };
 
-  var findSupportedAnchorElement = function findSupportedAnchorElement(targetElement) {
+  var findSupportedAnchorElement = function findSupportedAnchorElement(
+    // @ts-ignore
+    targetElement
+  ) {
     var node = targetElement;
 
     while (node) {
@@ -4668,8 +5498,8 @@
    * @returns {{supportedNodes: Array, includesUnsupportedNodes: boolean}} Node support object.
    */
 
-
   var extractSupportedNodes = function extractSupportedNodes(node) {
+    // @ts-ignore
     var supportedNodes = [];
     var includesUnsupportedNodes = false;
 
@@ -4680,8 +5510,10 @@
         var childNodes = Array.prototype.slice.call(node.childNodes);
         childNodes.forEach(function (childNode) {
           var nodes = extractSupportedNodes(childNode);
+          // @ts-ignore
           supportedNodes = supportedNodes.concat(nodes.supportedNodes);
-          includesUnsupportedNodes = includesUnsupportedNodes || nodes.includesUnsupportedNodes;
+          includesUnsupportedNodes =
+            includesUnsupportedNodes || nodes.includesUnsupportedNodes;
         });
       }
     } else {
@@ -4690,7 +5522,7 @@
 
     return {
       supportedNodes: supportedNodes,
-      includesUnsupportedNodes: includesUnsupportedNodes
+      includesUnsupportedNodes: includesUnsupportedNodes,
     };
   };
   /**
@@ -4701,8 +5533,11 @@
    * @returns {string} Attribute value or undefined.
    */
 
-
-  var getNodeAttributeValue = function getNodeAttributeValue(node, attributeName, nodeName) {
+  var getNodeAttributeValue = function getNodeAttributeValue(
+    node,
+    attributeName,
+    nodeName
+  ) {
     var attributeValue;
 
     if (!nodeName || nodeName === node.nodeName.toUpperCase()) {
@@ -4717,31 +5552,48 @@
    * The returned map contains the supported not empty children attributes values.
    * */
 
-
   var getChildrenAttributes = function getChildrenAttributes(nodes) {
     var attributes = {
-      texts: []
+      texts: [],
     };
+    // @ts-ignore
     nodes.supportedNodes.forEach(function (supportedNode) {
       if (supportedNode.getAttribute) {
+        // @ts-ignore
         if (!attributes.alt) {
-          attributes.alt = truncateWhiteSpace(supportedNode.getAttribute("alt"));
+          // @ts-ignore
+          attributes.alt = truncateWhiteSpace(
+            supportedNode.getAttribute('alt')
+          );
         }
 
+        // @ts-ignore
         if (!attributes.title) {
-          attributes.title = truncateWhiteSpace(supportedNode.getAttribute("title"));
+          // @ts-ignore
+          attributes.title = truncateWhiteSpace(
+            supportedNode.getAttribute('title')
+          );
         }
 
+        // @ts-ignore
         if (!attributes.inputValue) {
-          attributes.inputValue = truncateWhiteSpace(getNodeAttributeValue(supportedNode, "value", "INPUT"));
+          // @ts-ignore
+          attributes.inputValue = truncateWhiteSpace(
+            getNodeAttributeValue(supportedNode, 'value', 'INPUT')
+          );
         }
 
+        // @ts-ignore
         if (!attributes.imgSrc) {
-          attributes.imgSrc = truncateWhiteSpace(getNodeAttributeValue(supportedNode, "src", "IMG"));
+          // @ts-ignore
+          attributes.imgSrc = truncateWhiteSpace(
+            getNodeAttributeValue(supportedNode, 'src', 'IMG')
+          );
         }
       }
 
       if (supportedNode.nodeValue) {
+        // @ts-ignore
         attributes.texts.push(supportedNode.nodeValue);
       }
     });
@@ -4768,22 +5620,29 @@
    * @returns {string} link-name or an empty string if not link-name is found.
    */
 
-
-  var getLinkName = (function (node) {
+  var getLinkName = function (node) {
     var nodeText = truncateWhiteSpace(node.innerText || node.textContent);
     var nodes = extractSupportedNodes(node); // if contains unsupported nodes we want children node attributes
 
     if (!nodeText || nodes.includesUnsupportedNodes) {
       var attributesMap = getChildrenAttributes(nodes);
-      nodeText = truncateWhiteSpace(attributesMap.texts.join(""));
+      nodeText = truncateWhiteSpace(attributesMap.texts.join(''));
 
       if (!nodeText) {
-        nodeText = attributesMap.alt || attributesMap.title || attributesMap.inputValue || attributesMap.imgSrc;
+        nodeText =
+          // @ts-ignore
+          attributesMap.alt ||
+          // @ts-ignore
+          attributesMap.title ||
+          // @ts-ignore
+          attributesMap.inputValue ||
+          // @ts-ignore
+          attributesMap.imgSrc;
       }
     }
 
-    return nodeText || "";
-  });
+    return nodeText || '';
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -4798,16 +5657,18 @@
   */
   var semanticElements = /^(HEADER|MAIN|FOOTER|NAV)$/i;
 
+  // @ts-ignore
   var getAriaRegionLabel = function getAriaRegionLabel(node) {
     var regionLabel;
 
-    if (node.role === "region" && isNonEmptyString(node["aria-label"])) {
-      regionLabel = node["aria-label"];
+    if (node.role === 'region' && isNonEmptyString(node['aria-label'])) {
+      regionLabel = node['aria-label'];
     }
 
     return regionLabel;
   };
 
+  // @ts-ignore
   var getSectionNodeName = function getSectionNodeName(node) {
     var nodeName;
 
@@ -4834,13 +5695,16 @@
    * @returns {string} link-region.
    */
 
-
-  var getLinkRegion = (function (node) {
+  var getLinkRegion = function (node) {
     var linkParentNode = node.parentNode;
     var regionName;
 
     while (linkParentNode) {
-      regionName = truncateWhiteSpace(linkParentNode.id || getAriaRegionLabel(linkParentNode) || getSectionNodeName(linkParentNode));
+      regionName = truncateWhiteSpace(
+        linkParentNode.id ||
+          getAriaRegionLabel(linkParentNode) ||
+          getSectionNodeName(linkParentNode)
+      );
 
       if (regionName) {
         return regionName;
@@ -4849,8 +5713,8 @@
       linkParentNode = linkParentNode.parentNode;
     }
 
-    return "BODY";
-  });
+    return 'BODY';
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -4870,55 +5734,62 @@
     getLinkRegion: getLinkRegion,
     getAbsoluteUrlFromAnchorElement: getAbsoluteUrlFromAnchorElement,
     findSupportedAnchorElement: findSupportedAnchorElement,
-    determineLinkType: determineLinkType
+    determineLinkType: determineLinkType,
   });
 
+  // @ts-ignore
   var createActivityCollector = function createActivityCollector(_ref) {
     var config = _ref.config,
-        eventManager = _ref.eventManager,
-        handleError = _ref.handleError,
-        logger = _ref.logger;
+      eventManager = _ref.eventManager,
+      handleError = _ref.handleError,
+      logger = _ref.logger;
     var linkClick = createLinkClick({
       getLinkDetails: _getLinkDetails,
       config: config,
-      logger: logger
+      logger: logger,
     });
     return {
       lifecycle: {
+        // @ts-ignore
         onComponentsRegistered: function onComponentsRegistered(tools) {
           var lifecycle = tools.lifecycle;
           attachClickActivityCollector({
             eventManager: eventManager,
             lifecycle: lifecycle,
-            handleError: handleError
+            handleError: handleError,
           }); // TODO: createScrollActivityCollector ...
         },
+        // @ts-ignore
         onClick: function onClick(_ref2) {
           var event = _ref2.event,
-              clickedElement = _ref2.clickedElement;
+            clickedElement = _ref2.clickedElement;
           linkClick({
             targetElement: clickedElement,
-            event: event
+            event: event,
           });
-        }
-      }
+        },
+      },
     };
   };
 
-  createActivityCollector.namespace = "ActivityCollector";
+  createActivityCollector.namespace = 'ActivityCollector';
   createActivityCollector.configValidators = configValidators$1;
 
-  createActivityCollector.buildOnInstanceConfiguredExtraParams = function (_ref3) {
+  createActivityCollector.buildOnInstanceConfiguredExtraParams = function (
+    // @ts-ignore
+    _ref3
+  ) {
     var config = _ref3.config,
-        logger = _ref3.logger;
+      logger = _ref3.logger;
     return {
+      // @ts-ignore
       getLinkDetails: function getLinkDetails(targetElement) {
         return _getLinkDetails({
           targetElement: targetElement,
           config: config,
-          logger: logger
+          logger: logger,
         });
-      }
+      },
     };
   };
 
@@ -4934,34 +5805,49 @@
   governing permissions and limitations under the License.
   */
 
-  var createResultLogMessage$1 = function createResultLogMessage(idSync, success) {
-    return "ID sync " + (success ? "succeeded" : "failed") + ": " + idSync.spec.url;
+  var createResultLogMessage$1 = function createResultLogMessage(
+    // @ts-ignore
+    idSync,
+    // @ts-ignore
+    success
+  ) {
+    return (
+      'ID sync ' + (success ? 'succeeded' : 'failed') + ': ' + idSync.spec.url
+    );
   };
 
-  var injectProcessIdSyncs = (function (_ref) {
+  // @ts-ignore
+  var injectProcessIdSyncs = function (_ref) {
     var fireReferrerHideableImage = _ref.fireReferrerHideableImage,
-        logger = _ref.logger;
+      logger = _ref.logger;
+    // @ts-ignore
     return function (idSyncs) {
+      // @ts-ignore
       var urlIdSyncs = idSyncs.filter(function (idSync) {
-        return idSync.type === "url";
+        return idSync.type === 'url';
       });
 
       if (!urlIdSyncs.length) {
         return Promise.resolve();
       }
 
-      return Promise.all(urlIdSyncs.map(function (idSync) {
-        return fireReferrerHideableImage(idSync.spec).then(function () {
-          logger.info(createResultLogMessage$1(idSync, true));
-        }).catch(function () {
-          // We intentionally do not throw an error if id syncs fail. We
-          // consider it a non-critical failure and therefore do not want it to
-          // reject the promise handed back to the customer.
-          logger.error(createResultLogMessage$1(idSync, false));
-        });
-      })).then(noop$1);
+      return Promise.all(
+        // @ts-ignore
+        urlIdSyncs.map(function (idSync) {
+          return fireReferrerHideableImage(idSync.spec)
+            .then(function () {
+              logger.info(createResultLogMessage$1(idSync, true));
+            })
+            .catch(function () {
+              // We intentionally do not throw an error if id syncs fail. We
+              // consider it a non-critical failure and therefore do not want it to
+              // reject the promise handed back to the customer.
+              logger.error(createResultLogMessage$1(idSync, false));
+            });
+        })
+      ).then(noop$1);
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -4975,8 +5861,10 @@
   governing permissions and limitations under the License.
   */
   var configValidators = {
+    // @ts-ignore
     thirdPartyCookiesEnabled: boundBoolean().default(true),
-    idMigrationEnabled: boundBoolean().default(true)
+    // @ts-ignore
+    idMigrationEnabled: boundBoolean().default(true),
   };
 
   /*
@@ -4997,11 +5885,18 @@
    */
 
   var getIdentityOptionsValidator = boundObjectOf({
-    namespaces: boundArrayOf(boundLiteral("ECID")).nonEmpty().uniqueItems().default(["ECID"]),
-    edgeConfigOverrides: validateConfigOverride
-  }).noUnknownFields().default({
-    namespaces: ["ECID"]
-  });
+    namespaces: boundArrayOf(boundLiteral('ECID'))
+      // @ts-ignore
+      .nonEmpty()
+      .uniqueItems()
+      .default(['ECID']),
+    edgeConfigOverrides: validateConfigOverride,
+  })
+    // @ts-ignore
+    .noUnknownFields()
+    .default({
+      namespaces: ['ECID'],
+    });
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -5021,9 +5916,13 @@
    */
 
   var appendIdentityToUrlOptionsValidator = boundObjectOf({
+    // @ts-ignore
     url: boundString().required().nonEmpty(),
-    edgeConfigOverrides: validateConfigOverride
-  }).required().noUnknownFields();
+    edgeConfigOverrides: validateConfigOverride,
+  })
+    // @ts-ignore
+    .required()
+    .noUnknownFields();
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -5036,25 +5935,28 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createComponent$4 = (function (_ref) {
+  // @ts-ignore
+  var createComponent$4 = function (_ref) {
     var addEcidQueryToPayload = _ref.addEcidQueryToPayload,
-        addQueryStringIdentityToPayload = _ref.addQueryStringIdentityToPayload,
-        ensureSingleIdentity = _ref.ensureSingleIdentity,
-        setLegacyEcid = _ref.setLegacyEcid,
-        handleResponseForIdSyncs = _ref.handleResponseForIdSyncs,
-        getEcidFromResponse = _ref.getEcidFromResponse,
-        getIdentity = _ref.getIdentity,
-        consent = _ref.consent,
-        appendIdentityToUrl = _ref.appendIdentityToUrl,
-        logger = _ref.logger;
+      addQueryStringIdentityToPayload = _ref.addQueryStringIdentityToPayload,
+      ensureSingleIdentity = _ref.ensureSingleIdentity,
+      setLegacyEcid = _ref.setLegacyEcid,
+      handleResponseForIdSyncs = _ref.handleResponseForIdSyncs,
+      getEcidFromResponse = _ref.getEcidFromResponse,
+      getIdentity = _ref.getIdentity,
+      consent = _ref.consent,
+      appendIdentityToUrl = _ref.appendIdentityToUrl,
+      logger = _ref.logger;
+    // @ts-ignore
     var ecid;
     var edge = {};
     return {
       lifecycle: {
+        // @ts-ignore
         onBeforeRequest: function onBeforeRequest(_ref2) {
           var request = _ref2.request,
-              onResponse = _ref2.onResponse,
-              onRequestFailure = _ref2.onRequestFailure;
+            onResponse = _ref2.onResponse,
+            onRequestFailure = _ref2.onRequestFailure;
           // Querying the ECID on every request to be able to set the legacy cookie, and make it
           // available for the `getIdentity` command.
           addEcidQueryToPayload(request.getPayload());
@@ -5062,12 +5964,14 @@
           return ensureSingleIdentity({
             request: request,
             onResponse: onResponse,
-            onRequestFailure: onRequestFailure
+            onRequestFailure: onRequestFailure,
           });
         },
+        // @ts-ignore
         onResponse: function onResponse(_ref3) {
           var response = _ref3.response;
 
+          // @ts-ignore
           if (!ecid) {
             ecid = getEcidFromResponse(response); // Only data collection calls will have an ECID in the response.
             // https://jira.corp.adobe.com/browse/EXEG-1234
@@ -5078,45 +5982,62 @@
           } // For sendBeacon requests, getEdge() will return {}, so we are using assign here
           // so that sendBeacon requests don't override the edge info from before.
 
-
           edge = reactorObjectAssign(edge, response.getEdge());
           return handleResponseForIdSyncs(response);
-        }
+        },
       },
       commands: {
         getIdentity: {
           optionsValidator: getIdentityOptionsValidator,
+          // @ts-ignore
           run: function run(options) {
-            return consent.awaitConsent().then(function () {
-              return ecid ? undefined : getIdentity(options);
-            }).then(function () {
-              return {
-                identity: {
-                  ECID: ecid
-                },
-                edge: edge
-              };
-            });
-          }
+            return consent
+              .awaitConsent()
+              .then(function () {
+                // @ts-ignore
+                return ecid ? undefined : getIdentity(options);
+              })
+              .then(function () {
+                return {
+                  identity: {
+                    // @ts-ignore
+                    ECID: ecid,
+                  },
+                  edge: edge,
+                };
+              });
+          },
         },
         appendIdentityToUrl: {
           optionsValidator: appendIdentityToUrlOptionsValidator,
+          // @ts-ignore
           run: function run(options) {
-            return consent.withConsent().then(function () {
-              return ecid ? undefined : getIdentity(options);
-            }).then(function () {
-              return {
-                url: appendIdentityToUrl(ecid, options.url)
-              };
-            }).catch(function (error) {
-              logger.warn("Unable to append identity to url. " + error.message);
-              return options;
-            });
-          }
-        }
-      }
+            return (
+              consent
+                .withConsent()
+                .then(function () {
+                  // @ts-ignore
+                  return ecid ? undefined : getIdentity(options);
+                })
+                .then(function () {
+                  return {
+                    // @ts-ignore
+                    url: appendIdentityToUrl(ecid, options.url),
+                  };
+                })
+                // @ts-ignore
+                .catch(function (error) {
+                  logger.warn(
+                    'Unable to append identity to url. ' + error.message
+                  );
+                  return options;
+                })
+            );
+          },
+        },
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -5133,20 +6054,22 @@
   /**
    * Handles migration of ECID to and from Visitor.js.
    */
-  var createLegacyIdentity = (function (_ref) {
+  // @ts-ignore
+  var createLegacyIdentity = function (_ref) {
     var config = _ref.config,
-        getEcidFromVisitor = _ref.getEcidFromVisitor,
-        apexDomain = _ref.apexDomain,
-        isPageSsl = _ref.isPageSsl,
-        cookieJar = _ref.cookieJar;
+      getEcidFromVisitor = _ref.getEcidFromVisitor,
+      apexDomain = _ref.apexDomain,
+      isPageSsl = _ref.isPageSsl,
+      cookieJar = _ref.cookieJar;
     var idMigrationEnabled = config.idMigrationEnabled,
-        orgId = config.orgId;
-    var amcvCookieName = "AMCV_" + orgId;
+      orgId = config.orgId;
+    var amcvCookieName = 'AMCV_' + orgId;
 
     var getEcidFromLegacyCookies = function getEcidFromLegacyCookies() {
       var ecid = null;
-      var secidCookieName = "s_ecid";
-      var legacyEcidCookieValue = cookieJar.get(secidCookieName) || cookieJar.get(amcvCookieName);
+      var secidCookieName = 's_ecid';
+      var legacyEcidCookieValue =
+        cookieJar.get(secidCookieName) || cookieJar.get(amcvCookieName);
 
       if (legacyEcidCookieValue) {
         var reg = /(^|\|)MCMID\|(\d+)($|\|)/;
@@ -5175,21 +6098,31 @@
 
         return Promise.resolve();
       },
+      // @ts-ignore
       setEcid: function setEcid(ecid) {
         if (idMigrationEnabled && getEcidFromLegacyCookies() !== ecid) {
-          var extraOptions = isPageSsl ? {
-            sameSite: "none",
-            secure: true
-          } : {};
-          cookieJar.set(amcvCookieName, "MCMID|" + ecid, _objectSpread2({
-            domain: apexDomain,
-            // Without `expires` this will be a session cookie.
-            expires: 390
-          }, extraOptions));
+          var extraOptions = isPageSsl
+            ? {
+                sameSite: 'none',
+                secure: true,
+              }
+            : {};
+          cookieJar.set(
+            amcvCookieName,
+            'MCMID|' + ecid,
+            _objectSpread2(
+              {
+                domain: apexDomain,
+                // Without `expires` this will be a session cookie.
+                expires: 390,
+              },
+              extraOptions
+            )
+          );
         }
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5202,25 +6135,34 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var awaitVisitorOptIn = (function (_ref) {
+  // @ts-ignore
+  var awaitVisitorOptIn = function (_ref) {
     var logger = _ref.logger;
     return new Promise(function (resolve, reject) {
+      // @ts-ignore
       if (isObject(window.adobe) && isObject(window.adobe.optIn)) {
+        // @ts-ignore
         var optInOld = window.adobe.optIn;
-        logger.info("Delaying request while waiting for legacy opt-in to let Visitor retrieve ECID from server.");
+        logger.info(
+          'Delaying request while waiting for legacy opt-in to let Visitor retrieve ECID from server.'
+        );
         optInOld.fetchPermissions(function () {
           if (optInOld.isApproved([optInOld.Categories.ECID])) {
-            logger.info("Received legacy opt-in approval to let Visitor retrieve ECID from server.");
+            logger.info(
+              'Received legacy opt-in approval to let Visitor retrieve ECID from server.'
+            );
+            // @ts-ignore
             resolve();
           } else {
-            reject(new Error("Legacy opt-in was declined."));
+            reject(new Error('Legacy opt-in was declined.'));
           }
         }, true);
       } else {
+        // @ts-ignore
         resolve();
       }
     });
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5233,10 +6175,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getVisitor = (function (window) {
+  // @ts-ignore
+  var getVisitor = function (window) {
     var Visitor = window.Visitor;
     return isFunction(Visitor) && isFunction(Visitor.getInstance) && Visitor;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5249,42 +6192,57 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectGetEcidFromVisitor = (function (_ref) {
+  // @ts-ignore
+  var injectGetEcidFromVisitor = function (_ref) {
     var logger = _ref.logger,
-        orgId = _ref.orgId,
-        awaitVisitorOptIn = _ref.awaitVisitorOptIn;
+      orgId = _ref.orgId,
+      awaitVisitorOptIn = _ref.awaitVisitorOptIn;
     return function () {
       var Visitor = getVisitor(window);
 
       if (Visitor) {
         // Need to explicitly wait for optIn because visitor will call callback
         // with invalid values prior to optIn being approved
-        return awaitVisitorOptIn({
-          logger: logger
-        }).then(function () {
-          logger.info("Delaying request while using Visitor to retrieve ECID from server.");
-          return new Promise(function (resolve) {
-            var visitor = Visitor.getInstance(orgId, {});
-            visitor.getMarketingCloudVisitorID(function (ecid) {
-              logger.info("Resuming previously delayed request that was waiting for ECID from Visitor.");
-              resolve(ecid);
-            }, true);
-          });
-        }).catch(function (error) {
-          // If consent was denied, get the ECID from experience edge. OptIn and AEP Web SDK
-          // consent should operate independently, but during id migration AEP Web SDK needs
-          // to wait for optIn object consent resolution so that only one ECID is generated.
-          if (error) {
-            logger.info(error.message + ", retrieving ECID from experience edge");
-          } else {
-            logger.info("An error occurred while obtaining the ECID from Visitor.");
-          }
-        });
+        return (
+          awaitVisitorOptIn({
+            logger: logger,
+          })
+            .then(function () {
+              logger.info(
+                'Delaying request while using Visitor to retrieve ECID from server.'
+              );
+              return new Promise(function (resolve) {
+                var visitor = Visitor.getInstance(orgId, {});
+                // @ts-ignore
+                visitor.getMarketingCloudVisitorID(function (ecid) {
+                  logger.info(
+                    'Resuming previously delayed request that was waiting for ECID from Visitor.'
+                  );
+                  resolve(ecid);
+                }, true);
+              });
+            })
+            // @ts-ignore
+            .catch(function (error) {
+              // If consent was denied, get the ECID from experience edge. OptIn and AEP Web SDK
+              // consent should operate independently, but during id migration AEP Web SDK needs
+              // to wait for optIn object consent resolution so that only one ECID is generated.
+              if (error) {
+                logger.info(
+                  error.message + ', retrieving ECID from experience edge'
+                );
+              } else {
+                logger.info(
+                  'An error occurred while obtaining the ECID from Visitor.'
+                );
+              }
+            })
+        );
       }
 
       return Promise.resolve();
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5297,12 +6255,14 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectHandleResponseForIdSyncs = (function (_ref) {
+  // @ts-ignore
+  var injectHandleResponseForIdSyncs = function (_ref) {
     var processIdSyncs = _ref.processIdSyncs;
+    // @ts-ignore
     return function (response) {
-      return processIdSyncs(response.getPayloadsByType("identity:exchange"));
+      return processIdSyncs(response.getPayloadsByType('identity:exchange'));
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5316,18 +6276,23 @@
   governing permissions and limitations under the License.
   */
   // TO-DOCUMENT: We queue subsequent requests until we have an identity cookie.
-  var injectEnsureSingleIdentity = (function (_ref) {
+  // @ts-ignore
+  var injectEnsureSingleIdentity = function (_ref) {
     var doesIdentityCookieExist = _ref.doesIdentityCookieExist,
-        setDomainForInitialIdentityPayload = _ref.setDomainForInitialIdentityPayload,
-        addLegacyEcidToPayload = _ref.addLegacyEcidToPayload,
-        awaitIdentityCookie = _ref.awaitIdentityCookie,
-        logger = _ref.logger;
+      setDomainForInitialIdentityPayload =
+        _ref.setDomainForInitialIdentityPayload,
+      addLegacyEcidToPayload = _ref.addLegacyEcidToPayload,
+      awaitIdentityCookie = _ref.awaitIdentityCookie,
+      logger = _ref.logger;
+    // @ts-ignore
     var obtainedIdentityPromise;
 
-    var allowRequestToGoWithoutIdentity = function allowRequestToGoWithoutIdentity(request) {
-      setDomainForInitialIdentityPayload(request);
-      return addLegacyEcidToPayload(request.getPayload());
-    };
+    var allowRequestToGoWithoutIdentity =
+      // @ts-ignore
+      function allowRequestToGoWithoutIdentity(request) {
+        setDomainForInitialIdentityPayload(request);
+        return addLegacyEcidToPayload(request.getPayload());
+      };
     /**
      * Ensures that if no identity cookie exists, we only let one request at a
      * time without an identity until its response returns. In the meantime,
@@ -5348,57 +6313,62 @@
      * requests to never send.
      */
 
-
+    // @ts-ignore
     return function (_ref2) {
       var request = _ref2.request,
-          onResponse = _ref2.onResponse,
-          onRequestFailure = _ref2.onRequestFailure;
+        onResponse = _ref2.onResponse,
+        onRequestFailure = _ref2.onRequestFailure;
 
       if (doesIdentityCookieExist()) {
         request.setIsIdentityEstablished();
         return Promise.resolve();
       }
 
+      // @ts-ignore
       if (obtainedIdentityPromise) {
         // We don't have an identity cookie, but at least one request has
         // been sent to get it. Konductor may set the identity cookie in the
         // response. We will hold up this request until the last request
         // requiring identity returns and awaitIdentityCookie confirms the
         // identity was set.
-        logger.info("Delaying request while retrieving ECID from server.");
+        logger.info('Delaying request while retrieving ECID from server.');
         var previousObtainedIdentityPromise = obtainedIdentityPromise; // This promise resolves when we have an identity cookie. Additional
         // requests are chained together so that only one is sent at a time
         // until we have the identity cookie.
 
-        obtainedIdentityPromise = previousObtainedIdentityPromise.catch(function () {
-          return awaitIdentityCookie({
-            onResponse: onResponse,
-            onRequestFailure: onRequestFailure
-          });
-        }); // When this returned promise resolves, the request will go out.
+        obtainedIdentityPromise = previousObtainedIdentityPromise.catch(
+          function () {
+            return awaitIdentityCookie({
+              onResponse: onResponse,
+              onRequestFailure: onRequestFailure,
+            });
+          }
+        ); // When this returned promise resolves, the request will go out.
 
-        return previousObtainedIdentityPromise.then(function () {
-          logger.info("Resuming previously delayed request.");
-          request.setIsIdentityEstablished();
-        }) // If Konductor did not set the identity cookie on the previous
-        // request, then awaitIdentityCookie will reject its promise.
-        // Catch the rejection here and allow this request to go out.
-        .catch(function () {
-          return allowRequestToGoWithoutIdentity(request);
-        });
+        return (
+          previousObtainedIdentityPromise
+            .then(function () {
+              logger.info('Resuming previously delayed request.');
+              request.setIsIdentityEstablished();
+            }) // If Konductor did not set the identity cookie on the previous
+            // request, then awaitIdentityCookie will reject its promise.
+            // Catch the rejection here and allow this request to go out.
+            .catch(function () {
+              return allowRequestToGoWithoutIdentity(request);
+            })
+        );
       } // For Alloy+Konductor communication to be as robust as possible and
       // to ensure we don't mint new ECIDs for requests that would otherwise
       // be sent in parallel, we'll let this request go out to fetch the
       // cookie
 
-
       obtainedIdentityPromise = awaitIdentityCookie({
         onResponse: onResponse,
-        onRequestFailure: onRequestFailure
+        onRequestFailure: onRequestFailure,
       });
       return allowRequestToGoWithoutIdentity(request);
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -5411,7 +6381,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var ecidNamespace = "ECID";
+  var ecidNamespace = 'ECID';
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5424,15 +6394,18 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var addEcidQueryToPayload = (function (payload) {
+  // @ts-ignore
+  var addEcidQueryToPayload = function (payload) {
     payload.mergeQuery({
       identity: {
-        fetch: [ecidNamespace]
-      }
+        fetch: [ecidNamespace],
+      },
     });
-  });
+  };
 
+  // @ts-ignore
   var matchUserAgent = function matchUserAgent(regexs) {
+    // @ts-ignore
     return function (userAgent) {
       var keys = Object.keys(regexs);
 
@@ -5449,10 +6422,28 @@
     };
   };
 
+  // @ts-ignore
   var getBrowser = memoize(function (window) {
     var _matchUserAgent;
 
-    return matchUserAgent((_matchUserAgent = {}, _defineProperty(_matchUserAgent, EDGE$1, /Edge\/([0-9\._]+)/), _defineProperty(_matchUserAgent, EDGE_CHROMIUM, /Edg\/([0-9\.]+)/), _defineProperty(_matchUserAgent, CHROME, /(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/), _defineProperty(_matchUserAgent, FIREFOX, /Firefox\/([0-9\.]+)(?:\s|$)/), _defineProperty(_matchUserAgent, IE, /Trident\/7\.0.*rv\:([0-9\.]+).*\).*Gecko$/), _defineProperty(_matchUserAgent, SAFARI, /Version\/([0-9\._]+).*Safari/), _matchUserAgent))(window.navigator.userAgent);
+    return matchUserAgent(
+      ((_matchUserAgent = {}),
+      _defineProperty(_matchUserAgent, EDGE$1, /Edge\/([0-9\._]+)/),
+      _defineProperty(_matchUserAgent, EDGE_CHROMIUM, /Edg\/([0-9\.]+)/),
+      _defineProperty(
+        _matchUserAgent,
+        CHROME,
+        /(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/
+      ),
+      _defineProperty(_matchUserAgent, FIREFOX, /Firefox\/([0-9\.]+)(?:\s|$)/),
+      _defineProperty(
+        _matchUserAgent,
+        IE,
+        /Trident\/7\.0.*rv\:([0-9\.]+).*\).*Gecko$/
+      ),
+      _defineProperty(_matchUserAgent, SAFARI, /Version\/([0-9\._]+).*Safari/),
+      _matchUserAgent)
+    )(window.navigator.userAgent);
   });
 
   /*
@@ -5466,11 +6457,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectSetDomainForInitialIdentityPayload = (function (_ref) {
+  // @ts-ignore
+  var injectSetDomainForInitialIdentityPayload = function (_ref) {
     var thirdPartyCookiesEnabled = _ref.thirdPartyCookiesEnabled,
-        areThirdPartyCookiesSupportedByDefault = _ref.areThirdPartyCookiesSupportedByDefault;
+      areThirdPartyCookiesSupportedByDefault =
+        _ref.areThirdPartyCookiesSupportedByDefault;
+    // @ts-ignore
     return function (request) {
-      if (thirdPartyCookiesEnabled && areThirdPartyCookiesSupportedByDefault(getBrowser(window))) {
+      if (
+        thirdPartyCookiesEnabled &&
+        areThirdPartyCookiesSupportedByDefault(getBrowser(window))
+      ) {
         // If third-party cookies are enabled by the customer and
         // supported by the browser, we will send the request to a
         // a third-party identification domain that allows for more accurate
@@ -5483,7 +6480,7 @@
         request.setUseIdThirdPartyDomain();
       }
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5496,9 +6493,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectAddLegacyEcidToPayload = (function (_ref) {
+  // @ts-ignore
+  var injectAddLegacyEcidToPayload = function (_ref) {
     var getLegacyEcid = _ref.getLegacyEcid,
-        addEcidToPayload = _ref.addEcidToPayload;
+      addEcidToPayload = _ref.addEcidToPayload;
+    // @ts-ignore
     return function (payload) {
       if (payload.hasIdentity(ecidNamespace)) {
         // don't get the legacy identity if we already have the query string identity or if
@@ -5506,13 +6505,14 @@
         return Promise.resolve();
       }
 
+      // @ts-ignore
       return getLegacyEcid().then(function (ecidToMigrate) {
         if (ecidToMigrate) {
           addEcidToPayload(payload, ecidToMigrate);
         }
       });
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -5525,15 +6525,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var queryStringIdentityParam = "adobe_mc";
+  var queryStringIdentityParam = 'adobe_mc';
 
   var LINK_TTL_SECONDS = 300; // 5 minute link time to live
 
-  var injectAddQueryStringIdentityToPayload = (function (_ref) {
+  // @ts-ignore
+  var injectAddQueryStringIdentityToPayload = function (_ref) {
     var locationSearch = _ref.locationSearch,
-        dateProvider = _ref.dateProvider,
-        orgId = _ref.orgId,
-        logger = _ref.logger;
+      dateProvider = _ref.dateProvider,
+      orgId = _ref.orgId,
+      logger = _ref.logger;
+    // @ts-ignore
     return function (payload) {
       if (payload.hasIdentity(ecidNamespace)) {
         // don't overwrite a user provided ecid identity
@@ -5547,32 +6549,47 @@
         return;
       }
 
-      var properties = queryStringValue.split("|").reduce(function (memo, keyValue) {
-        var _keyValue$split = keyValue.split("="),
+      var properties = queryStringValue
+        .split('|')
+        // @ts-ignore
+        .reduce(function (memo, keyValue) {
+          var _keyValue$split = keyValue.split('='),
             _keyValue$split2 = _slicedToArray(_keyValue$split, 2),
+            // @ts-ignore
             key = _keyValue$split2[0],
+            // @ts-ignore
             value = _keyValue$split2[1];
 
-        memo[key] = value;
-        return memo;
-      }, {}); // We are using MCMID and MCORGID to be compatible with Visitor.
+          memo[key] = value;
+          return memo;
+        }, {}); // We are using MCMID and MCORGID to be compatible with Visitor.
 
       var ts = parseInt(properties.TS, 10);
       var mcmid = properties.MCMID;
       var mcorgid = decodeURIComponent(properties.MCORGID);
 
-      if ( // When TS is not specified or not a number, the following inequality returns false.
-      // All inequalities with NaN variables are false.
-      dateProvider().getTime() / 1000 <= ts + LINK_TTL_SECONDS && mcorgid === orgId && mcmid) {
-        logger.info("Found valid ECID identity " + mcmid + " from the adobe_mc query string parameter.");
+      if (
+        // When TS is not specified or not a number, the following inequality returns false.
+        // All inequalities with NaN variables are false.
+        dateProvider().getTime() / 1000 <= ts + LINK_TTL_SECONDS &&
+        mcorgid === orgId &&
+        mcmid
+      ) {
+        logger.info(
+          'Found valid ECID identity ' +
+            mcmid +
+            ' from the adobe_mc query string parameter.'
+        );
         payload.addIdentity(ecidNamespace, {
-          id: mcmid
+          id: mcmid,
         });
       } else {
-        logger.info("Detected invalid or expired adobe_mc query string parameter.");
+        logger.info(
+          'Detected invalid or expired adobe_mc query string parameter.'
+        );
       }
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5585,11 +6602,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var addEcidToPayload = (function (payload, ecid) {
+  // @ts-ignore
+  var addEcidToPayload = function (payload, ecid) {
     payload.addIdentity(ecidNamespace, {
-      id: ecid
+      id: ecid,
     });
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5602,26 +6620,33 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectAwaitIdentityCookie = (function (_ref) {
+  // @ts-ignore
+  var injectAwaitIdentityCookie = function (_ref) {
     var doesIdentityCookieExist = _ref.doesIdentityCookieExist,
-        orgId = _ref.orgId;
+      orgId = _ref.orgId;
 
     /**
      * Returns a promise that will be resolved once an identity cookie exists.
      * If an identity cookie doesn't already exist, it should always exist after
      * the first response.
      */
+    // @ts-ignore
     return function (_ref2) {
       var onResponse = _ref2.onResponse,
-          onRequestFailure = _ref2.onRequestFailure;
+        onRequestFailure = _ref2.onRequestFailure;
       return new Promise(function (resolve, reject) {
         onResponse(function () {
           if (doesIdentityCookieExist()) {
+            // @ts-ignore
             resolve();
           } else {
             // This logic assumes that the code setting the cookie is working as expected and that
             // the cookie was missing from the response.
-            var noIdentityCookieError = new Error("An identity was not set properly. Please verify that the org ID " + orgId + " configured in Alloy matches the org ID specified in the edge configuration."); // Rejecting the promise will reject commands that were queued
+            var noIdentityCookieError = new Error(
+              'An identity was not set properly. Please verify that the org ID ' +
+                orgId +
+                ' configured in Alloy matches the org ID specified in the edge configuration.'
+            ); // Rejecting the promise will reject commands that were queued
             // by the Identity component while waiting on the response to
             // the initial request.
 
@@ -5633,16 +6658,17 @@
         });
         onRequestFailure(function () {
           if (doesIdentityCookieExist()) {
+            // @ts-ignore
             resolve();
           } else {
             // The error from the request failure will be logged separately. Rejecting this here
             // will tell ensureSingleIdentity to send the next request without identity
-            reject(new Error("No identity was set on response."));
+            reject(new Error('No identity was set on response.'));
           }
         });
       });
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5655,13 +6681,15 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getEcidFromResponse = (function (response) {
-    var identityResultPayloads = response.getPayloadsByType("identity:result");
+  // @ts-ignore
+  var getEcidFromResponse = function (response) {
+    var identityResultPayloads = response.getPayloadsByType('identity:result');
+    // @ts-ignore
     var ecidPayload = find(identityResultPayloads, function (payload) {
       return payload.namespace && payload.namespace.code === ecidNamespace;
     });
     return ecidPayload ? ecidPayload.id : undefined;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5674,15 +6702,19 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createGetIdentity = (function (_ref) {
+  // @ts-ignore
+  var createGetIdentity = function (_ref) {
     var sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
-        createIdentityRequestPayload = _ref.createIdentityRequestPayload,
-        createIdentityRequest = _ref.createIdentityRequest,
-        globalConfigOverrides = _ref.globalConfigOverrides;
+      createIdentityRequestPayload = _ref.createIdentityRequestPayload,
+      createIdentityRequest = _ref.createIdentityRequest,
+      globalConfigOverrides = _ref.globalConfigOverrides;
     return function () {
-      var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          namespaces = _ref2.namespaces,
-          localConfigOverrides = _ref2.edgeConfigOverrides;
+      var _ref2 =
+          arguments.length > 0 && arguments[0] !== undefined
+            ? arguments[0]
+            : {},
+        namespaces = _ref2.namespaces,
+        localConfigOverrides = _ref2.edgeConfigOverrides;
 
       var payload = createIdentityRequestPayload(namespaces);
       var request = createIdentityRequest(payload); // merge the configurations, but give preference to the command-local configs
@@ -5690,10 +6722,10 @@
       payload.mergeConfigOverride(globalConfigOverrides);
       payload.mergeConfigOverride(localConfigOverrides);
       return sendEdgeNetworkRequest({
-        request: request
+        request: request,
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -5706,14 +6738,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createAddIdentity = (function (content) {
+  // @ts-ignore
+  var createAddIdentity = function (content) {
+    // @ts-ignore
     return function (namespaceCode, identity) {
       content.xdm = content.xdm || {};
       content.xdm.identityMap = content.xdm.identityMap || {};
-      content.xdm.identityMap[namespaceCode] = content.xdm.identityMap[namespaceCode] || [];
+      content.xdm.identityMap[namespaceCode] =
+        content.xdm.identityMap[namespaceCode] || [];
       content.xdm.identityMap[namespaceCode].push(identity);
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5727,10 +6762,11 @@
   governing permissions and limitations under the License.
   */
 
-  var createRequest = (function (options) {
+  // @ts-ignore
+  var createRequest = function (options) {
     var payload = options.payload,
-        _getAction = options.getAction,
-        _getUseSendBeacon = options.getUseSendBeacon;
+      _getAction = options.getAction,
+      _getUseSendBeacon = options.getUseSendBeacon;
     var id = v4_1();
     var shouldUseThirdPartyDomain = false;
     var isIdentityEstablished = false;
@@ -5743,12 +6779,12 @@
       },
       getAction: function getAction() {
         return _getAction({
-          isIdentityEstablished: isIdentityEstablished
+          isIdentityEstablished: isIdentityEstablished,
         });
       },
       getUseSendBeacon: function getUseSendBeacon() {
         return _getUseSendBeacon({
-          isIdentityEstablished: isIdentityEstablished
+          isIdentityEstablished: isIdentityEstablished,
         });
       },
       getUseIdThirdPartyDomain: function getUseIdThirdPartyDomain() {
@@ -5759,9 +6795,9 @@
       },
       setIsIdentityEstablished: function setIsIdentityEstablished() {
         isIdentityEstablished = true;
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5774,7 +6810,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createDataCollectionRequest = (function (dataCollectionRequestPayload) {
+  // @ts-ignore
+  var createDataCollectionRequest = function (dataCollectionRequestPayload) {
+    // @ts-ignore
     var getUseSendBeacon = function getUseSendBeacon(_ref) {
       var isIdentityEstablished = _ref.isIdentityEstablished;
       // When the document may be unloading, we still hit the interact endpoint
@@ -5811,20 +6849,26 @@
       // using fetch instead of sendBeacon.
       //
       // The second approach seemed preferable.
-      return dataCollectionRequestPayload.getDocumentMayUnload() && isIdentityEstablished;
+      return (
+        dataCollectionRequestPayload.getDocumentMayUnload() &&
+        isIdentityEstablished
+      );
     };
 
     return createRequest({
       payload: dataCollectionRequestPayload,
+      // @ts-ignore
       getAction: function getAction(_ref2) {
         var isIdentityEstablished = _ref2.isIdentityEstablished;
         return getUseSendBeacon({
-          isIdentityEstablished: isIdentityEstablished
-        }) ? "collect" : "interact";
+          isIdentityEstablished: isIdentityEstablished,
+        })
+          ? 'collect'
+          : 'interact';
       },
-      getUseSendBeacon: getUseSendBeacon
+      getUseSendBeacon: getUseSendBeacon,
     });
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -5839,17 +6883,19 @@
   */
   // request payloads share.
 
-  var createRequestPayload = (function (options) {
+  // @ts-ignore
+  var createRequestPayload = function (options) {
     var content = options.content,
-        addIdentity = options.addIdentity,
-        hasIdentity = options.hasIdentity;
+      addIdentity = options.addIdentity,
+      hasIdentity = options.hasIdentity;
 
-    var _mergeConfigOverride = createMerger(content, "meta.configOverrides");
+    var _mergeConfigOverride = createMerger(content, 'meta.configOverrides');
 
     return {
-      mergeMeta: createMerger(content, "meta"),
-      mergeState: createMerger(content, "meta.state"),
-      mergeQuery: createMerger(content, "query"),
+      mergeMeta: createMerger(content, 'meta'),
+      mergeState: createMerger(content, 'meta.state'),
+      mergeQuery: createMerger(content, 'query'),
+      // @ts-ignore
       mergeConfigOverride: function mergeConfigOverride(updates) {
         return _mergeConfigOverride(prepareConfigOverridesForEdge(updates));
       },
@@ -5857,9 +6903,9 @@
       hasIdentity: hasIdentity,
       toJSON: function toJSON() {
         return content;
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -5872,11 +6918,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createHasIdentity = (function (content) {
+  // @ts-ignore
+  var createHasIdentity = function (content) {
+    // @ts-ignore
     return function (namespaceCode) {
-      return (content.xdm && content.xdm.identityMap && content.xdm.identityMap[namespaceCode]) !== undefined;
+      return (
+        (content.xdm &&
+          content.xdm.identityMap &&
+          content.xdm.identityMap[namespaceCode]) !== undefined
+      );
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -5889,27 +6941,32 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createDataCollectionRequestPayload = (function () {
+  var createDataCollectionRequestPayload = function () {
     var content = {};
     var payload = createRequestPayload({
       content: content,
       addIdentity: createAddIdentity(content),
-      hasIdentity: createHasIdentity(content)
+      hasIdentity: createHasIdentity(content),
     });
 
+    // @ts-ignore
     payload.addEvent = function (event) {
+      // @ts-ignore
       content.events = content.events || [];
+      // @ts-ignore
       content.events.push(event);
     };
 
+    // @ts-ignore
     payload.getDocumentMayUnload = function () {
+      // @ts-ignore
       return (content.events || []).some(function (event) {
         return event.getDocumentMayUnload();
       });
     };
 
     return payload;
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -5922,11 +6979,14 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var ASSURANCE_VALIDATION_SESSION_URL_PARAM = "adb_validation_sessionid";
-  var ASSURANCE_VALIDATION_NAMESPACE = "validation.";
-  var CLIENT_ID = "clientId";
+  var ASSURANCE_VALIDATION_SESSION_URL_PARAM = 'adb_validation_sessionid';
+  var ASSURANCE_VALIDATION_NAMESPACE = 'validation.';
+  var CLIENT_ID = 'clientId';
 
-  var getOrCreateAssuranceClientId = function getOrCreateAssuranceClientId(storage) {
+  var getOrCreateAssuranceClientId = function getOrCreateAssuranceClientId(
+    // @ts-ignore
+    storage
+  ) {
     var clientId = storage.persistent.getItem(CLIENT_ID);
 
     if (!clientId) {
@@ -5937,25 +6997,30 @@
     return clientId;
   };
 
-  var createGetAssuranceValidationTokenParams = (function (_ref) {
+  // @ts-ignore
+  var createGetAssuranceValidationTokenParams = function (_ref) {
     var window = _ref.window,
-        createNamespacedStorage = _ref.createNamespacedStorage;
+      createNamespacedStorage = _ref.createNamespacedStorage;
     var storage = createNamespacedStorage(ASSURANCE_VALIDATION_NAMESPACE);
     return function () {
       var parsedQuery = reactorQueryString.parse(window.location.search);
-      var validationSessionId = parsedQuery[ASSURANCE_VALIDATION_SESSION_URL_PARAM];
+      var validationSessionId =
+        parsedQuery[ASSURANCE_VALIDATION_SESSION_URL_PARAM];
 
       if (!validationSessionId) {
-        return "";
+        return '';
       }
 
       var clientId = getOrCreateAssuranceClientId(storage);
-      var validationToken = validationSessionId + "|" + clientId;
-      return "&" + reactorQueryString.stringify({
-        adobeAepValidationToken: validationToken
-      });
+      var validationToken = validationSessionId + '|' + clientId;
+      return (
+        '&' +
+        reactorQueryString.stringify({
+          adobeAepValidationToken: validationToken,
+        })
+      );
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5968,17 +7033,18 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createIdentityRequest = (function (identityRequestPayload) {
+  // @ts-ignore
+  var createIdentityRequest = function (identityRequestPayload) {
     return createRequest({
       payload: identityRequestPayload,
       getAction: function getAction() {
-        return "identity/acquire";
+        return 'identity/acquire';
       },
       getUseSendBeacon: function getUseSendBeacon() {
         return false;
-      }
+      },
     });
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -5991,20 +7057,21 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createIdentityRequestPayload = (function (namespaces) {
+  // @ts-ignore
+  var createIdentityRequestPayload = function (namespaces) {
     var content = {
       query: {
         identity: {
-          fetch: namespaces
-        }
-      }
+          fetch: namespaces,
+        },
+      },
     };
     return createRequestPayload({
       content: content,
       addIdentity: createAddIdentity(content),
-      hasIdentity: createHasIdentity(content)
+      hasIdentity: createHasIdentity(content),
     });
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -6019,35 +7086,51 @@
   */
   var URL_REGEX = /^([^?#]*)(\??[^#]*)(#?.*)$/;
 
+  // @ts-ignore
   var getSeparator = function getSeparator(queryString) {
-    if (queryString === "") {
-      return "?";
+    if (queryString === '') {
+      return '?';
     }
 
-    if (queryString === "?") {
-      return "";
+    if (queryString === '?') {
+      return '';
     }
 
-    return "&";
+    return '&';
   };
 
-  var injectAppendIdentityToUrl = (function (_ref) {
+  // @ts-ignore
+  var injectAppendIdentityToUrl = function (_ref) {
     var dateProvider = _ref.dateProvider,
-        orgId = _ref.orgId;
+      orgId = _ref.orgId;
+    // @ts-ignore
     return function (ecid, url) {
       var ts = Math.round(dateProvider().getTime() / 1000);
-      var adobemc = encodeURIComponent("TS=" + ts + "|MCMID=" + ecid + "|MCORGID=" + encodeURIComponent(orgId));
+      var adobemc = encodeURIComponent(
+        'TS=' + ts + '|MCMID=' + ecid + '|MCORGID=' + encodeURIComponent(orgId)
+      );
 
       var _url$match = url.match(URL_REGEX),
-          _url$match2 = _slicedToArray(_url$match, 4),
-          location = _url$match2[1],
-          queryString = _url$match2[2],
-          fragment = _url$match2[3];
+        _url$match2 = _slicedToArray(_url$match, 4),
+        // @ts-ignore
+        location = _url$match2[1],
+        // @ts-ignore
+        queryString = _url$match2[2],
+        // @ts-ignore
+        fragment = _url$match2[3];
 
       var separator = getSeparator(queryString);
-      return "" + location + queryString + separator + "adobe_mc=" + adobemc + fragment;
+      return (
+        '' +
+        location +
+        queryString +
+        separator +
+        'adobe_mc=' +
+        adobemc +
+        fragment
+      );
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6061,81 +7144,86 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createIdentity = function createIdentity(_ref) {
     var config = _ref.config,
-        logger = _ref.logger,
-        consent = _ref.consent,
-        fireReferrerHideableImage = _ref.fireReferrerHideableImage,
-        sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
-        apexDomain = _ref.apexDomain;
+      logger = _ref.logger,
+      consent = _ref.consent,
+      fireReferrerHideableImage = _ref.fireReferrerHideableImage,
+      sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
+      apexDomain = _ref.apexDomain;
     var orgId = config.orgId,
-        thirdPartyCookiesEnabled = config.thirdPartyCookiesEnabled,
-        globalConfigOverrides = config.edgeConfigOverrides;
+      thirdPartyCookiesEnabled = config.thirdPartyCookiesEnabled,
+      globalConfigOverrides = config.edgeConfigOverrides;
     var getEcidFromVisitor = injectGetEcidFromVisitor({
       logger: logger,
       orgId: orgId,
-      awaitVisitorOptIn: awaitVisitorOptIn
+      awaitVisitorOptIn: awaitVisitorOptIn,
     });
     var loggingCookieJar = createLoggingCookieJar({
       logger: logger,
-      cookieJar: cookieJar
+      cookieJar: cookieJar,
     });
     var legacyIdentity = createLegacyIdentity({
       config: config,
       getEcidFromVisitor: getEcidFromVisitor,
       apexDomain: apexDomain,
       cookieJar: loggingCookieJar,
-      isPageSsl: window.location.protocol === "https:"
+      isPageSsl: window.location.protocol === 'https:',
     });
     var doesIdentityCookieExist = injectDoesIdentityCookieExist({
-      orgId: orgId
+      orgId: orgId,
     });
     var getIdentity = createGetIdentity({
       sendEdgeNetworkRequest: sendEdgeNetworkRequest,
       createIdentityRequestPayload: createIdentityRequestPayload,
       createIdentityRequest: createIdentityRequest,
-      globalConfigOverrides: globalConfigOverrides
+      globalConfigOverrides: globalConfigOverrides,
     });
-    var setDomainForInitialIdentityPayload = injectSetDomainForInitialIdentityPayload({
-      thirdPartyCookiesEnabled: thirdPartyCookiesEnabled,
-      areThirdPartyCookiesSupportedByDefault: areThirdPartyCookiesSupportedByDefault
-    });
+    var setDomainForInitialIdentityPayload =
+      injectSetDomainForInitialIdentityPayload({
+        thirdPartyCookiesEnabled: thirdPartyCookiesEnabled,
+        areThirdPartyCookiesSupportedByDefault:
+          areThirdPartyCookiesSupportedByDefault,
+      });
     var addLegacyEcidToPayload = injectAddLegacyEcidToPayload({
       getLegacyEcid: legacyIdentity.getEcid,
-      addEcidToPayload: addEcidToPayload
+      addEcidToPayload: addEcidToPayload,
     });
-    var addQueryStringIdentityToPayload = injectAddQueryStringIdentityToPayload({
-      locationSearch: window.document.location.search,
-      dateProvider: function dateProvider() {
-        return new Date();
-      },
-      orgId: orgId,
-      logger: logger
-    });
+    var addQueryStringIdentityToPayload = injectAddQueryStringIdentityToPayload(
+      {
+        locationSearch: window.document.location.search,
+        dateProvider: function dateProvider() {
+          return new Date();
+        },
+        orgId: orgId,
+        logger: logger,
+      }
+    );
     var awaitIdentityCookie = injectAwaitIdentityCookie({
       doesIdentityCookieExist: doesIdentityCookieExist,
-      orgId: orgId
+      orgId: orgId,
     });
     var ensureSingleIdentity = injectEnsureSingleIdentity({
       doesIdentityCookieExist: doesIdentityCookieExist,
       setDomainForInitialIdentityPayload: setDomainForInitialIdentityPayload,
       addLegacyEcidToPayload: addLegacyEcidToPayload,
       awaitIdentityCookie: awaitIdentityCookie,
-      logger: logger
+      logger: logger,
     });
     var processIdSyncs = injectProcessIdSyncs({
       fireReferrerHideableImage: fireReferrerHideableImage,
-      logger: logger
+      logger: logger,
     });
     var handleResponseForIdSyncs = injectHandleResponseForIdSyncs({
-      processIdSyncs: processIdSyncs
+      processIdSyncs: processIdSyncs,
     });
     var appendIdentityToUrl = injectAppendIdentityToUrl({
       dateProvider: function dateProvider() {
         return new Date();
       },
       orgId: orgId,
-      globalConfigOverrides: globalConfigOverrides
+      globalConfigOverrides: globalConfigOverrides,
     });
     return createComponent$4({
       addEcidQueryToPayload: addEcidQueryToPayload,
@@ -6148,63 +7236,95 @@
       consent: consent,
       appendIdentityToUrl: appendIdentityToUrl,
       logger: logger,
-      config: config
+      config: config,
     });
   };
 
-  createIdentity.namespace = "Identity";
+  createIdentity.namespace = 'Identity';
   createIdentity.configValidators = configValidators;
 
-  var createResultLogMessage = function createResultLogMessage(urlDestination, success) {
-    return "URL destination " + (success ? "succeeded" : "failed") + ": " + urlDestination.spec.url;
+  var createResultLogMessage = function createResultLogMessage(
+    // @ts-ignore
+    urlDestination,
+    // @ts-ignore
+    success
+  ) {
+    return (
+      'URL destination ' +
+      (success ? 'succeeded' : 'failed') +
+      ': ' +
+      urlDestination.spec.url
+    );
   };
 
-  var injectProcessDestinations = (function (_ref) {
+  // @ts-ignore
+  var injectProcessDestinations = function (_ref) {
     var fireReferrerHideableImage = _ref.fireReferrerHideableImage,
-        logger = _ref.logger,
-        cookieJar = _ref.cookieJar,
-        isPageSsl = _ref.isPageSsl;
-    var extraCookieOptions = isPageSsl ? {
-      sameSite: "none",
-      secure: true
-    } : {};
+      logger = _ref.logger,
+      cookieJar = _ref.cookieJar,
+      isPageSsl = _ref.isPageSsl;
+    var extraCookieOptions = isPageSsl
+      ? {
+          sameSite: 'none',
+          secure: true,
+        }
+      : {};
 
+    // @ts-ignore
     var processCookies = function processCookies(destinations) {
+      // @ts-ignore
       var cookieDestinations = destinations.filter(function (dest) {
-        return dest.type === "cookie";
+        return dest.type === 'cookie';
       });
+      // @ts-ignore
       cookieDestinations.forEach(function (dest) {
         var _dest$spec = dest.spec,
-            name = _dest$spec.name,
-            value = _dest$spec.value,
-            domain = _dest$spec.domain,
-            ttlDays = _dest$spec.ttlDays;
-        cookieJar.set(name, value || "", _objectSpread2({
-          domain: domain || "",
-          expires: ttlDays || 10
-        }, extraCookieOptions));
+          name = _dest$spec.name,
+          value = _dest$spec.value,
+          domain = _dest$spec.domain,
+          ttlDays = _dest$spec.ttlDays;
+        cookieJar.set(
+          name,
+          value || '',
+          _objectSpread2(
+            {
+              domain: domain || '',
+              expires: ttlDays || 10,
+            },
+            extraCookieOptions
+          )
+        );
       });
     };
 
+    // @ts-ignore
     var processUrls = function processUrls(destinations) {
+      // @ts-ignore
       var urlDestinations = destinations.filter(function (dest) {
-        return dest.type === "url";
+        return dest.type === 'url';
       });
-      return Promise.all(urlDestinations.map(function (urlDestination) {
-        return fireReferrerHideableImage(urlDestination.spec).then(function () {
-          logger.info(createResultLogMessage(urlDestination, true));
-        }).catch(function () {// We intentionally do not throw an error if destinations fail. We
-          // consider it a non-critical failure and therefore do not want it to
-          // reject the promise handed back to the customer.
-        });
-      })).then(noop$1);
+      return Promise.all(
+        // @ts-ignore
+        urlDestinations.map(function (urlDestination) {
+          return fireReferrerHideableImage(urlDestination.spec)
+            .then(function () {
+              logger.info(createResultLogMessage(urlDestination, true));
+            })
+            .catch(function () {
+              // We intentionally do not throw an error if destinations fail. We
+              // consider it a non-critical failure and therefore do not want it to
+              // reject the promise handed back to the customer.
+            });
+        })
+      ).then(noop$1);
     };
 
+    // @ts-ignore
     return function (destinations) {
       processCookies(destinations);
       return processUrls(destinations);
     };
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -6217,33 +7337,37 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectProcessResponse = (function (_ref) {
+  // @ts-ignore
+  var injectProcessResponse = function (_ref) {
     var processDestinations = _ref.processDestinations;
 
+    // @ts-ignore
     var processPushDestinations = function processPushDestinations(_ref2) {
       var response = _ref2.response;
-      var destinations = response.getPayloadsByType("activation:push");
+      var destinations = response.getPayloadsByType('activation:push');
       return processDestinations(destinations);
     };
 
+    // @ts-ignore
     var retrievePullDestinations = function retrievePullDestinations(_ref3) {
       var response = _ref3.response;
       return {
-        destinations: response.getPayloadsByType("activation:pull")
+        destinations: response.getPayloadsByType('activation:pull'),
       };
     };
 
+    // @ts-ignore
     return function (_ref4) {
       var response = _ref4.response;
       return processPushDestinations({
-        response: response
+        response: response,
       }).then(function () {
         return retrievePullDestinations({
-          response: response
+          response: response,
         });
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6257,37 +7381,39 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createAudiences = function createAudiences(_ref) {
     var logger = _ref.logger,
-        fireReferrerHideableImage = _ref.fireReferrerHideableImage;
+      fireReferrerHideableImage = _ref.fireReferrerHideableImage;
     // we override the js-cookie converter to encode the cookie value similar on how it is in DIL (PDCL-10238)
     var cookieJarWithEncoding = cookieJar.withConverter({
+      // @ts-ignore
       write: function write(value) {
         return encodeURIComponent(value);
-      }
+      },
     });
     var loggingCookieJar = createLoggingCookieJar({
       logger: logger,
-      cookieJar: cookieJarWithEncoding
+      cookieJar: cookieJarWithEncoding,
     });
     var processDestinations = injectProcessDestinations({
       fireReferrerHideableImage: fireReferrerHideableImage,
       logger: logger,
       cookieJar: loggingCookieJar,
-      isPageSsl: window.location.protocol === "https:"
+      isPageSsl: window.location.protocol === 'https:',
     });
     var processResponse = injectProcessResponse({
-      processDestinations: processDestinations
+      processDestinations: processDestinations,
     });
     return {
       lifecycle: {
-        onResponse: processResponse
+        onResponse: processResponse,
       },
-      commands: {}
+      commands: {},
     };
   };
 
-  createAudiences.namespace = "Audiences";
+  createAudiences.namespace = 'Audiences';
   createAudiences.configValidators = {};
 
   /*
@@ -6301,10 +7427,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var WEB = "web";
-  var WEBAPP = "webapp";
-  var SURFACE_TYPE_DELIMITER = "://";
-  var FRAGMENT_DELIMITER = "#";
+  var WEB = 'web';
+  var WEBAPP = 'webapp';
+  var SURFACE_TYPE_DELIMITER = '://';
+  var FRAGMENT_DELIMITER = '#';
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -6318,47 +7444,66 @@
   governing permissions and limitations under the License.
   */
   var SURFACE_REGEX = /^(\w+):\/\/([^/#]+)(\/[^#]*)?(#.*)?$/;
-  var AUTHORITY_REGEX = /^(?:.*@)?(?:[a-z\d\u00a1-\uffff.-]+|\[[a-f\d:]+])(?::\d+)?$/;
+  var AUTHORITY_REGEX =
+    /^(?:.*@)?(?:[a-z\d\u00a1-\uffff.-]+|\[[a-f\d:]+])(?::\d+)?$/;
   var PATH_REGEX = /^\/(?:[/\w\u00a1-\uffff-.~]|%[a-fA-F\d]{2})*$/;
   var FRAGMENT_REGEX = /^#(?:[/\w\u00a1-\uffff-.~]|%[a-fA-F\d]{2})+$/;
 
   var normalizePath = function normalizePath() {
-    var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "/";
+    var path =
+      arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '/';
     var end = path.length;
 
-    while (end > 0 && "/".indexOf(path.charAt(end - 1)) !== -1) {
+    while (end > 0 && '/'.indexOf(path.charAt(end - 1)) !== -1) {
       end -= 1;
     }
 
-    return path.substring(0, end) || "/";
+    return path.substring(0, end) || '/';
   };
 
+  // @ts-ignore
   var getSurfaceType = function getSurfaceType(surfaceTypeMatch) {
-    return isNonEmptyString(surfaceTypeMatch) ? surfaceTypeMatch.toLowerCase() : "";
+    return isNonEmptyString(surfaceTypeMatch)
+      ? surfaceTypeMatch.toLowerCase()
+      : '';
   };
 
+  // @ts-ignore
   var getAuthority = function getAuthority(authorityMatch) {
-    return isNonEmptyString(authorityMatch) ? authorityMatch.toLowerCase() : "";
+    return isNonEmptyString(authorityMatch) ? authorityMatch.toLowerCase() : '';
   };
 
+  // @ts-ignore
   var getPath = function getPath(pathMatch) {
-    return isNonEmptyString(pathMatch) ? normalizePath(pathMatch) : "/";
+    return isNonEmptyString(pathMatch) ? normalizePath(pathMatch) : '/';
   };
 
+  // @ts-ignore
   var parseSurface = function parseSurface(surfaceString) {
     var matched = surfaceString.match(SURFACE_REGEX);
-    return matched ? {
-      surfaceType: getSurfaceType(matched[1]),
-      authority: getAuthority(matched[2]),
-      path: getPath(matched[3]),
-      fragment: matched[4]
-    } : null;
+    return matched
+      ? {
+          surfaceType: getSurfaceType(matched[1]),
+          authority: getAuthority(matched[2]),
+          path: getPath(matched[3]),
+          fragment: matched[4],
+        }
+      : null;
   };
 
+  // @ts-ignore
   var stringifySurface = function stringifySurface(surface) {
-    return "" + surface.surfaceType + SURFACE_TYPE_DELIMITER + surface.authority + (surface.path || "") + (surface.fragment || "");
+    return (
+      '' +
+      surface.surfaceType +
+      SURFACE_TYPE_DELIMITER +
+      surface.authority +
+      (surface.path || '') +
+      (surface.fragment || '')
+    );
   };
 
+  // @ts-ignore
   var buildPageSurface = function buildPageSurface(getPageLocation) {
     var location = getPageLocation();
     var host = location.host.toLowerCase();
@@ -6366,58 +7511,97 @@
     return WEB + SURFACE_TYPE_DELIMITER + host + normalizePath(path);
   };
 
-  var expandFragmentSurface = function expandFragmentSurface(surface, getPageLocation) {
-    return startsWith(surface, FRAGMENT_DELIMITER) ? buildPageSurface(getPageLocation) + surface : surface;
+  var expandFragmentSurface = function expandFragmentSurface(
+    // @ts-ignore
+    surface,
+    // @ts-ignore
+    getPageLocation
+  ) {
+    return startsWith(surface, FRAGMENT_DELIMITER)
+      ? buildPageSurface(getPageLocation) + surface
+      : surface;
   };
 
-  var validateSurface = function validateSurface(surface, getPageLocation, logger) {
+  var validateSurface = function validateSurface(
+    // @ts-ignore
+    surface,
+    // @ts-ignore
+    getPageLocation,
+    // @ts-ignore
+    logger
+  ) {
+    // @ts-ignore
     var invalidateSurface = function invalidateSurface(validationError) {
       logger.warn(validationError);
       return null;
     };
 
     if (!isNonEmptyString(surface)) {
-      return invalidateSurface("Invalid surface: " + surface);
+      return invalidateSurface('Invalid surface: ' + surface);
     }
 
     var expanded = expandFragmentSurface(surface, getPageLocation);
     var parsed = parseSurface(expanded);
 
     if (parsed === null) {
-      return invalidateSurface("Invalid surface: " + surface);
+      return invalidateSurface('Invalid surface: ' + surface);
     }
 
     if (!includes([WEB, WEBAPP], parsed.surfaceType)) {
-      return invalidateSurface("Unsupported surface type " + parsed.surfaceType + " in surface: " + surface);
+      return invalidateSurface(
+        'Unsupported surface type ' +
+          parsed.surfaceType +
+          ' in surface: ' +
+          surface
+      );
     }
 
     if (!parsed.authority || !AUTHORITY_REGEX.test(parsed.authority)) {
-      return invalidateSurface("Invalid authority " + parsed.authority + " in surface: " + surface);
+      return invalidateSurface(
+        'Invalid authority ' + parsed.authority + ' in surface: ' + surface
+      );
     }
 
     if (parsed.path && !PATH_REGEX.test(parsed.path)) {
-      return invalidateSurface("Invalid path " + parsed.path + " in surface: " + surface);
+      return invalidateSurface(
+        'Invalid path ' + parsed.path + ' in surface: ' + surface
+      );
     }
 
     if (parsed.fragment && !FRAGMENT_REGEX.test(parsed.fragment)) {
-      return invalidateSurface("Invalid fragment " + parsed.fragment + " in surface: " + surface);
+      return invalidateSurface(
+        'Invalid fragment ' + parsed.fragment + ' in surface: ' + surface
+      );
     }
 
     return parsed;
   };
 
+  // @ts-ignore
   var isPageWideSurface = function isPageWideSurface(scope) {
-    return !!scope && scope.indexOf(WEB + SURFACE_TYPE_DELIMITER) === 0 && scope.indexOf(FRAGMENT_DELIMITER) === -1;
+    return (
+      !!scope &&
+      scope.indexOf(WEB + SURFACE_TYPE_DELIMITER) === 0 &&
+      scope.indexOf(FRAGMENT_DELIMITER) === -1
+    );
   };
   var normalizeSurfaces = function normalizeSurfaces() {
-    var surfaces = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var surfaces =
+      arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var getPageLocation = arguments.length > 1 ? arguments[1] : undefined;
     var logger = arguments.length > 2 ? arguments[2] : undefined;
-    return surfaces.map(function (surface) {
-      return validateSurface(surface, getPageLocation, logger);
-    }).filter(function (surface) {
-      return !isNil(surface);
-    }).map(stringifySurface);
+    return (
+      surfaces
+        // @ts-ignore
+        .map(function (surface) {
+          return validateSurface(surface, getPageLocation, logger);
+        })
+        // @ts-ignore
+        .filter(function (surface) {
+          return !isNil(surface);
+        })
+        .map(stringifySurface)
+    );
   };
 
   /*
@@ -6431,7 +7615,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var PAGE_WIDE_SCOPE = "__view__";
+  var PAGE_WIDE_SCOPE = '__view__';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6444,19 +7628,24 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var DEFAULT_CONTENT_ITEM = "https://ns.adobe.com/personalization/default-content-item";
-  var DOM_ACTION = "https://ns.adobe.com/personalization/dom-action";
-  var HTML_CONTENT_ITEM = "https://ns.adobe.com/personalization/html-content-item";
-  var JSON_CONTENT_ITEM = "https://ns.adobe.com/personalization/json-content-item";
-  var REDIRECT_ITEM = "https://ns.adobe.com/personalization/redirect-item";
-  var MEASUREMENT_SCHEMA = "https://ns.adobe.com/personalization/measurement";
+  var DEFAULT_CONTENT_ITEM =
+    'https://ns.adobe.com/personalization/default-content-item';
+  var DOM_ACTION = 'https://ns.adobe.com/personalization/dom-action';
+  var HTML_CONTENT_ITEM =
+    'https://ns.adobe.com/personalization/html-content-item';
+  var JSON_CONTENT_ITEM =
+    'https://ns.adobe.com/personalization/json-content-item';
+  var REDIRECT_ITEM = 'https://ns.adobe.com/personalization/redirect-item';
+  var MEASUREMENT_SCHEMA = 'https://ns.adobe.com/personalization/measurement';
 
+  // @ts-ignore
   var addPageWideScope = function addPageWideScope(scopes) {
     if (!includes(scopes, PAGE_WIDE_SCOPE)) {
       scopes.push(PAGE_WIDE_SCOPE);
     }
   };
 
+  // @ts-ignore
   var addPageSurface = function addPageSurface(surfaces, getPageLocation) {
     var pageSurface = buildPageSurface(getPageLocation);
 
@@ -6465,20 +7654,23 @@
     }
   };
 
+  // @ts-ignore
   var dedupe = function dedupe(array) {
+    // @ts-ignore
     return array.filter(function (item, pos) {
       return array.indexOf(item) === pos;
     });
   };
 
-  var createPersonalizationDetails = (function (_ref) {
+  // @ts-ignore
+  var createPersonalizationDetails = function (_ref) {
     var getPageLocation = _ref.getPageLocation,
-        renderDecisions = _ref.renderDecisions,
-        decisionScopes = _ref.decisionScopes,
-        personalization = _ref.personalization,
-        event = _ref.event,
-        viewCache = _ref.viewCache,
-        logger = _ref.logger;
+      renderDecisions = _ref.renderDecisions,
+      decisionScopes = _ref.decisionScopes,
+      personalization = _ref.personalization,
+      event = _ref.event,
+      viewCache = _ref.viewCache,
+      logger = _ref.logger;
     var viewName = event.getViewName();
     return {
       isRenderDecisions: function isRenderDecisions() {
@@ -6488,7 +7680,10 @@
         return viewName;
       },
       hasScopes: function hasScopes() {
-        return decisionScopes.length > 0 || isNonEmptyArray(personalization.decisionScopes);
+        return (
+          decisionScopes.length > 0 ||
+          isNonEmptyArray(personalization.decisionScopes)
+        );
       },
       hasSurfaces: function hasSurfaces() {
         return isNonEmptyArray(personalization.surfaces);
@@ -6500,18 +7695,32 @@
         var scopes = _toConsumableArray(decisionScopes);
 
         if (isNonEmptyArray(personalization.decisionScopes)) {
-          scopes.push.apply(scopes, _toConsumableArray(personalization.decisionScopes));
+          // @ts-ignore
+          scopes.push.apply(
+            scopes,
+            _toConsumableArray(personalization.decisionScopes)
+          );
         }
 
-        var eventSurfaces = normalizeSurfaces(personalization.surfaces, getPageLocation, logger);
+        var eventSurfaces = normalizeSurfaces(
+          personalization.surfaces,
+          getPageLocation,
+          logger
+        );
 
         if (!this.isCacheInitialized()) {
           addPageWideScope(scopes);
           addPageSurface(eventSurfaces, getPageLocation);
         }
 
-        var schemas = [DEFAULT_CONTENT_ITEM, HTML_CONTENT_ITEM, JSON_CONTENT_ITEM, REDIRECT_ITEM];
+        var schemas = [
+          DEFAULT_CONTENT_ITEM,
+          HTML_CONTENT_ITEM,
+          JSON_CONTENT_ITEM,
+          REDIRECT_ITEM,
+        ];
 
+        // @ts-ignore
         if (includes(scopes, PAGE_WIDE_SCOPE)) {
           schemas.push(DOM_ACTION);
         }
@@ -6519,20 +7728,22 @@
         return {
           schemas: schemas,
           decisionScopes: dedupe(scopes),
-          surfaces: dedupe(eventSurfaces)
+          surfaces: dedupe(eventSurfaces),
         };
       },
       isCacheInitialized: function isCacheInitialized() {
         return viewCache.isInitialized();
       },
       shouldFetchData: function shouldFetchData() {
-        return this.hasScopes() || this.hasSurfaces() || !this.isCacheInitialized();
+        return (
+          this.hasScopes() || this.hasSurfaces() || !this.isCacheInitialized()
+        );
       },
       shouldUseCachedData: function shouldUseCachedData() {
         return this.hasViewName() && this.isCacheInitialized();
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -6545,8 +7756,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var AUTHORING_ENABLED = "Rendering is disabled for authoring mode.";
-  var REDIRECT_EXECUTION_ERROR = "An error occurred while executing the redirect offer.";
+  var AUTHORING_ENABLED = 'Rendering is disabled for authoring mode.';
+  var REDIRECT_EXECUTION_ERROR =
+    'An error occurred while executing the redirect offer.';
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -6560,23 +7772,29 @@
   governing permissions and limitations under the License.
   */
   var EMPTY_PROPOSITIONS = {
-    propositions: []
+    propositions: [],
   };
-  var validateApplyPropositionsOptions = (function (_ref) {
+  // @ts-ignore
+  var validateApplyPropositionsOptions = function (_ref) {
     var logger = _ref.logger,
-        options = _ref.options;
+      options = _ref.options;
     var applyPropositionsOptionsValidator = boundObjectOf({
+      // @ts-ignore
       propositions: boundArrayOf(boundObjectOf(boundAnything())).nonEmpty(),
-      metadata: boundObjectOf(boundAnything())
+      metadata: boundObjectOf(boundAnything()),
+      // @ts-ignore
     }).required();
 
     try {
       return applyPropositionsOptionsValidator(options);
     } catch (e) {
-      logger.warn("Invalid options for applyPropositions. No propositions will be applied.", e);
+      logger.warn(
+        'Invalid options for applyPropositions. No propositions will be applied.',
+        e
+      );
       return EMPTY_PROPOSITIONS;
     }
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -6589,40 +7807,47 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createComponent$3 = (function (_ref) {
+  // @ts-ignore
+  var createComponent$3 = function (_ref) {
     var getPageLocation = _ref.getPageLocation,
-        logger = _ref.logger,
-        fetchDataHandler = _ref.fetchDataHandler,
-        viewChangeHandler = _ref.viewChangeHandler,
-        onClickHandler = _ref.onClickHandler,
-        isAuthoringModeEnabled = _ref.isAuthoringModeEnabled,
-        mergeQuery = _ref.mergeQuery,
-        viewCache = _ref.viewCache,
-        showContainers = _ref.showContainers,
-        applyPropositions = _ref.applyPropositions,
-        setTargetMigration = _ref.setTargetMigration;
+      logger = _ref.logger,
+      fetchDataHandler = _ref.fetchDataHandler,
+      viewChangeHandler = _ref.viewChangeHandler,
+      onClickHandler = _ref.onClickHandler,
+      isAuthoringModeEnabled = _ref.isAuthoringModeEnabled,
+      mergeQuery = _ref.mergeQuery,
+      viewCache = _ref.viewCache,
+      showContainers = _ref.showContainers,
+      applyPropositions = _ref.applyPropositions,
+      setTargetMigration = _ref.setTargetMigration;
     return {
       lifecycle: {
+        // @ts-ignore
         onBeforeRequest: function onBeforeRequest(_ref2) {
           var request = _ref2.request;
           setTargetMigration(request);
           return Promise.resolve();
         },
+        // @ts-ignore
         onBeforeEvent: function onBeforeEvent(_ref3) {
           var event = _ref3.event,
-              renderDecisions = _ref3.renderDecisions,
-              _ref3$decisionScopes = _ref3.decisionScopes,
-              decisionScopes = _ref3$decisionScopes === void 0 ? [] : _ref3$decisionScopes,
-              _ref3$personalization = _ref3.personalization,
-              personalization = _ref3$personalization === void 0 ? {} : _ref3$personalization,
-              _ref3$onResponse = _ref3.onResponse,
-              onResponse = _ref3$onResponse === void 0 ? noop$1 : _ref3$onResponse,
-              _ref3$onRequestFailur = _ref3.onRequestFailure,
-              onRequestFailure = _ref3$onRequestFailur === void 0 ? noop$1 : _ref3$onRequestFailur;
+            renderDecisions = _ref3.renderDecisions,
+            _ref3$decisionScopes = _ref3.decisionScopes,
+            decisionScopes =
+              _ref3$decisionScopes === void 0 ? [] : _ref3$decisionScopes,
+            _ref3$personalization = _ref3.personalization,
+            personalization =
+              _ref3$personalization === void 0 ? {} : _ref3$personalization,
+            _ref3$onResponse = _ref3.onResponse,
+            onResponse =
+              _ref3$onResponse === void 0 ? noop$1 : _ref3$onResponse,
+            _ref3$onRequestFailur = _ref3.onRequestFailure,
+            onRequestFailure =
+              _ref3$onRequestFailur === void 0 ? noop$1 : _ref3$onRequestFailur;
           // Include propositions on all responses, overridden with data as needed
           onResponse(function () {
             return {
-              propositions: []
+              propositions: [],
             };
           });
           onRequestFailure(function () {
@@ -6633,7 +7858,7 @@
             logger.warn(AUTHORING_ENABLED); // If we are in authoring mode we disable personalization
 
             mergeQuery(event, {
-              enabled: false
+              enabled: false,
             });
             return;
           }
@@ -6645,20 +7870,21 @@
             personalization: personalization,
             event: event,
             viewCache: viewCache,
-            logger: logger
+            logger: logger,
           });
 
           if (personalizationDetails.shouldFetchData()) {
             var decisionsDeferred = defer();
             viewCache.storeViews(decisionsDeferred.promise);
             onRequestFailure(function () {
+              // @ts-ignore
               return decisionsDeferred.reject();
             });
             fetchDataHandler({
               decisionsDeferred: decisionsDeferred,
               personalizationDetails: personalizationDetails,
               event: event,
-              onResponse: onResponse
+              onResponse: onResponse,
             });
             return;
           }
@@ -6669,32 +7895,34 @@
               personalizationDetails: personalizationDetails,
               event: event,
               onResponse: onResponse,
-              onRequestFailure: onRequestFailure
+              onRequestFailure: onRequestFailure,
             });
           }
         },
+        // @ts-ignore
         onClick: function onClick(_ref4) {
           var event = _ref4.event,
-              clickedElement = _ref4.clickedElement;
+            clickedElement = _ref4.clickedElement;
           onClickHandler({
             event: event,
-            clickedElement: clickedElement
+            clickedElement: clickedElement,
           });
-        }
+        },
       },
       commands: {
         applyPropositions: {
+          // @ts-ignore
           optionsValidator: function optionsValidator(options) {
             return validateApplyPropositionsOptions({
               logger: logger,
-              options: options
+              options: options,
             });
           },
-          run: applyPropositions
-        }
-      }
+          run: applyPropositions,
+        },
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6707,93 +7935,118 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createFragment = (function (content) {
-    return createNode(DIV, {}, {
-      innerHTML: content
-    });
-  });
+  // @ts-ignore
+  var createFragment = function (content) {
+    return createNode(
+      DIV,
+      {},
+      {
+        innerHTML: content,
+      }
+    );
+  };
 
+  // @ts-ignore
   var css_escape = createCommonjsModule(function (module, exports) {
-
     (function (root, factory) {
       // https://github.com/umdjs/umd/blob/master/returnExports.js
       {
         // For Node.js.
+        // @ts-ignore
         module.exports = factory(root);
       }
-    })(typeof commonjsGlobal != 'undefined' ? commonjsGlobal : commonjsGlobal, function (root) {
-      if (root.CSS && root.CSS.escape) {
-        return root.CSS.escape;
-      } // https://drafts.csswg.org/cssom/#serialize-an-identifier
+    })(
+      typeof commonjsGlobal != 'undefined' ? commonjsGlobal : commonjsGlobal,
+      // @ts-ignore
+      function (root) {
+        if (root.CSS && root.CSS.escape) {
+          return root.CSS.escape;
+        } // https://drafts.csswg.org/cssom/#serialize-an-identifier
 
-
-      var cssEscape = function cssEscape(value) {
-        if (arguments.length == 0) {
-          throw new TypeError('`CSS.escape` requires an argument.');
-        }
-
-        var string = String(value);
-        var length = string.length;
-        var index = -1;
-        var codeUnit;
-        var result = '';
-        var firstCodeUnit = string.charCodeAt(0);
-
-        while (++index < length) {
-          codeUnit = string.charCodeAt(index); // Note: there’s no need to special-case astral symbols, surrogate
-          // pairs, or lone surrogates.
-          // If the character is NULL (U+0000), then the REPLACEMENT CHARACTER
-          // (U+FFFD).
-
-          if (codeUnit == 0x0000) {
-            result += "\uFFFD";
-            continue;
+        // @ts-ignore
+        var cssEscape = function cssEscape(value) {
+          if (arguments.length == 0) {
+            throw new TypeError('`CSS.escape` requires an argument.');
           }
 
-          if ( // If the character is in the range [\1-\1F] (U+0001 to U+001F) or is
-          // U+007F, […]
-          codeUnit >= 0x0001 && codeUnit <= 0x001F || codeUnit == 0x007F || // If the character is the first character and is in the range [0-9]
-          // (U+0030 to U+0039), […]
-          index == 0 && codeUnit >= 0x0030 && codeUnit <= 0x0039 || // If the character is the second character and is in the range [0-9]
-          // (U+0030 to U+0039) and the first character is a `-` (U+002D), […]
-          index == 1 && codeUnit >= 0x0030 && codeUnit <= 0x0039 && firstCodeUnit == 0x002D) {
-            // https://drafts.csswg.org/cssom/#escape-a-character-as-code-point
-            result += '\\' + codeUnit.toString(16) + ' ';
-            continue;
-          }
+          var string = String(value);
+          var length = string.length;
+          var index = -1;
+          var codeUnit;
+          var result = '';
+          var firstCodeUnit = string.charCodeAt(0);
 
-          if ( // If the character is the first character and is a `-` (U+002D), and
-          // there is no second character, […]
-          index == 0 && length == 1 && codeUnit == 0x002D) {
+          while (++index < length) {
+            codeUnit = string.charCodeAt(index); // Note: there’s no need to special-case astral symbols, surrogate
+            // pairs, or lone surrogates.
+            // If the character is NULL (U+0000), then the REPLACEMENT CHARACTER
+            // (U+FFFD).
+
+            if (codeUnit == 0x0000) {
+              result += '\uFFFD';
+              continue;
+            }
+
+            if (
+              // If the character is in the range [\1-\1F] (U+0001 to U+001F) or is
+              // U+007F, […]
+              (codeUnit >= 0x0001 && codeUnit <= 0x001f) ||
+              codeUnit == 0x007f || // If the character is the first character and is in the range [0-9]
+              // (U+0030 to U+0039), […]
+              (index == 0 && codeUnit >= 0x0030 && codeUnit <= 0x0039) || // If the character is the second character and is in the range [0-9]
+              // (U+0030 to U+0039) and the first character is a `-` (U+002D), […]
+              (index == 1 &&
+                codeUnit >= 0x0030 &&
+                codeUnit <= 0x0039 &&
+                firstCodeUnit == 0x002d)
+            ) {
+              // https://drafts.csswg.org/cssom/#escape-a-character-as-code-point
+              result += '\\' + codeUnit.toString(16) + ' ';
+              continue;
+            }
+
+            if (
+              // If the character is the first character and is a `-` (U+002D), and
+              // there is no second character, […]
+              index == 0 &&
+              length == 1 &&
+              codeUnit == 0x002d
+            ) {
+              result += '\\' + string.charAt(index);
+              continue;
+            } // If the character is not handled by one of the above rules and is
+            // greater than or equal to U+0080, is `-` (U+002D) or `_` (U+005F), or
+            // is in one of the ranges [0-9] (U+0030 to U+0039), [A-Z] (U+0041 to
+            // U+005A), or [a-z] (U+0061 to U+007A), […]
+
+            if (
+              codeUnit >= 0x0080 ||
+              codeUnit == 0x002d ||
+              codeUnit == 0x005f ||
+              (codeUnit >= 0x0030 && codeUnit <= 0x0039) ||
+              (codeUnit >= 0x0041 && codeUnit <= 0x005a) ||
+              (codeUnit >= 0x0061 && codeUnit <= 0x007a)
+            ) {
+              // the character itself
+              result += string.charAt(index);
+              continue;
+            } // Otherwise, the escaped character.
+            // https://drafts.csswg.org/cssom/#escape-a-character
+
             result += '\\' + string.charAt(index);
-            continue;
-          } // If the character is not handled by one of the above rules and is
-          // greater than or equal to U+0080, is `-` (U+002D) or `_` (U+005F), or
-          // is in one of the ranges [0-9] (U+0030 to U+0039), [A-Z] (U+0041 to
-          // U+005A), or [a-z] (U+0061 to U+007A), […]
+          }
 
+          return result;
+        };
 
-          if (codeUnit >= 0x0080 || codeUnit == 0x002D || codeUnit == 0x005F || codeUnit >= 0x0030 && codeUnit <= 0x0039 || codeUnit >= 0x0041 && codeUnit <= 0x005A || codeUnit >= 0x0061 && codeUnit <= 0x007A) {
-            // the character itself
-            result += string.charAt(index);
-            continue;
-          } // Otherwise, the escaped character.
-          // https://drafts.csswg.org/cssom/#escape-a-character
-
-
-          result += '\\' + string.charAt(index);
+        if (!root.CSS) {
+          root.CSS = {};
         }
 
-        return result;
-      };
-
-      if (!root.CSS) {
-        root.CSS = {};
+        root.CSS.escape = cssEscape;
+        return cssEscape;
       }
-
-      root.CSS.escape = cssEscape;
-      return cssEscape;
-    });
+    );
   });
 
   /*
@@ -6807,11 +8060,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var EQ_START = ":eq(";
+  var EQ_START = ':eq(';
   var EQ_PATTERN = /:eq\((\d+)\)/g;
+  // @ts-ignore
   var isNotEqSelector = function isNotEqSelector(str) {
     return str.indexOf(EQ_START) === -1;
   };
+  // @ts-ignore
   var splitWithEq = function splitWithEq(selector) {
     return selector.split(EQ_PATTERN).filter(isNonEmptyString);
   };
@@ -6821,13 +8076,18 @@
   // Please check:  https://www.w3.org/TR/css-syntax-3/#escaping
   // CSS.escape() polyfill can be found here: https://github.com/mathiasbynens/CSS.escape
 
+  // @ts-ignore
   var replaceIdentifier = function replaceIdentifier(_, $1, $2) {
-    return "" + $1 + css_escape($2);
+    return '' + $1 + css_escape($2);
   };
 
-  var escapeIdentifiersInSelector = function escapeIdentifiersInSelector(selector) {
+  var escapeIdentifiersInSelector = function escapeIdentifiersInSelector(
+    // @ts-ignore
+    selector
+  ) {
     return selector.replace(CSS_IDENTIFIER_PATTERN, replaceIdentifier);
   };
+  // @ts-ignore
   var parseSelector = function parseSelector(rawSelector) {
     var result = [];
     var selector = escapeIdentifiersInSelector(rawSelector.trim());
@@ -6842,11 +8102,11 @@
       if (eq) {
         result.push({
           sel: sel,
-          eq: Number(eq)
+          eq: Number(eq),
         });
       } else {
         result.push({
-          sel: sel
+          sel: sel,
         });
       }
 
@@ -6876,8 +8136,8 @@
 
     while (i < length) {
       var _parts$i = parts[i],
-          sel = _parts$i.sel,
-          eq = _parts$i.eq;
+        sel = _parts$i.sel,
+        eq = _parts$i.eq;
       var nodes = selectNodes(sel, context);
       var nodesCount = nodes.length;
 
@@ -6893,6 +8153,7 @@
         if (eq == null) {
           var _nodes = _slicedToArray(nodes, 1);
 
+          // @ts-ignore
           context = _nodes[0];
         } else {
           context = nodes[eq];
@@ -6931,10 +8192,13 @@
    * @param {Node} [context=document] defaults to document
    * @returns {HTMLElement} an element of null
    */
-  var getElementById = (function (id) {
-    var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+  var getElementById = function (id) {
+    var context =
+      arguments.length > 1 && arguments[1] !== undefined
+        ? arguments[1]
+        : document;
     return context.getElementById(id);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6947,9 +8211,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var setAttribute = (function (element, name, value) {
+  // @ts-ignore
+  var setAttribute = function (element, name, value) {
     element.setAttribute(name, value);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6962,9 +8227,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getAttribute = (function (element, name) {
+  // @ts-ignore
+  var getAttribute = function (element, name) {
     return element.getAttribute(name);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6977,9 +8243,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var removeAttribute = (function (element, name) {
+  // @ts-ignore
+  var removeAttribute = function (element, name) {
     element.removeAttribute(name);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -6992,17 +8259,18 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var setStyle = (function (element, name, value, priority) {
+  // @ts-ignore
+  var setStyle = function (element, name, value, priority) {
     var css;
 
     if (priority) {
-      css = name + ":" + value + " !" + priority + ";";
+      css = name + ':' + value + ' !' + priority + ';';
     } else {
-      css = name + ":" + value + ";";
+      css = name + ':' + value + ';';
     }
 
-    element.style.cssText += ";" + css;
-  });
+    element.style.cssText += ';' + css;
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7015,9 +8283,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getParent = (function (element) {
+  // @ts-ignore
+  var getParent = function (element) {
     return element.parentNode;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7030,9 +8299,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getNextSibling = (function (element) {
+  // @ts-ignore
+  var getNextSibling = function (element) {
     return element.nextElementSibling;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7045,7 +8315,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var insertAfter = (function (container, element) {
+  // @ts-ignore
+  var insertAfter = function (container, element) {
     if (!container) {
       return;
     }
@@ -7055,7 +8326,7 @@
     if (parent) {
       parent.insertBefore(element, getNextSibling(container));
     }
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7068,7 +8339,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var insertBefore = (function (container, element) {
+  // @ts-ignore
+  var insertBefore = function (container, element) {
     if (!container) {
       return;
     }
@@ -7078,7 +8350,7 @@
     if (parent) {
       parent.insertBefore(element, container);
     }
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7091,7 +8363,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getChildren = (function (element) {
+  // @ts-ignore
+  var getChildren = function (element) {
     var children = element.children;
 
     if (children) {
@@ -7099,7 +8372,7 @@
     }
 
     return [];
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7112,7 +8385,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getChildNodes = (function (element) {
+  // @ts-ignore
+  var getChildNodes = function (element) {
     var childNodes = element.childNodes;
 
     if (childNodes) {
@@ -7120,7 +8394,7 @@
     }
 
     return [];
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7133,9 +8407,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var getFirstChild = (function (element) {
+  // @ts-ignore
+  var getFirstChild = function (element) {
     return element.firstElementChild;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7148,6 +8423,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
+  // @ts-ignore
   var nonce;
   /**
    * Returns the nonce if available.
@@ -7155,60 +8431,74 @@
    * @returns {(String|undefined)} the nonce or undefined if not available
    */
 
-  var getNonce = (function () {
-    var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
+  var getNonce = function () {
+    var context =
+      arguments.length > 0 && arguments[0] !== undefined
+        ? arguments[0]
+        : document;
 
+    // @ts-ignore
     if (nonce === undefined) {
-      var n = context.querySelector("[nonce]"); // NOTE: We're keeping n.getAttribute("nonce") until it is safe to remove:
+      var n = context.querySelector('[nonce]'); // NOTE: We're keeping n.getAttribute("nonce") until it is safe to remove:
       //   ref: https://github.com/whatwg/html/issues/2369#issuecomment-280853946
 
-      nonce = n && (n.nonce || n.getAttribute("nonce"));
+      nonce = n && (n.nonce || n.getAttribute('nonce'));
     }
 
+    // @ts-ignore
     return nonce;
-  }); // This function is only used for testing and removed when library is built (tree-shaking)
+  }; // This function is only used for testing and removed when library is built (tree-shaking)
 
-  var PREHIDING_ID = "alloy-prehiding";
-  var HIDING_STYLE_DEFINITION = "{ visibility: hidden }"; // Using global is OK since we have a single DOM
+  var PREHIDING_ID = 'alloy-prehiding';
+  var HIDING_STYLE_DEFINITION = '{ visibility: hidden }'; // Using global is OK since we have a single DOM
   // so storing nodes even for multiple Alloy instances is fine
 
   var styleNodes = {};
+  // @ts-ignore
   var hideElements = function hideElements(prehidingSelector) {
     // if we have different events with the same
     // prehiding selector we don't want to recreate
     // the style tag
+    // @ts-ignore
     if (styleNodes[prehidingSelector]) {
       return;
     }
 
     var nonce = getNonce();
 
-    var attrs = _objectSpread2({}, nonce && {
-      nonce: nonce
-    });
+    var attrs = _objectSpread2(
+      {},
+      nonce && {
+        nonce: nonce,
+      }
+    );
 
     var props = {
-      textContent: prehidingSelector + " " + HIDING_STYLE_DEFINITION
+      textContent: prehidingSelector + ' ' + HIDING_STYLE_DEFINITION,
     };
     var node = createNode(STYLE, attrs, props);
     appendNode(document.head, node);
+    // @ts-ignore
     styleNodes[prehidingSelector] = node;
   };
+  // @ts-ignore
   var showElements = function showElements(prehidingSelector) {
+    // @ts-ignore
     var node = styleNodes[prehidingSelector];
 
     if (node) {
       removeNode(node);
+      // @ts-ignore
       delete styleNodes[prehidingSelector];
     }
   };
+  // @ts-ignore
   var hideContainers = function hideContainers(prehidingStyle) {
     if (!prehidingStyle) {
       return;
     } // If containers prehiding style has been added
     // by customer's prehiding snippet we don't
     // want to add the same node
-
 
     var node = getElementById(PREHIDING_ID);
 
@@ -7218,14 +8508,17 @@
 
     var nonce = getNonce();
 
-    var attrs = _objectSpread2({
-      id: PREHIDING_ID
-    }, nonce && {
-      nonce: nonce
-    });
+    var attrs = _objectSpread2(
+      {
+        id: PREHIDING_ID,
+      },
+      nonce && {
+        nonce: nonce,
+      }
+    );
 
     var props = {
-      textContent: prehidingStyle
+      textContent: prehidingStyle,
     };
     var styleNode = createNode(STYLE, attrs, props);
     appendNode(document.head, styleNode);
@@ -7253,9 +8546,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var setText = (function (container, text) {
+  // @ts-ignore
+  var setText = function (container, text) {
     container.textContent = text;
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -7268,7 +8562,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var SRC = "src";
+  var SRC = 'src';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7281,14 +8575,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
+  // @ts-ignore
   var isImage = function isImage(element) {
     return element.tagName === IMG;
   };
+  // @ts-ignore
   var loadImage = function loadImage(url) {
     return createNode(IMG, {
-      src: url
+      src: url,
     });
   };
+  // @ts-ignore
   var loadImages = function loadImages(fragment) {
     var images = selectNodes(IMG, fragment);
     images.forEach(function (image) {
@@ -7312,15 +8609,18 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var is$1 = function is(element, tagName) {
     return element.tagName === tagName;
   };
 
+  // @ts-ignore
   var isInlineStyleElement = function isInlineStyleElement(element) {
     return is$1(element, STYLE) && !getAttribute(element, SRC);
   };
 
-  var addNonceToInlineStyleElements = (function (fragment) {
+  // @ts-ignore
+  var addNonceToInlineStyleElements = function (fragment) {
     var styleNodes = selectNodes(STYLE, fragment);
     var length = styleNodes.length;
     var nonce = getNonce();
@@ -7329,7 +8629,6 @@
       return;
     }
     /* eslint-disable no-continue */
-
 
     for (var i = 0; i < length; i += 1) {
       var element = styleNodes[i];
@@ -7340,38 +8639,43 @@
 
       element.nonce = nonce;
     }
-  });
+  };
 
   /**
    * @this {Promise}
    */
+  // @ts-ignore
   function finallyConstructor(callback) {
     var constructor = this.constructor;
-    return this.then(function (value) {
-      // @ts-ignore
-      return constructor.resolve(callback()).then(function () {
-        return value;
-      });
-    }, function (reason) {
-      // @ts-ignore
-      return constructor.resolve(callback()).then(function () {
+    return this.then(
+      function (value) {
         // @ts-ignore
-        return constructor.reject(reason);
-      });
-    });
+        return constructor.resolve(callback()).then(function () {
+          return value;
+        });
+      },
+      function (reason) {
+        // @ts-ignore
+        return constructor.resolve(callback()).then(function () {
+          // @ts-ignore
+          return constructor.reject(reason);
+        });
+      }
+    );
   }
 
   // other code modifying setTimeout (like sinon.useFakeTimers())
 
   var setTimeoutFunc = setTimeout;
 
+  // @ts-ignore
   function isArray(x) {
     return Boolean(x && typeof x.length !== 'undefined');
   }
 
   function noop() {} // Polyfill for Function.prototype.bind
 
-
+  // @ts-ignore
   function bind(fn, thisArg) {
     return function () {
       fn.apply(thisArg, arguments);
@@ -7382,9 +8686,9 @@
    * @param {Function} fn
    */
 
-
   function Promise$1(fn) {
-    if (!(this instanceof Promise$1)) throw new TypeError('Promises must be constructed via new');
+    if (!(this instanceof Promise$1))
+      throw new TypeError('Promises must be constructed via new');
     if (typeof fn !== 'function') throw new TypeError('not a function');
     /** @type {!number} */
 
@@ -7401,6 +8705,7 @@
     doResolve(fn, this);
   }
 
+  // @ts-ignore
   function handle(self, deferred) {
     while (self._state === 3) {
       self = self._value;
@@ -7435,12 +8740,17 @@
     });
   }
 
+  // @ts-ignore
   function resolve(self, newValue) {
     try {
       // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-      if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.');
+      if (newValue === self)
+        throw new TypeError('A promise cannot be resolved with itself.');
 
-      if (newValue && (_typeof(newValue) === 'object' || typeof newValue === 'function')) {
+      if (
+        newValue &&
+        (_typeof(newValue) === 'object' || typeof newValue === 'function')
+      ) {
         var then = newValue.then;
 
         if (newValue instanceof Promise$1) {
@@ -7462,12 +8772,14 @@
     }
   }
 
+  // @ts-ignore
   function reject(self, newValue) {
     self._state = 2;
     self._value = newValue;
     finale(self);
   }
 
+  // @ts-ignore
   function finale(self) {
     if (self._state === 2 && self._deferreds.length === 0) {
       Promise$1._immediateFn(function () {
@@ -7487,7 +8799,7 @@
    * @constructor
    */
 
-
+  // @ts-ignore
   function Handler(onFulfilled, onRejected, promise) {
     this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
     this.onRejected = typeof onRejected === 'function' ? onRejected : null;
@@ -7500,20 +8812,25 @@
    * Makes no guarantees about asynchrony.
    */
 
-
+  // @ts-ignore
   function doResolve(fn, self) {
     var done = false;
 
     try {
-      fn(function (value) {
-        if (done) return;
-        done = true;
-        resolve(self, value);
-      }, function (reason) {
-        if (done) return;
-        done = true;
-        reject(self, reason);
-      });
+      fn(
+        // @ts-ignore
+        function (value) {
+          if (done) return;
+          done = true;
+          resolve(self, value);
+        },
+        // @ts-ignore
+        function (reason) {
+          if (done) return;
+          done = true;
+          reject(self, reason);
+        }
+      );
     } catch (ex) {
       if (done) return;
       done = true;
@@ -7521,10 +8838,12 @@
     }
   }
 
+  // @ts-ignore
   Promise$1.prototype['catch'] = function (onRejected) {
     return this.then(null, onRejected);
   };
 
+  // @ts-ignore
   Promise$1.prototype.then = function (onFulfilled, onRejected) {
     // @ts-ignore
     var prom = new this.constructor(noop);
@@ -7534,7 +8853,9 @@
 
   Promise$1.prototype['finally'] = finallyConstructor;
 
+  // @ts-ignore
   Promise$1.all = function (arr) {
+    // @ts-ignore
     return new Promise$1(function (resolve, reject) {
       if (!isArray(arr)) {
         return reject(new TypeError('Promise.all accepts an array'));
@@ -7544,15 +8865,21 @@
       if (args.length === 0) return resolve([]);
       var remaining = args.length;
 
+      // @ts-ignore
       function res(i, val) {
         try {
           if (val && (_typeof(val) === 'object' || typeof val === 'function')) {
             var then = val.then;
 
             if (typeof then === 'function') {
-              then.call(val, function (val) {
-                res(i, val);
-              }, reject);
+              then.call(
+                val,
+                // @ts-ignore
+                function (val) {
+                  res(i, val);
+                },
+                reject
+              );
               return;
             }
           }
@@ -7573,23 +8900,33 @@
     });
   };
 
+  // @ts-ignore
   Promise$1.resolve = function (value) {
-    if (value && _typeof(value) === 'object' && value.constructor === Promise$1) {
+    if (
+      value &&
+      _typeof(value) === 'object' &&
+      value.constructor === Promise$1
+    ) {
       return value;
     }
 
+    // @ts-ignore
     return new Promise$1(function (resolve) {
       resolve(value);
     });
   };
 
+  // @ts-ignore
   Promise$1.reject = function (value) {
+    // @ts-ignore
     return new Promise$1(function (resolve, reject) {
       reject(value);
     });
   };
 
+  // @ts-ignore
   Promise$1.race = function (arr) {
+    // @ts-ignore
     return new Promise$1(function (resolve, reject) {
       if (!isArray(arr)) {
         return reject(new TypeError('Promise.race accepts an array'));
@@ -7601,15 +8938,18 @@
     });
   }; // Use polyfill for setImmediate for performance gains
 
-
   Promise$1._immediateFn = // @ts-ignore
-  typeof setImmediate === 'function' && function (fn) {
-    // @ts-ignore
-    setImmediate(fn);
-  } || function (fn) {
-    setTimeoutFunc(fn, 0);
-  };
+    (typeof setImmediate === 'function' &&
+      // @ts-ignore
+      function (fn) {
+        // @ts-ignore
+        setImmediate(fn);
+      }) ||
+    function (fn) {
+      setTimeoutFunc(fn, 0);
+    };
 
+  // @ts-ignore
   Promise$1._unhandledRejectionFn = function _unhandledRejectionFn(err) {
     if (typeof console !== 'undefined' && console) {
       console.warn('Possible Unhandled Promise Rejection:', err); // eslint-disable-line no-console
@@ -7620,10 +8960,17 @@
   // with Webpack 2+. We need `require('promise-polyfill').default` for running the tests
   // and `require('promise-polyfill')` for building Turbine.
 
+  var reactorPromise =
+    (typeof window !== 'undefined' && window.Promise) ||
+    // @ts-ignore
+    (typeof commonjsGlobal !== 'undefined' && commonjsGlobal.Promise) ||
+    // @ts-ignore
+    Promise$1.default ||
+    Promise$1;
 
-  var reactorPromise = typeof window !== 'undefined' && window.Promise || typeof commonjsGlobal !== 'undefined' && commonjsGlobal.Promise || Promise$1.default || Promise$1;
-
+  // @ts-ignore
   var getPromise = function getPromise(url, script) {
+    // @ts-ignore
     return new reactorPromise(function (resolve, reject) {
       script.onload = function () {
         resolve(script);
@@ -7635,6 +8982,7 @@
     });
   };
 
+  // @ts-ignore
   var reactorLoadScript = function reactorLoadScript(url) {
     var script = document.createElement('script');
     script.src = url;
@@ -7644,29 +8992,35 @@
     return promise;
   };
 
+  // @ts-ignore
   var is = function is(element, tagName) {
     return !!element && element.tagName === tagName;
   };
 
+  // @ts-ignore
   var isInlineScript = function isInlineScript(element) {
     return is(element, SCRIPT) && !getAttribute(element, SRC);
   };
 
+  // @ts-ignore
   var isRemoteScript = function isRemoteScript(element) {
     return is(element, SCRIPT) && getAttribute(element, SRC);
   };
 
+  // @ts-ignore
   var getInlineScripts = function getInlineScripts(fragment) {
     var scripts = selectNodes(SCRIPT, fragment);
     var result = [];
     var length = scripts.length;
     var nonce = getNonce();
 
-    var attributes = _objectSpread2({}, nonce && {
-      nonce: nonce
-    });
+    var attributes = _objectSpread2(
+      {},
+      nonce && {
+        nonce: nonce,
+      }
+    );
     /* eslint-disable no-continue */
-
 
     for (var i = 0; i < length; i += 1) {
       var element = scripts[i];
@@ -7681,15 +9035,17 @@
         continue;
       }
 
-      result.push(createNode(SCRIPT, attributes, {
-        textContent: textContent
-      }));
+      result.push(
+        createNode(SCRIPT, attributes, {
+          textContent: textContent,
+        })
+      );
     }
     /* eslint-enable no-continue */
 
-
     return result;
   };
+  // @ts-ignore
   var getRemoteScriptsUrls = function getRemoteScriptsUrls(fragment) {
     var scripts = selectNodes(SCRIPT, fragment);
     var result = [];
@@ -7713,15 +9069,17 @@
     }
     /* eslint-enable no-continue */
 
-
     return result;
   };
+  // @ts-ignore
   var executeInlineScripts = function executeInlineScripts(parent, scripts) {
+    // @ts-ignore
     scripts.forEach(function (script) {
       parent.appendChild(script);
       parent.removeChild(script);
     });
   };
+  // @ts-ignore
   var executeRemoteScripts = function executeRemoteScripts(urls) {
     return Promise.all(urls.map(reactorLoadScript));
   };
@@ -7737,7 +9095,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var appendHtml = (function (container, html) {
+  // @ts-ignore
+  var appendHtml = function (container, html) {
     var fragment = createFragment(html);
     addNonceToInlineStyleElements(fragment);
     var elements = getChildNodes(fragment);
@@ -7749,7 +9108,7 @@
     });
     executeInlineScripts(container, scripts);
     return executeRemoteScripts(scriptsUrls);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7763,16 +9122,18 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var clear = function clear(container) {
     // We want to remove ALL nodes, text, comments etc
     var childNodes = getChildNodes(container);
     childNodes.forEach(removeNode);
   };
 
-  var setHtml = (function (container, html) {
+  // @ts-ignore
+  var setHtml = function (container, html) {
     clear(container);
     appendHtml(container, html);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7785,7 +9146,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var prependHtml = (function (container, html) {
+  // @ts-ignore
+  var prependHtml = function (container, html) {
     var fragment = createFragment(html);
     addNonceToInlineStyleElements(fragment);
     var elements = getChildNodes(fragment);
@@ -7811,7 +9173,7 @@
 
     executeInlineScripts(container, scripts);
     return executeRemoteScripts(scriptsUrls);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7824,7 +9186,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var insertHtmlBefore = (function (container, html) {
+  // @ts-ignore
+  var insertHtmlBefore = function (container, html) {
     var fragment = createFragment(html);
     addNonceToInlineStyleElements(fragment);
     var elements = getChildNodes(fragment);
@@ -7836,7 +9199,7 @@
     });
     executeInlineScripts(container, scripts);
     return executeRemoteScripts(scriptsUrls);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7849,10 +9212,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var replaceHtml = (function (container, html) {
+  // @ts-ignore
+  var replaceHtml = function (container, html) {
     insertHtmlBefore(container, html);
     removeNode(container);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7865,7 +9229,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var insertHtmlAfter = (function (container, html) {
+  // @ts-ignore
+  var insertHtmlAfter = function (container, html) {
     var fragment = createFragment(html);
     addNonceToInlineStyleElements(fragment);
     var elements = getChildNodes(fragment);
@@ -7877,17 +9242,19 @@
     });
     executeInlineScripts(container, scripts);
     return executeRemoteScripts(scriptsUrls);
-  });
+  };
 
-  var _excluded$1 = ["priority"];
-  var setStyles = (function (container, styles) {
+  var _excluded$1 = ['priority'];
+  // @ts-ignore
+  var setStyles = function (container, styles) {
     var priority = styles.priority,
-        style = _objectWithoutProperties(styles, _excluded$1);
+      style = _objectWithoutProperties(styles, _excluded$1);
 
     Object.keys(style).forEach(function (key) {
+      // @ts-ignore
       setStyle(container, key, style[key], priority);
     });
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7900,11 +9267,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var setAttributes = (function (container, attributes) {
+  // @ts-ignore
+  var setAttributes = function (container, attributes) {
     Object.keys(attributes).forEach(function (key) {
       setAttribute(container, key, attributes[key]);
     });
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7917,18 +9285,18 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var swapImage = (function (container, url) {
+  // @ts-ignore
+  var swapImage = function (container, url) {
     if (!isImage(container)) {
       return;
     } // Start downloading the image
-
 
     loadImage(url); // Remove "src" so there is no flicker
 
     removeAttribute(container, SRC); // Replace the image "src"
 
     setAttribute(container, SRC, url);
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7941,9 +9309,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var rearrangeChildren = (function (container, _ref) {
+  // @ts-ignore
+  var rearrangeChildren = function (container, _ref) {
     var from = _ref.from,
-        to = _ref.to;
+      to = _ref.to;
     var children = getChildren(container);
     var elementFrom = children[from];
     var elementTo = children[to];
@@ -7959,7 +9328,7 @@
     } else {
       insertBefore(elementTo, elementFrom);
     }
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7972,15 +9341,16 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var _click = (function (settings, store) {
+  // @ts-ignore
+  var _click = function (settings, store) {
     var selector = settings.selector,
-        meta = settings.meta;
+      meta = settings.meta;
     store({
       selector: selector,
-      meta: meta
+      meta: meta,
     });
     return Promise.resolve();
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -7994,37 +9364,46 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var renderContent = function renderContent(elements, content, renderFunc) {
+    // @ts-ignore
     var executions = elements.map(function (element) {
       return renderFunc(element, content);
     });
     return Promise.all(executions);
   };
 
+  // @ts-ignore
   var createAction = function createAction(renderFunc) {
+    // @ts-ignore
     return function (settings) {
       var selector = settings.selector,
-          prehidingSelector = settings.prehidingSelector,
-          content = settings.content,
-          meta = settings.meta;
+        prehidingSelector = settings.prehidingSelector,
+        content = settings.content,
+        meta = settings.meta;
       hideElements(prehidingSelector);
-      return awaitSelector(selector, selectNodesWithEq).then(function (elements) {
-        return renderContent(elements, content, renderFunc);
-      }).then(function () {
-        // if everything is OK, show elements
-        showElements(prehidingSelector);
-        return {
-          meta: meta
-        };
-      }, function (error) {
-        // in case of awaiting timing or error, we need to remove the style tag
-        // hence showing the pre-hidden elements
-        showElements(prehidingSelector);
-        return {
-          meta: meta,
-          error: error
-        };
-      });
+      return awaitSelector(selector, selectNodesWithEq)
+        .then(function (elements) {
+          return renderContent(elements, content, renderFunc);
+        })
+        .then(
+          function () {
+            // if everything is OK, show elements
+            showElements(prehidingSelector);
+            return {
+              meta: meta,
+            };
+          },
+          function (error) {
+            // in case of awaiting timing or error, we need to remove the style tag
+            // hence showing the pre-hidden elements
+            showElements(prehidingSelector);
+            return {
+              meta: meta,
+              error: error,
+            };
+          }
+        );
     };
   };
 
@@ -8039,7 +9418,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var initDomActionsModules = (function (store) {
+  // @ts-ignore
+  var initDomActionsModules = function (store) {
     return {
       setHtml: createAction(setHtml),
       customCode: createAction(prependHtml),
@@ -8056,16 +9436,18 @@
       replaceHtml: createAction(replaceHtml),
       prependHtml: createAction(prependHtml),
       appendHtml: createAction(appendHtml),
+      // @ts-ignore
       click: function click(settings) {
         return _click(settings, store);
       },
+      // @ts-ignore
       defaultContent: function defaultContent(settings) {
         return Promise.resolve({
-          meta: settings.meta
+          meta: settings.meta,
         });
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -8084,9 +9466,9 @@
    * @returns {boolean}
    */
 
-  var isBlankString = (function (value) {
+  var isBlankString = function (value) {
     return isString(value) ? !value.trim() : true;
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -8099,21 +9481,25 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var APPEND_HTML = "appendHtml";
-  var HEAD_TAGS_SELECTOR = "SCRIPT,LINK,STYLE";
+  var APPEND_HTML = 'appendHtml';
+  var HEAD_TAGS_SELECTOR = 'SCRIPT,LINK,STYLE';
 
+  // @ts-ignore
   var filterHeadContent = function filterHeadContent(content) {
     var container = createFragment(content);
     var headNodes = selectNodes(HEAD_TAGS_SELECTOR, container);
-    return headNodes.map(function (node) {
-      return node.outerHTML;
-    }).join("");
+    return headNodes
+      .map(function (node) {
+        return node.outerHTML;
+      })
+      .join('');
   };
 
-  var remapHeadOffers = (function (action) {
+  // @ts-ignore
+  var remapHeadOffers = function (action) {
     var result = reactorObjectAssign({}, action);
     var content = result.content,
-        selector = result.selector;
+      selector = result.selector;
 
     if (isBlankString(content)) {
       return result;
@@ -8128,7 +9514,7 @@
     result.type = APPEND_HTML;
     result.content = filterHeadContent(content);
     return result;
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -8141,11 +9527,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var ACTION_CUSTOM_CODE = "customCode";
-  var TARGET_BODY_SELECTOR = "BODY > *:eq(0)";
-  var remapCustomCodeOffers = (function (action) {
+  var ACTION_CUSTOM_CODE = 'customCode';
+  var TARGET_BODY_SELECTOR = 'BODY > *:eq(0)';
+  // @ts-ignore
+  var remapCustomCodeOffers = function (action) {
     var selector = action.selector,
-        type = action.type;
+      type = action.type;
 
     if (type !== ACTION_CUSTOM_CODE) {
       return action;
@@ -8156,32 +9543,41 @@
     }
 
     return reactorObjectAssign({}, action, {
-      selector: "BODY"
+      selector: 'BODY',
     });
-  });
+  };
 
+  // @ts-ignore
   var logActionError = function logActionError(logger, action, error) {
     if (logger.enabled) {
       var details = JSON.stringify(action);
       var message = error.message,
-          stack = error.stack;
-      var errorMessage = "Failed to execute action " + details + ". " + message + " " + (stack ? "\n " + stack : "");
+        stack = error.stack;
+      var errorMessage =
+        'Failed to execute action ' +
+        details +
+        '. ' +
+        message +
+        ' ' +
+        (stack ? '\n ' + stack : '');
       logger.error(errorMessage);
     }
   };
 
+  // @ts-ignore
   var logActionCompleted = function logActionCompleted(logger, action) {
     if (logger.enabled) {
       var details = JSON.stringify(action);
-      logger.info("Action " + details + " executed.");
+      logger.info('Action ' + details + ' executed.');
     }
   };
 
+  // @ts-ignore
   var executeAction = function executeAction(logger, modules, type, args) {
     var execute = modules[type];
 
     if (!execute) {
-      var error = new Error("DOM action \"" + type + "\" not found");
+      var error = new Error('DOM action "' + type + '" not found');
       logActionError(logger, args[0], error);
       throw error;
     }
@@ -8191,26 +9587,35 @@
 
   var PREPROCESSORS = [remapHeadOffers, remapCustomCodeOffers];
 
+  // @ts-ignore
   var preprocess = function preprocess(action) {
     return PREPROCESSORS.reduce(function (processed, fn) {
       return reactorObjectAssign(processed, fn(processed));
     }, action);
   };
 
-  var executeActions = (function (actions, modules, logger) {
+  // @ts-ignore
+  var executeActions = function (actions, modules, logger) {
+    // @ts-ignore
     var actionPromises = actions.map(function (action) {
       var processedAction = preprocess(action);
       var type = processedAction.type;
-      return executeAction(logger, modules, type, [processedAction]).then(function (result) {
-        logActionCompleted(logger, processedAction);
-        return result;
-      }).catch(function (error) {
-        logActionError(logger, processedAction, error);
-        throw error;
-      });
+      return (
+        executeAction(logger, modules, type, [processedAction])
+          // @ts-ignore
+          .then(function (result) {
+            logActionCompleted(logger, processedAction);
+            return result;
+          })
+          // @ts-ignore
+          .catch(function (error) {
+            logActionError(logger, processedAction, error);
+            throw error;
+          })
+      );
     });
     return Promise.all(actionPromises);
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -8223,8 +9628,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var DISPLAY = "decisioning.propositionDisplay";
-  var INTERACT = "decisioning.propositionInteract";
+  var DISPLAY = 'decisioning.propositionDisplay';
+  var INTERACT = 'decisioning.propositionInteract';
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -8238,8 +9643,8 @@
   governing permissions and limitations under the License.
   */
   var PropositionEventType = {
-    DISPLAY: "display",
-    INTERACT: "interact"
+    DISPLAY: 'display',
+    INTERACT: 'interact',
   };
 
   /*
@@ -8253,26 +9658,31 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createCollect = (function (_ref) {
+  // @ts-ignore
+  var createCollect = function (_ref) {
     var eventManager = _ref.eventManager,
-        mergeDecisionsMeta = _ref.mergeDecisionsMeta;
+      mergeDecisionsMeta = _ref.mergeDecisionsMeta;
     // Called when a decision is auto-rendered for the __view__ scope or a SPA view(display and empty display notification)
+    // @ts-ignore
     return function (_ref2) {
       var _ref2$decisionsMeta = _ref2.decisionsMeta,
-          decisionsMeta = _ref2$decisionsMeta === void 0 ? [] : _ref2$decisionsMeta,
-          _ref2$documentMayUnlo = _ref2.documentMayUnload,
-          documentMayUnload = _ref2$documentMayUnlo === void 0 ? false : _ref2$documentMayUnlo,
-          viewName = _ref2.viewName;
+        decisionsMeta =
+          _ref2$decisionsMeta === void 0 ? [] : _ref2$decisionsMeta,
+        _ref2$documentMayUnlo = _ref2.documentMayUnload,
+        documentMayUnload =
+          _ref2$documentMayUnlo === void 0 ? false : _ref2$documentMayUnlo,
+        viewName = _ref2.viewName;
       var event = eventManager.createEvent();
       var data = {
-        eventType: DISPLAY
+        eventType: DISPLAY,
       };
 
       if (viewName) {
+        // @ts-ignore
         data.web = {
           webPageDetails: {
-            viewName: viewName
-          }
+            viewName: viewName,
+          },
         };
       }
 
@@ -8288,7 +9698,7 @@
 
       return eventManager.sendEvent(event);
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -8301,35 +9711,50 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var DEFAULT_ACTION_TYPE = "defaultContent";
+  var DEFAULT_ACTION_TYPE = 'defaultContent';
 
+  // @ts-ignore
   var identity = function identity(item) {
     return item;
   };
 
+  // @ts-ignore
   var getItemMeta = function getItemMeta(item, decisionMeta) {
-    return item.characteristics && item.characteristics.trackingLabel ? reactorObjectAssign({
-      trackingLabel: item.characteristics.trackingLabel
-    }, decisionMeta) : decisionMeta;
+    return item.characteristics && item.characteristics.trackingLabel
+      ? reactorObjectAssign(
+          {
+            trackingLabel: item.characteristics.trackingLabel,
+          },
+          decisionMeta
+        )
+      : decisionMeta;
   };
 
+  // @ts-ignore
   var buildActions = function buildActions(decision) {
     var decisionMeta = {
       id: decision.id,
       scope: decision.scope,
-      scopeDetails: decision.scopeDetails
+      scopeDetails: decision.scopeDetails,
     };
+    // @ts-ignore
     return decision.items.map(function (item) {
-      return reactorObjectAssign({
-        type: DEFAULT_ACTION_TYPE
-      }, item.data, {
-        meta: getItemMeta(item, decisionMeta)
-      });
+      return reactorObjectAssign(
+        {
+          type: DEFAULT_ACTION_TYPE,
+        },
+        item.data,
+        {
+          meta: getItemMeta(item, decisionMeta),
+        }
+      );
     });
   };
 
+  // @ts-ignore
   var processMetas = function processMetas(logger, actionResults) {
     var results = flatMap(actionResults, identity);
+    // @ts-ignore
     var finalMetas = [];
     var set = new Set();
     results.forEach(function (item) {
@@ -8352,25 +9777,31 @@
       set.add(meta.id);
       finalMetas.push(meta);
     });
+    // @ts-ignore
     return finalMetas;
   };
 
-  var createExecuteDecisions = (function (_ref) {
+  // @ts-ignore
+  var createExecuteDecisions = function (_ref) {
     var modules = _ref.modules,
-        logger = _ref.logger,
-        executeActions = _ref.executeActions;
+      logger = _ref.logger,
+      executeActions = _ref.executeActions;
+    // @ts-ignore
     return function (decisions) {
+      // @ts-ignore
       var actionResultsPromises = decisions.map(function (decision) {
         var actions = buildActions(decision);
         return executeActions(actions, modules, logger);
       });
-      return Promise.all(actionResultsPromises).then(function (results) {
-        return processMetas(logger, results);
-      }).catch(function (error) {
-        logger.error(error);
-      });
+      return Promise.all(actionResultsPromises)
+        .then(function (results) {
+          return processMetas(logger, results);
+        })
+        .catch(function (error) {
+          logger.error(error);
+        });
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -8383,32 +9814,35 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createFetchDataHandler = (function (_ref) {
+  // @ts-ignore
+  var createFetchDataHandler = function (_ref) {
     var prehidingStyle = _ref.prehidingStyle,
-        responseHandler = _ref.responseHandler,
-        hideContainers = _ref.hideContainers,
-        mergeQuery = _ref.mergeQuery;
+      responseHandler = _ref.responseHandler,
+      hideContainers = _ref.hideContainers,
+      mergeQuery = _ref.mergeQuery;
+    // @ts-ignore
     return function (_ref2) {
       var decisionsDeferred = _ref2.decisionsDeferred,
-          personalizationDetails = _ref2.personalizationDetails,
-          event = _ref2.event,
-          onResponse = _ref2.onResponse;
+        personalizationDetails = _ref2.personalizationDetails,
+        event = _ref2.event,
+        onResponse = _ref2.onResponse;
 
       if (personalizationDetails.isRenderDecisions()) {
         hideContainers(prehidingStyle);
       }
 
       mergeQuery(event, personalizationDetails.createQueryDetails());
+      // @ts-ignore
       onResponse(function (_ref3) {
         var response = _ref3.response;
         return responseHandler({
           decisionsDeferred: decisionsDeferred,
           personalizationDetails: personalizationDetails,
-          response: response
+          response: response,
         });
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -8421,12 +9855,12 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var matchesSelectorWithEq = (function (selector, element) {
+  // @ts-ignore
+  var matchesSelectorWithEq = function (selector, element) {
     if (isNotEqSelector(selector)) {
       return matchesSelector(selector, element);
     } // Using node selection vs matches selector, because of :eq()
     // Find all nodes using document as context
-
 
     var nodes = selectNodesWithEq(selector);
     var result = false; // Iterate through all the identified elements
@@ -8440,17 +9874,25 @@
     }
 
     return result;
-  });
+  };
 
-  var getMetasIfMatches = function getMetasIfMatches(clickedElement, selector, getClickMetasBySelector) {
+  var getMetasIfMatches = function getMetasIfMatches(
+    // @ts-ignore
+    clickedElement,
+    // @ts-ignore
+    selector,
+    // @ts-ignore
+    getClickMetasBySelector
+  ) {
     var _document = document,
-        documentElement = _document.documentElement;
+      documentElement = _document.documentElement;
     var element = clickedElement;
     var i = 0;
 
     while (element && element !== documentElement) {
       if (matchesSelectorWithEq(selector, element)) {
         var matchedMetas = getClickMetasBySelector(selector);
+        // @ts-ignore
         var foundMetaWithLabel = matchedMetas.find(function (meta) {
           return meta.trackingLabel;
         });
@@ -8459,12 +9901,12 @@
           return {
             metas: matchedMetas,
             label: foundMetaWithLabel.trackingLabel,
-            weight: i
+            weight: i,
           };
         }
 
         return {
-          metas: matchedMetas
+          metas: matchedMetas,
         };
       }
 
@@ -8473,55 +9915,79 @@
     }
 
     return {
-      metas: null
+      metas: null,
     };
   };
 
+  // @ts-ignore
   var cleanMetas = function cleanMetas(metas) {
+    // @ts-ignore
     return metas.map(function (meta) {
       delete meta.trackingLabel;
       return meta;
     });
   };
 
+  // @ts-ignore
   var dedupMetas = function dedupMetas(metas) {
+    // @ts-ignore
     return metas.filter(function (meta, index) {
       var stringifiedMeta = JSON.stringify(meta);
-      return index === metas.findIndex(function (innerMeta) {
-        return JSON.stringify(innerMeta) === stringifiedMeta;
-      });
+      return (
+        index ===
+        // @ts-ignore
+        metas.findIndex(function (innerMeta) {
+          return JSON.stringify(innerMeta) === stringifiedMeta;
+        })
+      );
     });
   };
 
-  var collectClicks = (function (clickedElement, selectors, getClickMetasBySelector) {
+  var collectClicks = function (
+    // @ts-ignore
+    clickedElement,
+    // @ts-ignore
+    selectors,
+    // @ts-ignore
+    getClickMetasBySelector
+  ) {
+    // @ts-ignore
     var result = [];
-    var resultLabel = "";
+    var resultLabel = '';
     var resultLabelWeight = Number.MAX_SAFE_INTEGER;
     /* eslint-disable no-continue */
 
     for (var i = 0; i < selectors.length; i += 1) {
-      var _getMetasIfMatches = getMetasIfMatches(clickedElement, selectors[i], getClickMetasBySelector),
-          metas = _getMetasIfMatches.metas,
-          label = _getMetasIfMatches.label,
-          weight = _getMetasIfMatches.weight;
+      var _getMetasIfMatches = getMetasIfMatches(
+          clickedElement,
+          selectors[i],
+          getClickMetasBySelector
+        ),
+        metas = _getMetasIfMatches.metas,
+        label = _getMetasIfMatches.label,
+        weight = _getMetasIfMatches.weight;
 
       if (!metas) {
         continue;
       }
 
+      // @ts-ignore
       if (label && weight <= resultLabelWeight) {
         resultLabel = label;
+        // @ts-ignore
         resultLabelWeight = weight;
       }
 
+      // @ts-ignore
       result.push.apply(result, _toConsumableArray(cleanMetas(metas)));
     }
 
     return {
+      // @ts-ignore
       decisionsMeta: dedupMetas(result),
-      eventLabel: resultLabel
+      eventLabel: resultLabel,
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -8534,10 +10000,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var isAuthoringModeEnabled = (function () {
-    var doc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
-    return doc.location.href.indexOf("adobe_authoring_enabled") !== -1;
-  });
+  var isAuthoringModeEnabled = function () {
+    var doc =
+      arguments.length > 0 && arguments[0] !== undefined
+        ? arguments[0]
+        : document;
+    return doc.location.href.indexOf('adobe_authoring_enabled') !== -1;
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -8553,28 +10022,38 @@
   var EVENT_TYPE_TRUE = 1;
   /* eslint-disable no-underscore-dangle */
 
-  var mergeDecisionsMeta = function mergeDecisionsMeta(event, decisionsMeta, eventType) {
-    var eventLabel = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
+  var mergeDecisionsMeta = function mergeDecisionsMeta(
+    // @ts-ignore
+    event,
+    // @ts-ignore
+    decisionsMeta,
+    // @ts-ignore
+    eventType
+  ) {
+    var eventLabel =
+      arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
     var xdm = {
       _experience: {
         decisioning: {
           propositions: decisionsMeta,
-          propositionEventType: _defineProperty({}, eventType, EVENT_TYPE_TRUE)
-        }
-      }
+          propositionEventType: _defineProperty({}, eventType, EVENT_TYPE_TRUE),
+        },
+      },
     };
 
     if (eventLabel) {
+      // @ts-ignore
       xdm._experience.decisioning.propositionAction = {
-        label: eventLabel
+        label: eventLabel,
       };
     }
 
     event.mergeXdm(xdm);
   };
+  // @ts-ignore
   var mergeQuery = function mergeQuery(event, details) {
     event.mergeQuery({
-      personalization: _objectSpread2({}, details)
+      personalization: _objectSpread2({}, details),
     });
   };
 
@@ -8589,42 +10068,54 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createOnClickHandler = (function (_ref) {
+  // @ts-ignore
+  var createOnClickHandler = function (_ref) {
     var mergeDecisionsMeta = _ref.mergeDecisionsMeta,
-        collectClicks = _ref.collectClicks,
-        getClickSelectors = _ref.getClickSelectors,
-        getClickMetasBySelector = _ref.getClickMetasBySelector;
+      collectClicks = _ref.collectClicks,
+      getClickSelectors = _ref.getClickSelectors,
+      getClickMetasBySelector = _ref.getClickMetasBySelector;
     // Called when an element qualifying for conversion within an offer is clicked.
+    // @ts-ignore
     return function (_ref2) {
       var event = _ref2.event,
-          clickedElement = _ref2.clickedElement;
+        clickedElement = _ref2.clickedElement;
       var selectors = getClickSelectors();
 
       if (isNonEmptyArray(selectors)) {
-        var _collectClicks = collectClicks(clickedElement, selectors, getClickMetasBySelector),
-            decisionsMeta = _collectClicks.decisionsMeta,
-            eventLabel = _collectClicks.eventLabel;
+        var _collectClicks = collectClicks(
+            clickedElement,
+            selectors,
+            getClickMetasBySelector
+          ),
+          decisionsMeta = _collectClicks.decisionsMeta,
+          eventLabel = _collectClicks.eventLabel;
 
         if (isNonEmptyArray(decisionsMeta)) {
           var xdm = {
-            eventType: INTERACT
+            eventType: INTERACT,
           };
           var scope = decisionsMeta[0].scope;
 
           if (scope !== PAGE_WIDE_SCOPE) {
+            // @ts-ignore
             xdm.web = {
               webPageDetails: {
-                viewName: scope
-              }
+                viewName: scope,
+              },
             };
           }
 
           event.mergeXdm(xdm);
-          mergeDecisionsMeta(event, decisionsMeta, PropositionEventType.INTERACT, eventLabel);
+          mergeDecisionsMeta(
+            event,
+            decisionsMeta,
+            PropositionEventType.INTERACT,
+            eventLabel
+          );
         }
       }
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -8637,43 +10128,56 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createViewCacheManager = (function () {
+  var createViewCacheManager = function () {
+    // @ts-ignore
     var viewStorage;
     var viewStorageDeferred = defer();
 
+    // @ts-ignore
     var storeViews = function storeViews(decisionsPromise) {
-      decisionsPromise.then(function (decisions) {
-        if (viewStorage === undefined) {
-          viewStorage = {};
-        }
+      decisionsPromise
+        // @ts-ignore
+        .then(function (decisions) {
+          // @ts-ignore
+          if (viewStorage === undefined) {
+            viewStorage = {};
+          }
 
-        reactorObjectAssign(viewStorage, decisions);
-        viewStorageDeferred.resolve();
-      }).catch(function () {
-        if (viewStorage === undefined) {
-          viewStorage = {};
-        }
+          // @ts-ignore
+          reactorObjectAssign(viewStorage, decisions);
+          // @ts-ignore
+          viewStorageDeferred.resolve();
+        })
+        .catch(function () {
+          // @ts-ignore
+          if (viewStorage === undefined) {
+            viewStorage = {};
+          }
 
-        viewStorageDeferred.resolve();
-      });
+          // @ts-ignore
+          viewStorageDeferred.resolve();
+        });
     };
 
+    // @ts-ignore
     var getView = function getView(viewName) {
       return viewStorageDeferred.promise.then(function () {
+        // @ts-ignore
         return viewStorage[viewName] || [];
       });
     };
 
     var isInitialized = function isInitialized() {
+      // @ts-ignore
       return !(viewStorage === undefined);
     };
 
     return {
       storeViews: storeViews,
       getView: getView,
-      isInitialized: isInitialized
+      isInitialized: isInitialized,
     };
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -8686,15 +10190,20 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var addRenderAttemptedToDecisions = (function (_ref) {
+  // @ts-ignore
+  var addRenderAttemptedToDecisions = function (_ref) {
     var decisions = _ref.decisions,
-        renderAttempted = _ref.renderAttempted;
+      renderAttempted = _ref.renderAttempted;
+    // @ts-ignore
     return decisions.map(function (decision) {
-      return reactorObjectAssign({
-        renderAttempted: renderAttempted
-      }, decision);
+      return reactorObjectAssign(
+        {
+          renderAttempted: renderAttempted,
+        },
+        decision
+      );
     });
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -8707,22 +10216,24 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var composePersonalizationResultingObject = (function () {
-    var decisions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var composePersonalizationResultingObject = function () {
+    var decisions =
+      arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var renderDecisions = arguments.length > 1 ? arguments[1] : undefined;
     var resultingObject = {
       propositions: addRenderAttemptedToDecisions({
         decisions: decisions,
-        renderAttempted: renderDecisions
-      })
+        renderAttempted: renderDecisions,
+      }),
     };
 
     if (!renderDecisions) {
+      // @ts-ignore
       resultingObject.decisions = decisions;
     }
 
     return resultingObject;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -8735,33 +10246,43 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createViewChangeHandler = (function (_ref) {
+  // @ts-ignore
+  var createViewChangeHandler = function (_ref) {
     var mergeDecisionsMeta = _ref.mergeDecisionsMeta,
-        collect = _ref.collect,
-        executeDecisions = _ref.executeDecisions,
-        viewCache = _ref.viewCache;
+      collect = _ref.collect,
+      executeDecisions = _ref.executeDecisions,
+      viewCache = _ref.viewCache;
+    // @ts-ignore
     return function (_ref2) {
       var personalizationDetails = _ref2.personalizationDetails,
-          event = _ref2.event,
-          onResponse = _ref2.onResponse;
+        event = _ref2.event,
+        onResponse = _ref2.onResponse;
       var viewName = personalizationDetails.getViewName();
+      // @ts-ignore
       return viewCache.getView(viewName).then(function (viewDecisions) {
         if (personalizationDetails.isRenderDecisions()) {
+          // @ts-ignore
           return executeDecisions(viewDecisions).then(function (decisionsMeta) {
             // if there are decisions to be rendered we render them and attach the result in experience.decisions.propositions
             if (isNonEmptyArray(decisionsMeta)) {
-              mergeDecisionsMeta(event, decisionsMeta, PropositionEventType.DISPLAY);
+              mergeDecisionsMeta(
+                event,
+                decisionsMeta,
+                PropositionEventType.DISPLAY
+              );
               onResponse(function () {
-                return composePersonalizationResultingObject(viewDecisions, true);
+                return composePersonalizationResultingObject(
+                  viewDecisions,
+                  true
+                );
               });
               return;
             } // if there are no decisions in cache for this view, we will send a empty notification
 
-
             onResponse(function () {
               collect({
                 decisionsMeta: [],
-                viewName: viewName
+                viewName: viewName,
               });
               return composePersonalizationResultingObject(viewDecisions, true);
             });
@@ -8774,7 +10295,7 @@
         return {};
       });
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -8787,9 +10308,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var isPageWideScope = (function (scope) {
+  // @ts-ignore
+  var isPageWideScope = function (scope) {
     return scope === PAGE_WIDE_SCOPE || isPageWideSurface(scope);
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -8802,11 +10324,15 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var VIEW_SCOPE_TYPE = "view";
+  var VIEW_SCOPE_TYPE = 'view';
 
+  // @ts-ignore
   var splitItems = function splitItems(items, schemas) {
+    // @ts-ignore
     var matched = [];
+    // @ts-ignore
     var nonMatched = [];
+    // @ts-ignore
     items.forEach(function (item) {
       if (includes(schemas, item.schema)) {
         matched.push(item);
@@ -8814,50 +10340,70 @@
         nonMatched.push(item);
       }
     });
+    // @ts-ignore
     return [matched, nonMatched];
   };
 
+  // @ts-ignore
   var createDecision = function createDecision(decision, items) {
     return {
       id: decision.id,
       scope: decision.scope,
       items: items,
-      scopeDetails: decision.scopeDetails
+      scopeDetails: decision.scopeDetails,
     };
   };
 
-  var splitMergedMetricDecisions = function splitMergedMetricDecisions(decisions) {
+  var splitMergedMetricDecisions = function splitMergedMetricDecisions(
+    // @ts-ignore
+    decisions
+  ) {
+    // @ts-ignore
     var matchedDecisions = decisions.filter(function (decision) {
       var _decision$items = decision.items,
-          items = _decision$items === void 0 ? [] : _decision$items;
+        items = _decision$items === void 0 ? [] : _decision$items;
+      // @ts-ignore
       return items.some(function (item) {
         return item.schema === MEASUREMENT_SCHEMA;
       });
     });
+    // @ts-ignore
     var unmatchedDecisions = decisions.filter(function (decision) {
       return !includes(matchedDecisions, decision);
     });
     return {
       matchedDecisions: matchedDecisions,
-      unmatchedDecisions: unmatchedDecisions
+      unmatchedDecisions: unmatchedDecisions,
     };
   };
 
+  // @ts-ignore
   var splitDecisions = function splitDecisions(decisions) {
-    for (var _len = arguments.length, schemas = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    for (
+      var _len = arguments.length,
+        schemas = new Array(_len > 1 ? _len - 1 : 0),
+        _key = 1;
+      _key < _len;
+      _key++
+    ) {
       schemas[_key - 1] = arguments[_key];
     }
 
+    // @ts-ignore
     var matchedDecisions = [];
+    // @ts-ignore
     var unmatchedDecisions = [];
+    // @ts-ignore
     decisions.forEach(function (decision) {
       var _decision$items2 = decision.items,
-          items = _decision$items2 === void 0 ? [] : _decision$items2;
+        items = _decision$items2 === void 0 ? [] : _decision$items2;
 
       var _splitItems = splitItems(items, schemas),
-          _splitItems2 = _slicedToArray(_splitItems, 2),
-          matchedItems = _splitItems2[0],
-          nonMatchedItems = _splitItems2[1];
+        _splitItems2 = _slicedToArray(_splitItems, 2),
+        // @ts-ignore
+        matchedItems = _splitItems2[0],
+        // @ts-ignore
+        nonMatchedItems = _splitItems2[1];
 
       if (isNonEmptyArray(matchedItems)) {
         matchedDecisions.push(createDecision(decision, matchedItems));
@@ -8868,12 +10414,19 @@
       }
     });
     return {
+      // @ts-ignore
       matchedDecisions: matchedDecisions,
-      unmatchedDecisions: unmatchedDecisions
+      // @ts-ignore
+      unmatchedDecisions: unmatchedDecisions,
     };
   };
 
-  var appendScopeDecision = function appendScopeDecision(scopeDecisions, decision) {
+  var appendScopeDecision = function appendScopeDecision(
+    // @ts-ignore
+    scopeDecisions,
+    // @ts-ignore
+    decision
+  ) {
     if (!scopeDecisions[decision.scope]) {
       scopeDecisions[decision.scope] = [];
     }
@@ -8881,16 +10434,25 @@
     scopeDecisions[decision.scope].push(decision);
   };
 
+  // @ts-ignore
   var isViewScope = function isViewScope(scopeDetails) {
-    return scopeDetails.characteristics && scopeDetails.characteristics.scopeType && scopeDetails.characteristics.scopeType === VIEW_SCOPE_TYPE;
+    return (
+      scopeDetails.characteristics &&
+      scopeDetails.characteristics.scopeType &&
+      scopeDetails.characteristics.scopeType === VIEW_SCOPE_TYPE
+    );
   };
 
+  // @ts-ignore
   var extractDecisionsByScope = function extractDecisionsByScope(decisions) {
+    // @ts-ignore
     var pageWideScopeDecisions = [];
+    // @ts-ignore
     var nonPageWideScopeDecisions = [];
     var viewScopeDecisions = {};
 
     if (isNonEmptyArray(decisions)) {
+      // @ts-ignore
       decisions.forEach(function (decision) {
         if (isPageWideScope(decision.scope)) {
           pageWideScopeDecisions.push(decision);
@@ -8903,30 +10465,52 @@
     }
 
     return {
+      // @ts-ignore
       pageWideScopeDecisions: pageWideScopeDecisions,
+      // @ts-ignore
       nonPageWideScopeDecisions: nonPageWideScopeDecisions,
-      viewScopeDecisions: viewScopeDecisions
+      viewScopeDecisions: viewScopeDecisions,
     };
   };
 
+  // @ts-ignore
   var groupDecisions = function groupDecisions(unprocessedDecisions) {
     // split redirect decisions
-    var decisionsGroupedByRedirectItemSchema = splitDecisions(unprocessedDecisions, REDIRECT_ITEM); // split merged measurement decisions
+    var decisionsGroupedByRedirectItemSchema = splitDecisions(
+      unprocessedDecisions,
+      REDIRECT_ITEM
+    ); // split merged measurement decisions
 
-    var mergedMetricDecisions = splitMergedMetricDecisions(decisionsGroupedByRedirectItemSchema.unmatchedDecisions); // split renderable decisions
+    var mergedMetricDecisions = splitMergedMetricDecisions(
+      decisionsGroupedByRedirectItemSchema.unmatchedDecisions
+    ); // split renderable decisions
 
-    var decisionsGroupedByRenderableSchemas = splitDecisions(mergedMetricDecisions.unmatchedDecisions, DOM_ACTION, DEFAULT_CONTENT_ITEM); // group renderable decisions by scope
+    var decisionsGroupedByRenderableSchemas = splitDecisions(
+      mergedMetricDecisions.unmatchedDecisions,
+      DOM_ACTION,
+      DEFAULT_CONTENT_ITEM
+    ); // group renderable decisions by scope
 
-    var _extractDecisionsBySc = extractDecisionsByScope(decisionsGroupedByRenderableSchemas.matchedDecisions),
-        pageWideScopeDecisions = _extractDecisionsBySc.pageWideScopeDecisions,
-        nonPageWideScopeDecisions = _extractDecisionsBySc.nonPageWideScopeDecisions,
-        viewScopeDecisions = _extractDecisionsBySc.viewScopeDecisions;
+    var _extractDecisionsBySc = extractDecisionsByScope(
+        decisionsGroupedByRenderableSchemas.matchedDecisions
+      ),
+      pageWideScopeDecisions = _extractDecisionsBySc.pageWideScopeDecisions,
+      nonPageWideScopeDecisions =
+        _extractDecisionsBySc.nonPageWideScopeDecisions,
+      viewScopeDecisions = _extractDecisionsBySc.viewScopeDecisions;
 
     return {
       redirectDecisions: decisionsGroupedByRedirectItemSchema.matchedDecisions,
       pageWideScopeDecisions: pageWideScopeDecisions,
       viewDecisions: viewScopeDecisions,
-      nonAutoRenderableDecisions: [].concat(_toConsumableArray(mergedMetricDecisions.matchedDecisions), _toConsumableArray(decisionsGroupedByRenderableSchemas.unmatchedDecisions), _toConsumableArray(nonPageWideScopeDecisions))
+      nonAutoRenderableDecisions: [].concat(
+        // @ts-ignore
+        _toConsumableArray(mergedMetricDecisions.matchedDecisions),
+        _toConsumableArray(
+          decisionsGroupedByRenderableSchemas.unmatchedDecisions
+        ),
+        _toConsumableArray(nonPageWideScopeDecisions)
+      ),
     };
   };
 
@@ -8941,17 +10525,19 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var DECISIONS_HANDLE = "personalization:decisions";
-  var createOnResponseHandler = (function (_ref) {
+  var DECISIONS_HANDLE = 'personalization:decisions';
+  // @ts-ignore
+  var createOnResponseHandler = function (_ref) {
     var autoRenderingHandler = _ref.autoRenderingHandler,
-        nonRenderingHandler = _ref.nonRenderingHandler,
-        groupDecisions = _ref.groupDecisions,
-        handleRedirectDecisions = _ref.handleRedirectDecisions,
-        showContainers = _ref.showContainers;
+      nonRenderingHandler = _ref.nonRenderingHandler,
+      groupDecisions = _ref.groupDecisions,
+      handleRedirectDecisions = _ref.handleRedirectDecisions,
+      showContainers = _ref.showContainers;
+    // @ts-ignore
     return function (_ref2) {
       var decisionsDeferred = _ref2.decisionsDeferred,
-          personalizationDetails = _ref2.personalizationDetails,
-          response = _ref2.response;
+        personalizationDetails = _ref2.personalizationDetails,
+        response = _ref2.response;
       var unprocessedDecisions = response.getPayloadsByType(DECISIONS_HANDLE);
       var viewName = personalizationDetails.getViewName(); // if personalization payload is empty return empty decisions array
 
@@ -8960,21 +10546,23 @@
         decisionsDeferred.resolve({});
         return {
           decisions: [],
-          propositions: []
+          propositions: [],
         };
       }
 
       var _groupDecisions = groupDecisions(unprocessedDecisions),
-          redirectDecisions = _groupDecisions.redirectDecisions,
-          pageWideScopeDecisions = _groupDecisions.pageWideScopeDecisions,
-          viewDecisions = _groupDecisions.viewDecisions,
-          nonAutoRenderableDecisions = _groupDecisions.nonAutoRenderableDecisions;
+        redirectDecisions = _groupDecisions.redirectDecisions,
+        pageWideScopeDecisions = _groupDecisions.pageWideScopeDecisions,
+        viewDecisions = _groupDecisions.viewDecisions,
+        nonAutoRenderableDecisions = _groupDecisions.nonAutoRenderableDecisions;
 
-      if (personalizationDetails.isRenderDecisions() && isNonEmptyArray(redirectDecisions)) {
+      if (
+        personalizationDetails.isRenderDecisions() &&
+        isNonEmptyArray(redirectDecisions)
+      ) {
         decisionsDeferred.resolve({});
         return handleRedirectDecisions(redirectDecisions);
       } // save decisions for views in local cache
-
 
       decisionsDeferred.resolve(viewDecisions);
 
@@ -8982,7 +10570,7 @@
         return autoRenderingHandler({
           viewName: viewName,
           pageWideScopeDecisions: pageWideScopeDecisions,
-          nonAutoRenderableDecisions: nonAutoRenderableDecisions
+          nonAutoRenderableDecisions: nonAutoRenderableDecisions,
         });
       }
 
@@ -8990,10 +10578,10 @@
         viewName: viewName,
         redirectDecisions: redirectDecisions,
         pageWideScopeDecisions: pageWideScopeDecisions,
-        nonAutoRenderableDecisions: nonAutoRenderableDecisions
+        nonAutoRenderableDecisions: nonAutoRenderableDecisions,
       });
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -9006,29 +10594,34 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
+  // @ts-ignore
   var metasToArray = function metasToArray(metas) {
     return Object.keys(metas).map(function (key) {
       return {
         id: key,
         scope: metas[key].scope,
         scopeDetails: metas[key].scopeDetails,
-        trackingLabel: metas[key].trackingLabel
+        trackingLabel: metas[key].trackingLabel,
       };
     });
   };
 
-  var createClickStorage = (function () {
+  var createClickStorage = function () {
     var clickStorage = {};
 
+    // @ts-ignore
     var storeClickMetrics = function storeClickMetrics(value) {
+      // @ts-ignore
       if (!clickStorage[value.selector]) {
+        // @ts-ignore
         clickStorage[value.selector] = {};
       }
 
+      // @ts-ignore
       clickStorage[value.selector][value.meta.id] = {
         scope: value.meta.scope,
         scopeDetails: value.meta.scopeDetails,
-        trackingLabel: value.meta.trackingLabel
+        trackingLabel: value.meta.trackingLabel,
       };
     };
 
@@ -9036,22 +10629,25 @@
       return Object.keys(clickStorage);
     };
 
+    // @ts-ignore
     var getClickMetasBySelector = function getClickMetasBySelector(selector) {
+      // @ts-ignore
       var metas = clickStorage[selector];
 
       if (!metas) {
         return {};
       }
 
+      // @ts-ignore
       return metasToArray(clickStorage[selector]);
     };
 
     return {
       storeClickMetrics: storeClickMetrics,
       getClickSelectors: getClickSelectors,
-      getClickMetasBySelector: getClickMetasBySelector
+      getClickMetasBySelector: getClickMetasBySelector,
     };
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -9065,251 +10661,336 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var getRedirectDetails = function getRedirectDetails(redirectDecisions) {
     var decision = redirectDecisions[0];
     var items = decision.items,
-        id = decision.id,
-        scope = decision.scope,
-        scopeDetails = decision.scopeDetails;
+      id = decision.id,
+      scope = decision.scope,
+      scopeDetails = decision.scopeDetails;
     var content = items[0].data.content;
     return {
       content: content,
-      decisions: [{
-        id: id,
-        scope: scope,
-        scopeDetails: scopeDetails
-      }]
+      decisions: [
+        {
+          id: id,
+          scope: scope,
+          scopeDetails: scopeDetails,
+        },
+      ],
     };
   };
 
-  var createRedirectHandler = (function (_ref) {
+  // @ts-ignore
+  var createRedirectHandler = function (_ref) {
     var collect = _ref.collect,
-        window = _ref.window,
-        logger = _ref.logger,
-        showContainers = _ref.showContainers;
+      window = _ref.window,
+      logger = _ref.logger,
+      showContainers = _ref.showContainers;
+    // @ts-ignore
     return function (redirectDecisions) {
       var _getRedirectDetails = getRedirectDetails(redirectDecisions),
-          content = _getRedirectDetails.content,
-          decisions = _getRedirectDetails.decisions;
+        content = _getRedirectDetails.content,
+        decisions = _getRedirectDetails.decisions;
 
       var documentMayUnload = true;
       return collect({
         decisionsMeta: decisions,
-        documentMayUnload: documentMayUnload
-      }).then(function () {
-        window.location.replace(content);
-      }).catch(function () {
-        showContainers();
-        logger.warn(REDIRECT_EXECUTION_ERROR);
-      });
+        documentMayUnload: documentMayUnload,
+      })
+        .then(function () {
+          window.location.replace(content);
+        })
+        .catch(function () {
+          showContainers();
+          logger.warn(REDIRECT_EXECUTION_ERROR);
+        });
     };
-  });
+  };
 
+  // @ts-ignore
   var getPropositions = function getPropositions(_ref) {
     var viewCache = _ref.viewCache,
-        viewName = _ref.viewName,
-        pageWideScopeDecisions = _ref.pageWideScopeDecisions;
+      viewName = _ref.viewName,
+      pageWideScopeDecisions = _ref.pageWideScopeDecisions;
 
     if (!viewName) {
       return {
         pageWideScopeDecisions: pageWideScopeDecisions,
-        viewPropositions: []
+        viewPropositions: [],
       };
     }
 
+    // @ts-ignore
     return viewCache.getView(viewName).then(function (viewPropositions) {
       return {
         pageWideScopeDecisions: pageWideScopeDecisions,
-        viewPropositions: viewPropositions
+        viewPropositions: viewPropositions,
       };
     });
   };
 
-  var createAutorenderingHandler = (function (_ref2) {
+  // @ts-ignore
+  var createAutorenderingHandler = function (_ref2) {
     var viewCache = _ref2.viewCache,
-        executeDecisions = _ref2.executeDecisions,
-        showContainers = _ref2.showContainers,
-        collect = _ref2.collect;
+      executeDecisions = _ref2.executeDecisions,
+      showContainers = _ref2.showContainers,
+      collect = _ref2.collect;
+    // @ts-ignore
     return function (_ref3) {
       var viewName = _ref3.viewName,
-          pageWideScopeDecisions = _ref3.pageWideScopeDecisions,
-          nonAutoRenderableDecisions = _ref3.nonAutoRenderableDecisions;
-      return Promise.resolve(pageWideScopeDecisions).then(function (propositions) {
-        return getPropositions({
-          viewCache: viewCache,
-          viewName: viewName,
-          executeDecisions: executeDecisions,
-          pageWideScopeDecisions: propositions
-        });
-      }).then(function (propositions) {
-        executeDecisions(propositions.pageWideScopeDecisions).then(function (decisionsMeta) {
-          if (isNonEmptyArray(decisionsMeta)) {
-            collect({
-              decisionsMeta: decisionsMeta
+        pageWideScopeDecisions = _ref3.pageWideScopeDecisions,
+        nonAutoRenderableDecisions = _ref3.nonAutoRenderableDecisions;
+      return Promise.resolve(pageWideScopeDecisions)
+        .then(function (propositions) {
+          return getPropositions({
+            viewCache: viewCache,
+            viewName: viewName,
+            executeDecisions: executeDecisions,
+            pageWideScopeDecisions: propositions,
+          });
+        })
+        .then(function (propositions) {
+          executeDecisions(propositions.pageWideScopeDecisions).then(function (
+            // @ts-ignore
+            decisionsMeta
+          ) {
+            if (isNonEmptyArray(decisionsMeta)) {
+              collect({
+                decisionsMeta: decisionsMeta,
+              });
+            }
+          });
+
+          if (viewName) {
+            executeDecisions(propositions.viewPropositions).then(function (
+              // @ts-ignore
+              decisionsMeta
+            ) {
+              collect({
+                decisionsMeta: decisionsMeta,
+                viewName: viewName,
+              });
             });
           }
+
+          showContainers();
+          return [].concat(
+            // @ts-ignore
+            _toConsumableArray(propositions.pageWideScopeDecisions),
+            _toConsumableArray(propositions.viewPropositions)
+          );
+        })
+        .then(function (renderablePropositions) {
+          return {
+            decisions: _toConsumableArray(nonAutoRenderableDecisions),
+            propositions: [].concat(
+              // @ts-ignore
+              _toConsumableArray(
+                addRenderAttemptedToDecisions({
+                  decisions: renderablePropositions,
+                  renderAttempted: true,
+                })
+              ),
+              _toConsumableArray(
+                addRenderAttemptedToDecisions({
+                  decisions: nonAutoRenderableDecisions,
+                  renderAttempted: false,
+                })
+              )
+            ),
+          };
         });
-
-        if (viewName) {
-          executeDecisions(propositions.viewPropositions).then(function (decisionsMeta) {
-            collect({
-              decisionsMeta: decisionsMeta,
-              viewName: viewName
-            });
-          });
-        }
-
-        showContainers();
-        return [].concat(_toConsumableArray(propositions.pageWideScopeDecisions), _toConsumableArray(propositions.viewPropositions));
-      }).then(function (renderablePropositions) {
-        return {
-          decisions: _toConsumableArray(nonAutoRenderableDecisions),
-          propositions: [].concat(_toConsumableArray(addRenderAttemptedToDecisions({
-            decisions: renderablePropositions,
-            renderAttempted: true
-          })), _toConsumableArray(addRenderAttemptedToDecisions({
-            decisions: nonAutoRenderableDecisions,
-            renderAttempted: false
-          })))
-        };
-      });
     };
-  });
+  };
 
+  // @ts-ignore
   var getViewPropositions = function getViewPropositions(_ref) {
     var viewCache = _ref.viewCache,
-        viewName = _ref.viewName,
-        propositions = _ref.propositions;
+      viewName = _ref.viewName,
+      propositions = _ref.propositions;
 
     if (!viewName) {
       return propositions;
     }
 
+    // @ts-ignore
     return viewCache.getView(viewName).then(function (viewPropositions) {
-      return [].concat(_toConsumableArray(viewPropositions), _toConsumableArray(propositions));
+      return [].concat(
+        // @ts-ignore
+        _toConsumableArray(viewPropositions),
+        _toConsumableArray(propositions)
+      );
     });
   };
 
+  // @ts-ignore
   var buildFinalResult = function buildFinalResult(_ref2) {
     var propositions = _ref2.propositions;
     return {
       decisions: propositions,
       propositions: addRenderAttemptedToDecisions({
         decisions: propositions,
-        renderAttempted: false
-      })
+        renderAttempted: false,
+      }),
     };
   };
 
-  var createNonRenderingHandler = (function (_ref3) {
+  // @ts-ignore
+  var createNonRenderingHandler = function (_ref3) {
     var viewCache = _ref3.viewCache;
+    // @ts-ignore
     return function (_ref4) {
       var viewName = _ref4.viewName,
-          redirectDecisions = _ref4.redirectDecisions,
-          pageWideScopeDecisions = _ref4.pageWideScopeDecisions,
-          nonAutoRenderableDecisions = _ref4.nonAutoRenderableDecisions;
-      var propositions = [].concat(_toConsumableArray(redirectDecisions), _toConsumableArray(pageWideScopeDecisions), _toConsumableArray(nonAutoRenderableDecisions));
-      return Promise.resolve(propositions).then(function (items) {
-        return getViewPropositions({
-          viewCache: viewCache,
-          viewName: viewName,
-          propositions: items
+        redirectDecisions = _ref4.redirectDecisions,
+        pageWideScopeDecisions = _ref4.pageWideScopeDecisions,
+        nonAutoRenderableDecisions = _ref4.nonAutoRenderableDecisions;
+      // @ts-ignore
+      var propositions = [].concat(
+        // @ts-ignore
+        _toConsumableArray(redirectDecisions),
+        _toConsumableArray(pageWideScopeDecisions),
+        _toConsumableArray(nonAutoRenderableDecisions)
+      );
+      return Promise.resolve(propositions)
+        .then(function (items) {
+          return getViewPropositions({
+            viewCache: viewCache,
+            viewName: viewName,
+            propositions: items,
+          });
+        })
+        .then(function (items) {
+          return buildFinalResult({
+            propositions: items,
+          });
         });
-      }).then(function (items) {
-        return buildFinalResult({
-          propositions: items
-        });
-      });
     };
-  });
+  };
 
   var SUPPORTED_SCHEMAS = [DOM_ACTION, HTML_CONTENT_ITEM];
-  var createApplyPropositions = (function (_ref) {
+  // @ts-ignore
+  var createApplyPropositions = function (_ref) {
     var executeDecisions = _ref.executeDecisions;
 
+    // @ts-ignore
     var filterItemsPredicate = function filterItemsPredicate(item) {
       return SUPPORTED_SCHEMAS.indexOf(item.schema) > -1;
     };
 
+    // @ts-ignore
     var updatePropositionItems = function updatePropositionItems(_ref2) {
       var items = _ref2.items,
-          metadataForScope = _ref2.metadataForScope;
-      return items.filter(filterItemsPredicate).map(function (item) {
-        if (item.schema !== HTML_CONTENT_ITEM) {
-          return _objectSpread2({}, item);
-        }
+        metadataForScope = _ref2.metadataForScope;
+      return (
+        items
+          .filter(filterItemsPredicate)
+          // @ts-ignore
+          .map(function (item) {
+            if (item.schema !== HTML_CONTENT_ITEM) {
+              return _objectSpread2({}, item);
+            }
 
-        if (isObject(metadataForScope)) {
-          return _objectSpread2(_objectSpread2({}, item), {}, {
-            data: _objectSpread2(_objectSpread2({}, item.data), {}, {
-              selector: metadataForScope.selector,
-              type: metadataForScope.actionType
-            })
-          });
-        }
+            if (isObject(metadataForScope)) {
+              return _objectSpread2(
+                _objectSpread2({}, item),
+                {},
+                {
+                  data: _objectSpread2(
+                    _objectSpread2({}, item.data),
+                    {},
+                    {
+                      selector: metadataForScope.selector,
+                      type: metadataForScope.actionType,
+                    }
+                  ),
+                }
+              );
+            }
 
-        return undefined;
-      }).filter(function (item) {
-        return item;
-      });
+            return undefined;
+          })
+          // @ts-ignore
+          .filter(function (item) {
+            return item;
+          })
+      );
     };
 
-    var filterPropositionsPredicate = function filterPropositionsPredicate(proposition) {
-      return !(proposition.scope === PAGE_WIDE_SCOPE && proposition.renderAttempted);
+    var filterPropositionsPredicate = function filterPropositionsPredicate(
+      // @ts-ignore
+      proposition
+    ) {
+      return !(
+        proposition.scope === PAGE_WIDE_SCOPE && proposition.renderAttempted
+      );
     };
 
+    // @ts-ignore
     var preparePropositions = function preparePropositions(_ref3) {
       var propositions = _ref3.propositions,
-          metadata = _ref3.metadata;
-      return propositions.filter(filterPropositionsPredicate).map(function (proposition) {
-        if (isNonEmptyArray(proposition.items)) {
-          var id = proposition.id,
-              scope = proposition.scope,
-              scopeDetails = proposition.scopeDetails;
-          return {
-            id: id,
-            scope: scope,
-            scopeDetails: scopeDetails,
-            items: updatePropositionItems({
-              items: proposition.items,
-              metadataForScope: metadata[proposition.scope]
-            })
-          };
-        }
+        metadata = _ref3.metadata;
+      return (
+        propositions
+          .filter(filterPropositionsPredicate)
+          // @ts-ignore
+          .map(function (proposition) {
+            if (isNonEmptyArray(proposition.items)) {
+              var id = proposition.id,
+                scope = proposition.scope,
+                scopeDetails = proposition.scopeDetails;
+              return {
+                id: id,
+                scope: scope,
+                scopeDetails: scopeDetails,
+                items: updatePropositionItems({
+                  items: proposition.items,
+                  metadataForScope: metadata[proposition.scope],
+                }),
+              };
+            }
 
-        return proposition;
-      }).filter(function (proposition) {
-        return isNonEmptyArray(proposition.items);
-      });
+            return proposition;
+          })
+          // @ts-ignore
+          .filter(function (proposition) {
+            return isNonEmptyArray(proposition.items);
+          })
+      );
     };
 
+    // @ts-ignore
     var applyPropositions = function applyPropositions(_ref4) {
       var propositions = _ref4.propositions,
-          metadata = _ref4.metadata;
+        metadata = _ref4.metadata;
       var propositionsToExecute = preparePropositions({
         propositions: propositions,
-        metadata: metadata
+        metadata: metadata,
       });
       return executeDecisions(propositionsToExecute).then(function () {
-        return composePersonalizationResultingObject(propositionsToExecute, true);
+        return composePersonalizationResultingObject(
+          propositionsToExecute,
+          true
+        );
       });
     };
 
+    // @ts-ignore
     return function (_ref5) {
       var propositions = _ref5.propositions,
-          _ref5$metadata = _ref5.metadata,
-          metadata = _ref5$metadata === void 0 ? {} : _ref5$metadata;
+        _ref5$metadata = _ref5.metadata,
+        metadata = _ref5$metadata === void 0 ? {} : _ref5$metadata;
 
       if (isNonEmptyArray(propositions)) {
         return applyPropositions({
           propositions: propositions,
-          metadata: metadata
+          metadata: metadata,
         });
       }
 
       return Promise.resolve(EMPTY_PROPOSITIONS);
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -9322,12 +11003,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createGetPageLocation = (function (_ref) {
+  // @ts-ignore
+  var createGetPageLocation = function (_ref) {
     var window = _ref.window;
     return function () {
       return window.location;
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -9340,21 +11022,23 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createSetTargetMigration = (function (_ref) {
+  // @ts-ignore
+  var createSetTargetMigration = function (_ref) {
     var targetMigrationEnabled = _ref.targetMigrationEnabled;
 
     if (targetMigrationEnabled) {
+      // @ts-ignore
       return function (request) {
         request.getPayload().mergeMeta({
           target: {
-            migration: true
-          }
+            migration: true,
+          },
         });
       };
     }
 
     return noop$1;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9368,77 +11052,78 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createPersonalization = function createPersonalization(_ref) {
     var config = _ref.config,
-        logger = _ref.logger,
-        eventManager = _ref.eventManager;
+      logger = _ref.logger,
+      eventManager = _ref.eventManager;
     var targetMigrationEnabled = config.targetMigrationEnabled,
-        prehidingStyle = config.prehidingStyle;
+      prehidingStyle = config.prehidingStyle;
     var collect = createCollect({
       eventManager: eventManager,
-      mergeDecisionsMeta: mergeDecisionsMeta
+      mergeDecisionsMeta: mergeDecisionsMeta,
     });
 
     var _createClickStorage = createClickStorage(),
-        getClickMetasBySelector = _createClickStorage.getClickMetasBySelector,
-        getClickSelectors = _createClickStorage.getClickSelectors,
-        storeClickMetrics = _createClickStorage.storeClickMetrics;
+      getClickMetasBySelector = _createClickStorage.getClickMetasBySelector,
+      getClickSelectors = _createClickStorage.getClickSelectors,
+      storeClickMetrics = _createClickStorage.storeClickMetrics;
 
     var getPageLocation = createGetPageLocation({
-      window: window
+      window: window,
     });
     var viewCache = createViewCacheManager();
     var modules = initDomActionsModules(storeClickMetrics);
     var executeDecisions = createExecuteDecisions({
       modules: modules,
       logger: logger,
-      executeActions: executeActions
+      executeActions: executeActions,
     });
     var handleRedirectDecisions = createRedirectHandler({
       collect: collect,
       window: window,
       logger: logger,
-      showContainers: showContainers
+      showContainers: showContainers,
     });
     var autoRenderingHandler = createAutorenderingHandler({
       viewCache: viewCache,
       executeDecisions: executeDecisions,
       showContainers: showContainers,
-      collect: collect
+      collect: collect,
     });
     var applyPropositions = createApplyPropositions({
-      executeDecisions: executeDecisions
+      executeDecisions: executeDecisions,
     });
     var nonRenderingHandler = createNonRenderingHandler({
-      viewCache: viewCache
+      viewCache: viewCache,
     });
     var responseHandler = createOnResponseHandler({
       autoRenderingHandler: autoRenderingHandler,
       nonRenderingHandler: nonRenderingHandler,
       groupDecisions: groupDecisions,
       handleRedirectDecisions: handleRedirectDecisions,
-      showContainers: showContainers
+      showContainers: showContainers,
     });
     var fetchDataHandler = createFetchDataHandler({
       prehidingStyle: prehidingStyle,
       responseHandler: responseHandler,
       hideContainers: hideContainers,
-      mergeQuery: mergeQuery
+      mergeQuery: mergeQuery,
     });
     var onClickHandler = createOnClickHandler({
       mergeDecisionsMeta: mergeDecisionsMeta,
       collectClicks: collectClicks,
       getClickSelectors: getClickSelectors,
-      getClickMetasBySelector: getClickMetasBySelector
+      getClickMetasBySelector: getClickMetasBySelector,
     });
     var viewChangeHandler = createViewChangeHandler({
       mergeDecisionsMeta: mergeDecisionsMeta,
       collect: collect,
       executeDecisions: executeDecisions,
-      viewCache: viewCache
+      viewCache: viewCache,
     });
     var setTargetMigration = createSetTargetMigration({
-      targetMigrationEnabled: targetMigrationEnabled
+      targetMigrationEnabled: targetMigrationEnabled,
     });
     return createComponent$3({
       getPageLocation: getPageLocation,
@@ -9451,14 +11136,16 @@
       viewCache: viewCache,
       showContainers: showContainers,
       applyPropositions: applyPropositions,
-      setTargetMigration: setTargetMigration
+      setTargetMigration: setTargetMigration,
     });
   };
 
-  createPersonalization.namespace = "Personalization";
+  createPersonalization.namespace = 'Personalization';
   createPersonalization.configValidators = {
+    // @ts-ignore
     prehidingStyle: boundString().nonEmpty(),
-    targetMigrationEnabled: boundBoolean().default(false)
+    // @ts-ignore
+    targetMigrationEnabled: boundBoolean().default(false),
   };
 
   /*
@@ -9472,21 +11159,23 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectWeb = (function (window) {
+  // @ts-ignore
+  var injectWeb = function (window) {
+    // @ts-ignore
     return function (xdm) {
       var web = {
         webPageDetails: {
-          URL: window.location.href || window.location
+          URL: window.location.href || window.location,
         },
         webReferrer: {
-          URL: window.document.referrer
-        }
+          URL: window.document.referrer,
+        },
       };
       deepAssign(xdm, {
-        web: web
+        web: web,
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9500,45 +11189,51 @@
   governing permissions and limitations under the License.
   */
 
-  var getScreenOrientationViaProperty = function getScreenOrientationViaProperty(window) {
-    var orientation = window.screen.orientation;
+  var getScreenOrientationViaProperty =
+    // @ts-ignore
+    function getScreenOrientationViaProperty(window) {
+      var orientation = window.screen.orientation;
 
-    if (orientation == null || orientation.type == null) {
-      return null;
-    }
-
-    var parts = orientation.type.split("-");
-
-    if (parts.length === 0) {
-      return null;
-    }
-
-    if (parts[0] !== "portrait" && parts[0] !== "landscape") {
-      return null;
-    }
-
-    return parts[0];
-  };
-
-  var getScreenOrientationViaMediaQuery = function getScreenOrientationViaMediaQuery(window) {
-    if (isFunction(window.matchMedia)) {
-      if (window.matchMedia("(orientation: portrait)").matches) {
-        return "portrait";
+      if (orientation == null || orientation.type == null) {
+        return null;
       }
 
-      if (window.matchMedia("(orientation: landscape)").matches) {
-        return "landscape";
+      var parts = orientation.type.split('-');
+
+      if (parts.length === 0) {
+        return null;
       }
-    }
 
-    return null;
-  };
+      if (parts[0] !== 'portrait' && parts[0] !== 'landscape') {
+        return null;
+      }
 
-  var injectDevice = (function (window) {
+      return parts[0];
+    };
+
+  var getScreenOrientationViaMediaQuery =
+    // @ts-ignore
+    function getScreenOrientationViaMediaQuery(window) {
+      if (isFunction(window.matchMedia)) {
+        if (window.matchMedia('(orientation: portrait)').matches) {
+          return 'portrait';
+        }
+
+        if (window.matchMedia('(orientation: landscape)').matches) {
+          return 'landscape';
+        }
+      }
+
+      return null;
+    };
+
+  // @ts-ignore
+  var injectDevice = function (window) {
+    // @ts-ignore
     return function (xdm) {
       var _window$screen = window.screen,
-          width = _window$screen.width,
-          height = _window$screen.height;
+        width = _window$screen.width,
+        height = _window$screen.height;
       var device = {};
       var screenHeight = toInteger(height);
 
@@ -9552,7 +11247,9 @@
         device.screenWidth = screenWidth;
       }
 
-      var orientation = getScreenOrientationViaProperty(window) || getScreenOrientationViaMediaQuery(window);
+      var orientation =
+        getScreenOrientationViaProperty(window) ||
+        getScreenOrientationViaMediaQuery(window);
 
       if (orientation) {
         device.screenOrientation = orientation;
@@ -9560,11 +11257,11 @@
 
       if (Object.keys(device).length > 0) {
         deepAssign(xdm, {
-          device: device
+          device: device,
         });
       }
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9577,35 +11274,41 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectEnvironment = (function (window) {
+  // @ts-ignore
+  var injectEnvironment = function (window) {
+    // @ts-ignore
     return function (xdm) {
       var _window$document$docu = window.document.documentElement;
-      _window$document$docu = _window$document$docu === void 0 ? {} : _window$document$docu;
+      _window$document$docu =
+        _window$document$docu === void 0 ? {} : _window$document$docu;
       var clientWidth = _window$document$docu.clientWidth,
-          clientHeight = _window$document$docu.clientHeight;
+        clientHeight = _window$document$docu.clientHeight;
       var environment = {
-        type: "browser"
+        type: 'browser',
       };
       var viewportWidth = toInteger(clientWidth);
 
       if (viewportWidth >= 0) {
+        // @ts-ignore
         environment.browserDetails = {
-          viewportWidth: viewportWidth
+          viewportWidth: viewportWidth,
         };
       }
 
       var viewportHeight = toInteger(clientHeight);
 
       if (viewportHeight >= 0) {
+        // @ts-ignore
         environment.browserDetails = environment.browserDetails || {};
+        // @ts-ignore
         environment.browserDetails.viewportHeight = viewportHeight;
       }
 
       deepAssign(xdm, {
-        environment: environment
+        environment: environment,
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9618,7 +11321,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectPlaceContext = (function (dateProvider) {
+  // @ts-ignore
+  var injectPlaceContext = function (dateProvider) {
+    // @ts-ignore
     return function (xdm) {
       var date = dateProvider();
       var placeContext = {};
@@ -9628,16 +11333,18 @@
         placeContext.localTimezoneOffset = localTimezoneOffset;
       } // make sure the timezone offset only uses two digits
 
-
-      if (localTimezoneOffset === undefined || Math.abs(localTimezoneOffset) < 6000) {
+      if (
+        localTimezoneOffset === undefined ||
+        Math.abs(localTimezoneOffset) < 6000
+      ) {
         placeContext.localTime = toISOStringLocal(date);
       }
 
       deepAssign(xdm, {
-        placeContext: placeContext
+        placeContext: placeContext,
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9650,14 +11357,16 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectTimestamp = (function (dateProvider) {
+  // @ts-ignore
+  var injectTimestamp = function (dateProvider) {
+    // @ts-ignore
     return function (xdm) {
       var timestamp = dateProvider().toISOString();
       deepAssign(xdm, {
-        timestamp: timestamp
+        timestamp: timestamp,
       });
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -9670,7 +11379,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var libraryName = "https://ns.adobe.com/experience/alloy";
+  var libraryName = 'https://ns.adobe.com/experience/alloy';
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -9685,7 +11394,7 @@
   */
   // The __VERSION__ keyword will be replace at alloy build time with the package.json version.
   // see babel-plugin-version
-  var libraryVersion = "2.17.0";
+  var libraryVersion = '2.17.0';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9698,16 +11407,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var implementationDetails = (function (xdm) {
+  // @ts-ignore
+  var implementationDetails = function (xdm) {
     var implementationDetails = {
       name: libraryName,
       version: libraryVersion,
-      environment: "browser"
+      environment: 'browser',
     };
     deepAssign(xdm, {
-      implementationDetails: implementationDetails
+      implementationDetails: implementationDetails,
     });
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9720,31 +11430,46 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createComponent$2 = (function (config, logger, optionalContexts, requiredContexts) {
+  var createComponent$2 = function (
+    // @ts-ignore
+    config,
+    // @ts-ignore
+    logger,
+    // @ts-ignore
+    optionalContexts,
+    // @ts-ignore
+    requiredContexts
+  ) {
     var configuredContexts = config.context;
+    // @ts-ignore
     var contexts = flatMap(configuredContexts, function (context, i) {
       if (optionalContexts[context]) {
         return [optionalContexts[context]];
       }
 
-      logger.warn("Invalid context[" + i + "]: '" + context + "' is not available.");
+      logger.warn(
+        'Invalid context[' + i + "]: '" + context + "' is not available."
+      );
       return [];
     }).concat(requiredContexts);
     return {
-      namespace: "Context",
+      namespace: 'Context',
       lifecycle: {
+        // @ts-ignore
         onBeforeEvent: function onBeforeEvent(_ref) {
           var event = _ref.event;
           var xdm = {};
-          return Promise.all(contexts.map(function (context) {
-            return Promise.resolve(context(xdm, logger));
-          })).then(function () {
+          return Promise.all(
+            contexts.map(function (context) {
+              return Promise.resolve(context(xdm, logger));
+            })
+          ).then(function () {
             return event.mergeXdm(xdm);
           });
-        }
-      }
+        },
+      },
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -9757,48 +11482,73 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var highEntropyUserAgentHints$1 = [["architecture", "string"], ["bitness", "string"], ["model", "string"], ["platformVersion", "string"], ["wow64", "boolean"]];
+  var highEntropyUserAgentHints$1 = [
+    ['architecture', 'string'],
+    ['bitness', 'string'],
+    ['model', 'string'],
+    ['platformVersion', 'string'],
+    ['wow64', 'boolean'],
+  ];
 
-  var browserSupportsUserAgentClientHints = function browserSupportsUserAgentClientHints(navigator) {
-    return typeof navigator.userAgentData !== "undefined";
-  };
+  var browserSupportsUserAgentClientHints =
+    // @ts-ignore
+    function browserSupportsUserAgentClientHints(navigator) {
+      return typeof navigator.userAgentData !== 'undefined';
+    };
 
-  var injectHighEntropyUserAgentHints = (function (navigator) {
+  // @ts-ignore
+  var injectHighEntropyUserAgentHints = function (navigator) {
     if (!browserSupportsUserAgentClientHints(navigator)) {
       return noop$1;
     }
 
+    // @ts-ignore
     return function (xdm, logger) {
       try {
-        return navigator.userAgentData.getHighEntropyValues(highEntropyUserAgentHints$1.map(function (hint) {
-          return hint[0];
-        })).then(function (hints) {
-          var userAgentClientHints = {};
-          highEntropyUserAgentHints$1.forEach(function (_ref) {
-            var _ref2 = _slicedToArray(_ref, 2),
-                hintName = _ref2[0],
-                hintType = _ref2[1];
+        return (
+          navigator.userAgentData
+            .getHighEntropyValues(
+              highEntropyUserAgentHints$1.map(function (hint) {
+                return hint[0];
+              })
+            )
+            // @ts-ignore
+            .then(function (hints) {
+              var userAgentClientHints = {};
+              highEntropyUserAgentHints$1.forEach(function (_ref) {
+                var _ref2 = _slicedToArray(_ref, 2),
+                  // @ts-ignore
+                  hintName = _ref2[0],
+                  // @ts-ignore
+                  hintType = _ref2[1];
 
-            if (Object.prototype.hasOwnProperty.call(hints, hintName) &&
-            /* eslint-disable-next-line valid-typeof */
-            _typeof(hints[hintName]) === hintType) {
-              userAgentClientHints[hintName] = hints[hintName];
-            }
-          });
-          deepAssign(xdm, {
-            environment: {
-              browserDetails: {
-                userAgentClientHints: userAgentClientHints
-              }
-            }
-          });
-        });
+                if (
+                  Object.prototype.hasOwnProperty.call(hints, hintName) &&
+                  /* eslint-disable-next-line valid-typeof */
+                  _typeof(hints[hintName]) === hintType
+                ) {
+                  // @ts-ignore
+                  userAgentClientHints[hintName] = hints[hintName];
+                }
+              });
+              deepAssign(xdm, {
+                environment: {
+                  browserDetails: {
+                    userAgentClientHints: userAgentClientHints,
+                  },
+                },
+              });
+            })
+        );
       } catch (error) {
-        logger.warn("Unable to collect user-agent client hints. " + error.message);
+        logger.warn(
+          // @ts-ignore
+          'Unable to collect user-agent client hints. ' + error.message
+        );
         return noop$1;
       }
     };
-  });
+  };
 
   var web = injectWeb(window);
   var device = injectDevice(window);
@@ -9814,36 +11564,49 @@
     web: web,
     device: device,
     environment: environment,
-    placeContext: placeContext
+    placeContext: placeContext,
   };
   var defaultDisabledContexts = {
-    highEntropyUserAgentHints: highEntropyUserAgentHints
+    highEntropyUserAgentHints: highEntropyUserAgentHints,
   };
 
-  var optionalContexts = _objectSpread2(_objectSpread2({}, defaultEnabledContexts), defaultDisabledContexts);
+  var optionalContexts = _objectSpread2(
+    _objectSpread2({}, defaultEnabledContexts),
+    defaultDisabledContexts
+  );
 
   var requiredContexts = [timestamp, implementationDetails];
 
+  // @ts-ignore
   var createContext = function createContext(_ref) {
     var config = _ref.config,
-        logger = _ref.logger;
-    return createComponent$2(config, logger, optionalContexts, requiredContexts);
+      logger = _ref.logger;
+    return createComponent$2(
+      config,
+      logger,
+      optionalContexts,
+      requiredContexts
+    );
   };
 
-  createContext.namespace = "Context";
+  createContext.namespace = 'Context';
   createContext.configValidators = {
-    context: boundArrayOf(boundString()).default(Object.keys(defaultEnabledContexts))
+    // @ts-ignore
+    context: boundArrayOf(boundString()).default(
+      Object.keys(defaultEnabledContexts)
+    ),
   };
 
-  var createComponent$1 = (function (_ref) {
+  // @ts-ignore
+  var createComponent$1 = function (_ref) {
     var storedConsent = _ref.storedConsent,
-        taskQueue = _ref.taskQueue,
-        defaultConsent = _ref.defaultConsent,
-        consent = _ref.consent,
-        sendSetConsentRequest = _ref.sendSetConsentRequest,
-        validateSetConsentOptions = _ref.validateSetConsentOptions,
-        consentHashStore = _ref.consentHashStore,
-        doesIdentityCookieExist = _ref.doesIdentityCookieExist;
+      taskQueue = _ref.taskQueue,
+      defaultConsent = _ref.defaultConsent,
+      consent = _ref.consent,
+      sendSetConsentRequest = _ref.sendSetConsentRequest,
+      validateSetConsentOptions = _ref.validateSetConsentOptions,
+      consentHashStore = _ref.consentHashStore,
+      doesIdentityCookieExist = _ref.doesIdentityCookieExist;
 
     var defaultConsentByPurpose = _defineProperty({}, GENERAL, defaultConsent);
 
@@ -9855,7 +11618,6 @@
       consentHashStore.clear();
     } // If the identity cookie is gone, remove the consent cookie because the
     // consent info is tied to the identity.
-
 
     if (!identityCookieExists) {
       storedConsent.clear();
@@ -9879,27 +11641,31 @@
       commands: {
         setConsent: {
           optionsValidator: validateSetConsentOptions,
+          // @ts-ignore
           run: function run(_ref2) {
             var consentOptions = _ref2.consent,
-                identityMap = _ref2.identityMap,
-                edgeConfigOverrides = _ref2.edgeConfigOverrides;
+              identityMap = _ref2.identityMap,
+              edgeConfigOverrides = _ref2.edgeConfigOverrides;
             consent.suspend();
             var consentHashes = consentHashStore.lookup(consentOptions);
-            return taskQueue.addTask(function () {
-              if (consentHashes.isNew()) {
-                return sendSetConsentRequest({
-                  consentOptions: consentOptions,
-                  identityMap: identityMap,
-                  edgeConfigOverrides: edgeConfigOverrides
-                });
-              }
+            return taskQueue
+              .addTask(function () {
+                if (consentHashes.isNew()) {
+                  return sendSetConsentRequest({
+                    consentOptions: consentOptions,
+                    identityMap: identityMap,
+                    edgeConfigOverrides: edgeConfigOverrides,
+                  });
+                }
 
-              return Promise.resolve();
-            }).then(function () {
-              return consentHashes.save();
-            }).finally(readCookieIfQueueEmpty);
-          }
-        }
+                return Promise.resolve();
+              })
+              .then(function () {
+                return consentHashes.save();
+              })
+              .finally(readCookieIfQueueEmpty);
+          },
+        },
       },
       lifecycle: {
         // Read the cookie here too because the consent cookie may change on any request
@@ -9909,11 +11675,12 @@
         // opted out in AudienceManager, but no consent cookie exists on the
         // client. The request will be sent and the server will respond with a
         // 403 Forbidden and a consent cookie.
-        onRequestFailure: readCookieIfQueueEmpty
-      }
+        onRequestFailure: readCookieIfQueueEmpty,
+      },
     };
-  });
+  };
 
+  // @ts-ignore
   var serialize = function serialize(obj) {
     if (Array.isArray(obj)) {
       return obj.map(function (i) {
@@ -9921,69 +11688,85 @@
       });
     }
 
-    if (_typeof(obj) === "object" && obj !== null) {
-      return Object.keys(obj).sort().reduce(function (memo, key) {
-        memo[key] = serialize(obj[key]);
-        return memo;
-      }, {});
+    if (_typeof(obj) === 'object' && obj !== null) {
+      return Object.keys(obj)
+        .sort()
+        .reduce(function (memo, key) {
+          // @ts-ignore
+          memo[key] = serialize(obj[key]);
+          return memo;
+        }, {});
     }
 
     return obj;
   };
 
-  var computeConsentHash = (function (obj) {
+  // @ts-ignore
+  var computeConsentHash = function (obj) {
     return crc32(JSON.stringify(serialize(obj)));
-  });
-
-  var _excluded = ["standard", "version"];
-
-  var getKey = function getKey(_ref) {
-    var standard = _ref.standard,
-        version = _ref.version;
-    return standard + "." + version;
   };
 
-  var createConsentHashStore = (function (_ref2) {
+  var _excluded = ['standard', 'version'];
+
+  // @ts-ignore
+  var getKey = function getKey(_ref) {
+    var standard = _ref.standard,
+      version = _ref.version;
+    return standard + '.' + version;
+  };
+
+  // @ts-ignore
+  var createConsentHashStore = function (_ref2) {
     var storage = _ref2.storage;
     return {
       clear: function clear() {
         storage.clear();
       },
+      // @ts-ignore
       lookup: function lookup(consentObjects) {
         var currentHashes = {};
 
+        // @ts-ignore
         var getCurrentHash = function getCurrentHash(consentObject) {
           var key = getKey(consentObject);
 
           consentObject.standard;
-              consentObject.version;
-              var rest = _objectWithoutProperties(consentObject, _excluded);
+          consentObject.version;
+          var rest = _objectWithoutProperties(consentObject, _excluded);
 
+          // @ts-ignore
           if (!currentHashes[key]) {
+            // @ts-ignore
             currentHashes[key] = computeConsentHash(rest).toString();
           }
 
+          // @ts-ignore
           return currentHashes[key];
         };
 
         return {
           isNew: function isNew() {
+            // @ts-ignore
             return consentObjects.some(function (consentObject) {
               var key = getKey(consentObject);
               var previousHash = storage.getItem(key);
-              return previousHash === null || previousHash !== getCurrentHash(consentObject);
+              return (
+                previousHash === null ||
+                previousHash !== getCurrentHash(consentObject)
+              );
             });
           },
           save: function save() {
+            // @ts-ignore
             consentObjects.forEach(function (consentObject) {
               var key = getKey(consentObject);
               storage.setItem(key, getCurrentHash(consentObject));
             });
-          }
+          },
         };
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -9996,26 +11779,39 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createConsentRequestPayload = (function () {
+  var createConsentRequestPayload = function () {
     var content = {};
     var payload = createRequestPayload({
       content: content,
+      // @ts-ignore
       addIdentity: function addIdentity(namespaceCode, identity) {
+        // @ts-ignore
         content.identityMap = content.identityMap || {};
-        content.identityMap[namespaceCode] = content.identityMap[namespaceCode] || [];
+        // @ts-ignore
+        content.identityMap[namespaceCode] =
+          // @ts-ignore
+          content.identityMap[namespaceCode] || [];
+        // @ts-ignore
         content.identityMap[namespaceCode].push(identity);
       },
+      // @ts-ignore
       hasIdentity: function hasIdentity(namespaceCode) {
-        return (content.identityMap && content.identityMap[namespaceCode]) !== undefined;
-      }
+        return (
+          // @ts-ignore
+          (content.identityMap && content.identityMap[namespaceCode]) !==
+          undefined
+        );
+      },
     });
 
+    // @ts-ignore
     payload.setConsent = function (consent) {
+      // @ts-ignore
       content.consent = consent;
     };
 
     return payload;
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -10028,17 +11824,18 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createConsentRequest = (function (consentRequestPayload) {
+  // @ts-ignore
+  var createConsentRequest = function (consentRequestPayload) {
     return createRequest({
       payload: consentRequestPayload,
       getAction: function getAction() {
-        return "privacy/set-consent";
+        return 'privacy/set-consent';
       },
       getUseSendBeacon: function getUseSendBeacon() {
         return false;
-      }
+      },
     });
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -10051,10 +11848,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createStoredConsent = (function (_ref) {
+  // @ts-ignore
+  var createStoredConsent = function (_ref) {
     var parseConsentCookie = _ref.parseConsentCookie,
-        orgId = _ref.orgId,
-        cookieJar = _ref.cookieJar;
+      orgId = _ref.orgId,
+      cookieJar = _ref.cookieJar;
     var consentCookieName = getNamespacedCookieName(orgId, CONSENT);
     return {
       read: function read() {
@@ -10063,9 +11861,9 @@
       },
       clear: function clear() {
         cookieJar.remove(consentCookieName);
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -10078,15 +11876,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectSendSetConsentRequest = (function (_ref) {
+  // @ts-ignore
+  var injectSendSetConsentRequest = function (_ref) {
     var createConsentRequestPayload = _ref.createConsentRequestPayload,
-        createConsentRequest = _ref.createConsentRequest,
-        sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
-        globalConfigOverrides = _ref.edgeConfigOverrides;
+      createConsentRequest = _ref.createConsentRequest,
+      sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
+      globalConfigOverrides = _ref.edgeConfigOverrides;
+    // @ts-ignore
     return function (_ref2) {
       var consentOptions = _ref2.consentOptions,
-          identityMap = _ref2.identityMap,
-          localConfigOverrides = _ref2.edgeConfigOverrides;
+        identityMap = _ref2.identityMap,
+        localConfigOverrides = _ref2.edgeConfigOverrides;
       var payload = createConsentRequestPayload();
       payload.setConsent(consentOptions);
       payload.mergeConfigOverride(globalConfigOverrides);
@@ -10094,6 +11894,7 @@
 
       if (isObject(identityMap)) {
         Object.keys(identityMap).forEach(function (key) {
+          // @ts-ignore
           identityMap[key].forEach(function (identity) {
             payload.addIdentity(key, identity);
           });
@@ -10102,12 +11903,13 @@
 
       var request = createConsentRequest(payload);
       return sendEdgeNetworkRequest({
-        request: request
-      }).then(function () {// Don't let response data disseminate beyond this
+        request: request,
+      }).then(function () {
+        // Don't let response data disseminate beyond this
         // point unless necessary.
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10127,18 +11929,21 @@
    * @returns {Object} An object where the keys are purpose names and the values
    * are the consent status for the purpose.
    */
-  var parseConsentCookie = (function (cookieValue) {
-    var categoryPairs = cookieValue.split(";");
+  var parseConsentCookie = function (cookieValue) {
+    var categoryPairs = cookieValue.split(';');
     return categoryPairs.reduce(function (consentByPurpose, categoryPair) {
-      var _categoryPair$split = categoryPair.split("="),
-          _categoryPair$split2 = _slicedToArray(_categoryPair$split, 2),
-          name = _categoryPair$split2[0],
-          value = _categoryPair$split2[1];
+      var _categoryPair$split = categoryPair.split('='),
+        _categoryPair$split2 = _slicedToArray(_categoryPair$split, 2),
+        // @ts-ignore
+        name = _categoryPair$split2[0],
+        // @ts-ignore
+        value = _categoryPair$split2[1];
 
+      // @ts-ignore
       consentByPurpose[name] = value;
       return consentByPurpose;
     }, {});
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -10152,10 +11957,14 @@
   governing permissions and limitations under the License.
   */
   var validateSetConsentOptions = boundObjectOf({
+    // @ts-ignore
     consent: boundArrayOf(boundAnything()).required().nonEmpty(),
     identityMap: validateIdentityMap,
-    edgeConfigOverrides: validateConfigOverride
-  }).noUnknownFields().required();
+    edgeConfigOverrides: validateConfigOverride,
+  })
+    // @ts-ignore
+    .noUnknownFields()
+    .required();
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10169,31 +11978,34 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createPrivacy = function createPrivacy(_ref) {
     var config = _ref.config,
-        consent = _ref.consent,
-        sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
-        createNamespacedStorage = _ref.createNamespacedStorage;
+      consent = _ref.consent,
+      sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
+      createNamespacedStorage = _ref.createNamespacedStorage;
     var orgId = config.orgId,
-        defaultConsent = config.defaultConsent;
+      defaultConsent = config.defaultConsent;
     var storedConsent = createStoredConsent({
       parseConsentCookie: parseConsentCookie,
       orgId: orgId,
-      cookieJar: cookieJar
+      cookieJar: cookieJar,
     });
     var taskQueue = createTaskQueue();
     var sendSetConsentRequest = injectSendSetConsentRequest({
       createConsentRequestPayload: createConsentRequestPayload,
       createConsentRequest: createConsentRequest,
       sendEdgeNetworkRequest: sendEdgeNetworkRequest,
-      edgeConfigOverrides: config.edgeConfigOverrides
+      edgeConfigOverrides: config.edgeConfigOverrides,
     });
-    var storage = createNamespacedStorage(sanitizeOrgIdForCookieName(orgId) + ".consentHashes.");
+    var storage = createNamespacedStorage(
+      sanitizeOrgIdForCookieName(orgId) + '.consentHashes.'
+    );
     var consentHashStore = createConsentHashStore({
-      storage: storage.persistent
+      storage: storage.persistent,
     });
     var doesIdentityCookieExist = injectDoesIdentityCookieExist({
-      orgId: orgId
+      orgId: orgId,
     });
     return createComponent$1({
       storedConsent: storedConsent,
@@ -10203,11 +12015,11 @@
       sendSetConsentRequest: sendSetConsentRequest,
       validateSetConsentOptions: validateSetConsentOptions,
       consentHashStore: consentHashStore,
-      doesIdentityCookieExist: doesIdentityCookieExist
+      doesIdentityCookieExist: doesIdentityCookieExist,
     });
   };
 
-  createPrivacy.namespace = "Privacy";
+  createPrivacy.namespace = 'Privacy';
 
   /*
   Copyright 20219 Adobe. All rights reserved.
@@ -10220,11 +12032,11 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createEventMergeId = (function () {
+  var createEventMergeId = function () {
     return {
-      eventMergeId: v4_1()
+      eventMergeId: v4_1(),
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -10237,16 +12049,17 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createComponent = (function (_ref) {
+  // @ts-ignore
+  var createComponent = function (_ref) {
     var createEventMergeId = _ref.createEventMergeId;
     return {
       commands: {
         createEventMergeId: {
-          run: createEventMergeId
-        }
-      }
+          run: createEventMergeId,
+        },
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10262,24 +12075,32 @@
 
   var createEventMerge = function createEventMerge() {
     return createComponent({
-      createEventMergeId: createEventMergeId
+      createEventMergeId: createEventMergeId,
     });
   };
 
-  createEventMerge.namespace = "EventMerge";
+  createEventMerge.namespace = 'EventMerge';
   createEventMerge.configValidators = {};
 
+  // @ts-ignore
   var prepareLibraryInfo = function prepareLibraryInfo(_ref) {
     var config = _ref.config,
-        componentRegistry = _ref.componentRegistry;
-    var allCommands = [].concat(_toConsumableArray(componentRegistry.getCommandNames()), [CONFIGURE, SET_DEBUG]).sort();
+      componentRegistry = _ref.componentRegistry;
+    // @ts-ignore
+    var allCommands = []
+      // @ts-ignore
+      .concat(_toConsumableArray(componentRegistry.getCommandNames()), [
+        CONFIGURE,
+        SET_DEBUG,
+      ])
+      .sort();
 
     var resultConfig = _objectSpread2({}, config);
 
     Object.keys(config).forEach(function (key) {
       var value = config[key];
 
-      if (typeof value !== "function") {
+      if (typeof value !== 'function') {
         return;
       }
 
@@ -10288,31 +12109,32 @@
     return {
       version: libraryVersion,
       configs: resultConfig,
-      commands: allCommands
+      commands: allCommands,
     };
   };
 
+  // @ts-ignore
   var createLibraryInfo = function createLibraryInfo(_ref2) {
     var config = _ref2.config,
-        componentRegistry = _ref2.componentRegistry;
+      componentRegistry = _ref2.componentRegistry;
     var libraryInfo = prepareLibraryInfo({
       config: config,
-      componentRegistry: componentRegistry
+      componentRegistry: componentRegistry,
     });
     return {
       commands: {
         getLibraryInfo: {
           run: function run() {
             return {
-              libraryInfo: libraryInfo
+              libraryInfo: libraryInfo,
             };
-          }
-        }
-      }
+          },
+        },
+      },
     };
   };
 
-  createLibraryInfo.namespace = "LibraryInfo";
+  createLibraryInfo.namespace = 'LibraryInfo';
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -10324,12 +12146,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var processResponse = (function (_ref) {
+  // @ts-ignore
+  var processResponse = function (_ref) {
     var response = _ref.response;
     return {
-      inferences: response.getPayloadsByType("rtml:inferences")
+      inferences: response.getPayloadsByType('rtml:inferences'),
     };
-  });
+  };
 
   /*
   Copyright 2021 Adobe. All rights reserved.
@@ -10346,13 +12169,13 @@
   var createMachineLearning = function createMachineLearning() {
     return {
       lifecycle: {
-        onResponse: processResponse
+        onResponse: processResponse,
       },
-      commands: {}
+      commands: {},
     };
   };
 
-  createMachineLearning.namespace = "MachineLearning";
+  createMachineLearning.namespace = 'MachineLearning';
   createMachineLearning.configValidators = {};
 
   /*
@@ -10368,13 +12191,30 @@
   */
   // TODO: Figure out how sub-components will be made available/registered
 
-  var componentCreators = [createDataCollector, createActivityCollector, createIdentity, createAudiences, createPersonalization, createContext, createPrivacy, createEventMerge, createLibraryInfo, createMachineLearning];
+  var componentCreators = [
+    createDataCollector,
+    createActivityCollector,
+    createIdentity,
+    createAudiences,
+    createPersonalization,
+    createContext,
+    createPrivacy,
+    createEventMerge,
+    createLibraryInfo,
+    createMachineLearning,
+  ];
 
-  var CONFIG_DOC_URI = "https://adobe.ly/3sHh553";
+  var CONFIG_DOC_URI = 'https://adobe.ly/3sHh553';
 
-  var buildSchema = function buildSchema(coreConfigValidators, componentCreators) {
+  var buildSchema = function buildSchema(
+    // @ts-ignore
+    coreConfigValidators,
+    // @ts-ignore
+    componentCreators
+  ) {
     var schema = {};
     reactorObjectAssign(schema, coreConfigValidators);
+    // @ts-ignore
     componentCreators.forEach(function (createComponent) {
       var configValidators = createComponent.configValidators;
       reactorObjectAssign(schema, configValidators);
@@ -10382,49 +12222,81 @@
     return schema;
   };
 
+  // @ts-ignore
   var transformOptions = function transformOptions(schema, options) {
     try {
+      // @ts-ignore
       var validator = boundObjectOf(schema).noUnknownFields().required();
       return validator(options);
     } catch (e) {
-      throw new Error("Resolve these configuration problems:\n\t - " + e.message.split("\n").join("\n\t - ") + "\nFor configuration documentation see: " + CONFIG_DOC_URI);
+      throw new Error(
+        'Resolve these configuration problems:\n\t - ' +
+          // @ts-ignore
+          e.message.split('\n').join('\n\t - ') +
+          '\nFor configuration documentation see: ' +
+          CONFIG_DOC_URI
+      );
     }
   };
 
-  var buildAllOnInstanceConfiguredExtraParams = function buildAllOnInstanceConfiguredExtraParams(config, logger, componentCreators) {
-    return componentCreators.reduce(function (memo, _ref) {
-      var buildOnInstanceConfiguredExtraParams = _ref.buildOnInstanceConfiguredExtraParams;
+  var buildAllOnInstanceConfiguredExtraParams =
+    function buildAllOnInstanceConfiguredExtraParams(
+      // @ts-ignore
+      config,
+      // @ts-ignore
+      logger,
+      // @ts-ignore
+      componentCreators
+    ) {
+      // @ts-ignore
+      return componentCreators.reduce(function (memo, _ref) {
+        var buildOnInstanceConfiguredExtraParams =
+          _ref.buildOnInstanceConfiguredExtraParams;
 
-      if (buildOnInstanceConfiguredExtraParams) {
-        reactorObjectAssign(memo, buildOnInstanceConfiguredExtraParams({
-          config: config,
-          logger: logger
-        }));
-      }
+        if (buildOnInstanceConfiguredExtraParams) {
+          reactorObjectAssign(
+            memo,
+            buildOnInstanceConfiguredExtraParams({
+              config: config,
+              logger: logger,
+            })
+          );
+        }
 
-      return memo;
-    }, {});
-  };
+        return memo;
+      }, {});
+    };
 
-  var buildAndValidateConfig = (function (_ref2) {
+  // @ts-ignore
+  var buildAndValidateConfig = function (_ref2) {
     var options = _ref2.options,
-        componentCreators = _ref2.componentCreators,
-        coreConfigValidators = _ref2.coreConfigValidators,
-        createConfig = _ref2.createConfig,
-        logger = _ref2.logger,
-        setDebugEnabled = _ref2.setDebugEnabled;
+      componentCreators = _ref2.componentCreators,
+      coreConfigValidators = _ref2.coreConfigValidators,
+      createConfig = _ref2.createConfig,
+      logger = _ref2.logger,
+      setDebugEnabled = _ref2.setDebugEnabled;
     var schema = buildSchema(coreConfigValidators, componentCreators);
     var config = createConfig(transformOptions(schema, options));
     setDebugEnabled(config.debugEnabled, {
-      fromConfig: true
+      fromConfig: true,
     }); // eslint-disable-next-line no-underscore-dangle
 
-    var extraParams = buildAllOnInstanceConfiguredExtraParams(config, logger, componentCreators);
-    logger.logOnInstanceConfigured(_objectSpread2(_objectSpread2({}, extraParams), {}, {
-      config: config
-    }));
+    var extraParams = buildAllOnInstanceConfiguredExtraParams(
+      config,
+      logger,
+      componentCreators
+    );
+    logger.logOnInstanceConfigured(
+      _objectSpread2(
+        _objectSpread2({}, extraParams),
+        {},
+        {
+          config: config,
+        }
+      )
+    );
     return config;
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10437,11 +12309,13 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var initializeComponents = (function (_ref) {
+  // @ts-ignore
+  var initializeComponents = function (_ref) {
     var componentCreators = _ref.componentCreators,
-        lifecycle = _ref.lifecycle,
-        componentRegistry = _ref.componentRegistry,
-        getImmediatelyAvailableTools = _ref.getImmediatelyAvailableTools;
+      lifecycle = _ref.lifecycle,
+      componentRegistry = _ref.componentRegistry,
+      getImmediatelyAvailableTools = _ref.getImmediatelyAvailableTools;
+    // @ts-ignore
     componentCreators.forEach(function (createComponent) {
       var namespace = createComponent.namespace; // TO-DOCUMENT: Helpers that we inject into factories.
 
@@ -10453,18 +12327,21 @@
       } catch (error) {
         throw stackError({
           error: error,
-          message: "[" + namespace + "] An error occurred during component creation."
+          message:
+            '[' + namespace + '] An error occurred during component creation.',
         });
       }
 
       componentRegistry.register(namespace, component);
     });
-    return lifecycle.onComponentsRegistered({
-      lifecycle: lifecycle
-    }).then(function () {
-      return componentRegistry;
-    });
-  });
+    return lifecycle
+      .onComponentsRegistered({
+        lifecycle: lifecycle,
+      })
+      .then(function () {
+        return componentRegistry;
+      });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10478,6 +12355,7 @@
   governing permissions and limitations under the License.
   */
 
+  // @ts-ignore
   var createConfig = function createConfig(options) {
     return reactorObjectAssign({}, options);
   };
@@ -10493,8 +12371,8 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var EDGE = "edge.adobedc.net";
-  var ID_THIRD_PARTY = "adobedc.demdex.net";
+  var EDGE = 'edge.adobedc.net';
+  var ID_THIRD_PARTY = 'adobedc.demdex.net';
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -10507,7 +12385,7 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var EDGE_BASE_PATH = "ee";
+  var EDGE_BASE_PATH = 'ee';
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10520,18 +12398,25 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createCoreConfigs = (function () {
+  var createCoreConfigs = function () {
     return {
+      // @ts-ignore
       debugEnabled: boundBoolean().default(false),
+      // @ts-ignore
       defaultConsent: boundEnumOf(IN, OUT, PENDING).default(IN),
+      // @ts-ignore
       edgeConfigId: boundString().unique().required(),
+      // @ts-ignore
       edgeDomain: boundString().domain().default(EDGE),
+      // @ts-ignore
       edgeBasePath: boundString().nonEmpty().default(EDGE_BASE_PATH),
+      // @ts-ignore
       orgId: boundString().unique().required(),
+      // @ts-ignore
       onBeforeEventSend: boundCallback().default(noop$1),
-      edgeConfigOverrides: validateConfigOverride
+      edgeConfigOverrides: validateConfigOverride,
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10544,26 +12429,31 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectHandleError = (function (_ref) {
+  // @ts-ignore
+  var injectHandleError = function (_ref) {
     var errorPrefix = _ref.errorPrefix,
-        logger = _ref.logger;
+      logger = _ref.logger;
+    // @ts-ignore
     return function (error, operation) {
       var err = toError(error); // In the case of declined consent, we've opted to not reject the promise
       // returned to the customer, but instead resolve the promise with an
       // empty result object.
 
+      // @ts-ignore
       if (err.code === DECLINED_CONSENT_ERROR_CODE) {
-        logger.warn("The " + operation + " could not fully complete. " + err.message);
+        logger.warn(
+          'The ' + operation + ' could not fully complete. ' + err.message
+        );
         return {};
       }
 
       updateErrorMessage({
         error: err,
-        message: errorPrefix + " " + err.message
+        message: errorPrefix + ' ' + err.message,
       });
       throw err;
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10576,20 +12466,24 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectSendFetchRequest = (function (_ref) {
+  // @ts-ignore
+  var injectSendFetchRequest = function (_ref) {
     var fetch = _ref.fetch;
+    // @ts-ignore
     return function (url, body) {
       return fetch(url, {
-        method: "POST",
-        cache: "no-cache",
-        credentials: "include",
+        method: 'POST',
+        cache: 'no-cache',
+        credentials: 'include',
         // To set the cookie header in the request.
         headers: {
-          "Content-Type": "text/plain; charset=UTF-8"
+          'Content-Type': 'text/plain; charset=UTF-8',
         },
-        referrerPolicy: "no-referrer-when-downgrade",
-        body: body
+        referrerPolicy: 'no-referrer-when-downgrade',
+        body: body,
+        // @ts-ignore
       }).then(function (response) {
+        // @ts-ignore
         return response.text().then(function (responseBody) {
           return {
             statusCode: response.status,
@@ -10597,15 +12491,16 @@
             // with all the headers up front largely because the native
             // request.getResponseHeader method is case-insensitive but also because it prevents
             // us from having to add header parsing logic when using XHR to make requests.
+            // @ts-ignore
             getHeader: function getHeader(name) {
               return response.headers.get(name);
             },
-            body: responseBody
+            body: responseBody,
           };
         });
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10618,8 +12513,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectSendXhrRequest = (function (_ref) {
+  // @ts-ignore
+  var injectSendXhrRequest = function (_ref) {
     var XMLHttpRequest = _ref.XMLHttpRequest;
+    // @ts-ignore
     return function (url, body) {
       return new Promise(function (resolve, reject) {
         var request = new XMLHttpRequest();
@@ -10627,7 +12524,7 @@
         request.onreadystatechange = function () {
           if (request.readyState === 4) {
             if (request.status === 0) {
-              reject(new Error("Request aborted."));
+              reject(new Error('Request aborted.'));
             } else {
               resolve({
                 statusCode: request.status,
@@ -10635,28 +12532,29 @@
                 // with all the headers up front because:
                 // 1. It avoids having to add header parsing code to get all headers.
                 // 2. The native request.getResponseHeader method is case-insensitive.
+                // @ts-ignore
                 getHeader: function getHeader(name) {
                   return request.getResponseHeader(name);
                 },
-                body: request.responseText
+                body: request.responseText,
               });
             }
           }
         };
 
         request.onloadstart = function () {
-          request.responseType = "text";
+          request.responseType = 'text';
         };
 
-        request.open("POST", url, true);
-        request.setRequestHeader("Content-Type", "text/plain; charset=UTF-8");
+        request.open('POST', url, true);
+        request.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
         request.withCredentials = true;
         request.onerror = reject;
         request.onabort = reject;
         request.send(body);
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10669,32 +12567,33 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectSendBeaconRequest = (function (_ref) {
+  // @ts-ignore
+  var injectSendBeaconRequest = function (_ref) {
     var sendBeacon = _ref.sendBeacon,
-        sendFetchRequest = _ref.sendFetchRequest,
-        logger = _ref.logger;
+      sendFetchRequest = _ref.sendFetchRequest,
+      logger = _ref.logger;
+    // @ts-ignore
     return function (url, body) {
       var blob = new Blob([body], {
-        type: "text/plain; charset=UTF-8"
+        type: 'text/plain; charset=UTF-8',
       });
 
       if (!sendBeacon(url, blob)) {
-        logger.info("Unable to use `sendBeacon`; falling back to `fetch`.");
+        logger.info('Unable to use `sendBeacon`; falling back to `fetch`.');
         return sendFetchRequest(url, body);
       } // Using sendBeacon, we technically don't get a response back from
       // the server, but we'll resolve the promise with an object to maintain
       // consistency with other network strategies.
-
 
       return Promise.resolve({
         statusCode: 204,
         getHeader: function getHeader() {
           return null;
         },
-        body: ""
+        body: '',
       });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10707,22 +12606,25 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var createLogger = (function (_ref) {
+  // @ts-ignore
+  var createLogger = function (_ref) {
     var getDebugEnabled = _ref.getDebugEnabled,
-        console = _ref.console,
-        getMonitors = _ref.getMonitors,
-        context = _ref.context;
-    var prefix = "[" + context.instanceName + "]";
+      console = _ref.console,
+      getMonitors = _ref.getMonitors,
+      context = _ref.context;
+    var prefix = '[' + context.instanceName + ']';
 
     if (context.componentName) {
-      prefix += " [" + context.componentName + "]";
+      prefix += ' [' + context.componentName + ']';
     }
 
+    // @ts-ignore
     var notifyMonitors = function notifyMonitors(method, data) {
       var monitors = getMonitors();
 
       if (monitors.length > 0) {
         var dataWithContext = reactorObjectAssign({}, context, data);
+        // @ts-ignore
         monitors.forEach(function (monitor) {
           if (monitor[method]) {
             monitor[method](dataWithContext);
@@ -10731,14 +12633,21 @@
       }
     };
 
+    // @ts-ignore
     var log = function log(level) {
-      for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      for (
+        var _len = arguments.length,
+          rest = new Array(_len > 1 ? _len - 1 : 0),
+          _key = 1;
+        _key < _len;
+        _key++
+      ) {
         rest[_key - 1] = arguments[_key];
       }
 
-      notifyMonitors("onBeforeLog", {
+      notifyMonitors('onBeforeLog', {
         level: level,
-        arguments: rest
+        arguments: rest,
       });
 
       if (getDebugEnabled()) {
@@ -10751,38 +12660,80 @@
         return getMonitors().length > 0 || getDebugEnabled();
       },
 
+      // @ts-ignore
       logOnInstanceCreated: function logOnInstanceCreated(data) {
-        notifyMonitors("onInstanceCreated", data);
-        log("info", "Instance initialized.");
+        notifyMonitors('onInstanceCreated', data);
+        log('info', 'Instance initialized.');
       },
+      // @ts-ignore
       logOnInstanceConfigured: function logOnInstanceConfigured(data) {
-        notifyMonitors("onInstanceConfigured", data);
-        log("info", "Instance configured. Computed configuration:", data.config);
+        notifyMonitors('onInstanceConfigured', data);
+        log(
+          'info',
+          'Instance configured. Computed configuration:',
+          data.config
+        );
       },
+      // @ts-ignore
       logOnBeforeCommand: function logOnBeforeCommand(data) {
-        notifyMonitors("onBeforeCommand", data);
-        log("info", "Executing " + data.commandName + " command. Options:", data.options);
+        notifyMonitors('onBeforeCommand', data);
+        log(
+          'info',
+          'Executing ' + data.commandName + ' command. Options:',
+          data.options
+        );
       },
+      // @ts-ignore
       logOnCommandResolved: function logOnCommandResolved(data) {
-        notifyMonitors("onCommandResolved", data);
-        log("info", data.commandName + " command resolved. Result:", data.result);
+        notifyMonitors('onCommandResolved', data);
+        log(
+          'info',
+          data.commandName + ' command resolved. Result:',
+          data.result
+        );
       },
+      // @ts-ignore
       logOnCommandRejected: function logOnCommandRejected(data) {
-        notifyMonitors("onCommandRejected", data);
-        log("error", data.commandName + " command was rejected. Error:", data.error);
+        notifyMonitors('onCommandRejected', data);
+        log(
+          'error',
+          data.commandName + ' command was rejected. Error:',
+          data.error
+        );
       },
+      // @ts-ignore
       logOnBeforeNetworkRequest: function logOnBeforeNetworkRequest(data) {
-        notifyMonitors("onBeforeNetworkRequest", data);
-        log("info", "Request " + data.requestId + ": Sending request.", data.payload);
+        notifyMonitors('onBeforeNetworkRequest', data);
+        log(
+          'info',
+          'Request ' + data.requestId + ': Sending request.',
+          data.payload
+        );
       },
+      // @ts-ignore
       logOnNetworkResponse: function logOnNetworkResponse(data) {
-        notifyMonitors("onNetworkResponse", data);
-        var messagesSuffix = data.parsedBody || data.body ? "response body:" : "no response body.";
-        log("info", "Request " + data.requestId + ": Received response with status code " + data.statusCode + " and " + messagesSuffix, data.parsedBody || data.body);
+        notifyMonitors('onNetworkResponse', data);
+        var messagesSuffix =
+          data.parsedBody || data.body ? 'response body:' : 'no response body.';
+        log(
+          'info',
+          'Request ' +
+            data.requestId +
+            ': Received response with status code ' +
+            data.statusCode +
+            ' and ' +
+            messagesSuffix,
+          data.parsedBody || data.body
+        );
       },
+      // @ts-ignore
       logOnNetworkError: function logOnNetworkError(data) {
-        notifyMonitors("onNetworkError", data);
-        log("error", "Request " + data.requestId + ": Network request failed.", data.error);
+        notifyMonitors('onNetworkError', data);
+        log(
+          'error',
+          'Request ' + data.requestId + ': Network request failed.',
+          data.error
+        );
       },
 
       /**
@@ -10791,21 +12742,21 @@
        * in the web console's log.
        * @param {...*} arg Any argument to be logged.
        */
-      info: log.bind(null, "info"),
+      info: log.bind(null, 'info'),
 
       /**
        * Outputs a warning message to the web console.
        * @param {...*} arg Any argument to be logged.
        */
-      warn: log.bind(null, "warn"),
+      warn: log.bind(null, 'warn'),
 
       /**
        * Outputs an error message to the web console.
        * @param {...*} arg Any argument to be logged.
        */
-      error: log.bind(null, "error")
+      error: log.bind(null, 'error'),
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10818,19 +12769,22 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var EVENT_CANCELLATION_MESSAGE = "Event was canceled because the onBeforeEventSend callback returned false.";
-  var createEventManager = (function (_ref) {
+  var EVENT_CANCELLATION_MESSAGE =
+    'Event was canceled because the onBeforeEventSend callback returned false.';
+  // @ts-ignore
+  var createEventManager = function (_ref) {
     var config = _ref.config,
-        logger = _ref.logger,
-        lifecycle = _ref.lifecycle,
-        consent = _ref.consent,
-        createEvent = _ref.createEvent,
-        createDataCollectionRequestPayload = _ref.createDataCollectionRequestPayload,
-        createDataCollectionRequest = _ref.createDataCollectionRequest,
-        sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
-        _applyResponse = _ref.applyResponse;
+      logger = _ref.logger,
+      lifecycle = _ref.lifecycle,
+      consent = _ref.consent,
+      createEvent = _ref.createEvent,
+      createDataCollectionRequestPayload =
+        _ref.createDataCollectionRequestPayload,
+      createDataCollectionRequest = _ref.createDataCollectionRequest,
+      sendEdgeNetworkRequest = _ref.sendEdgeNetworkRequest,
+      _applyResponse = _ref.applyResponse;
     var onBeforeEventSend = config.onBeforeEventSend,
-        globalConfigOverrides = config.edgeConfigOverrides;
+      globalConfigOverrides = config.edgeConfigOverrides;
     return {
       createEvent: createEvent,
 
@@ -10851,94 +12805,123 @@
        * @returns {*}
        */
       sendEvent: function sendEvent(event) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var options =
+          arguments.length > 1 && arguments[1] !== undefined
+            ? arguments[1]
+            : {};
         var _options$renderDecisi = options.renderDecisions,
-            renderDecisions = _options$renderDecisi === void 0 ? false : _options$renderDecisi,
-            decisionScopes = options.decisionScopes,
-            localConfigOverrides = options.edgeConfigOverrides,
-            personalization = options.personalization;
+          renderDecisions =
+            _options$renderDecisi === void 0 ? false : _options$renderDecisi,
+          decisionScopes = options.decisionScopes,
+          localConfigOverrides = options.edgeConfigOverrides,
+          personalization = options.personalization;
         var payload = createDataCollectionRequestPayload();
         var request = createDataCollectionRequest(payload);
         var onResponseCallbackAggregator = createCallbackAggregator();
         var onRequestFailureCallbackAggregator = createCallbackAggregator();
         payload.mergeConfigOverride(globalConfigOverrides);
         payload.mergeConfigOverride(localConfigOverrides);
-        return lifecycle.onBeforeEvent({
-          event: event,
-          renderDecisions: renderDecisions,
-          decisionScopes: decisionScopes,
-          personalization: personalization,
-          onResponse: onResponseCallbackAggregator.add,
-          onRequestFailure: onRequestFailureCallbackAggregator.add
-        }).then(function () {
-          payload.addEvent(event);
-          return consent.awaitConsent();
-        }).then(function () {
-          try {
-            // NOTE: this calls onBeforeEventSend callback (if configured)
-            event.finalize(onBeforeEventSend);
-          } catch (error) {
-            var throwError = function throwError() {
-              throw error;
-            };
+        return lifecycle
+          .onBeforeEvent({
+            event: event,
+            renderDecisions: renderDecisions,
+            decisionScopes: decisionScopes,
+            personalization: personalization,
+            onResponse: onResponseCallbackAggregator.add,
+            onRequestFailure: onRequestFailureCallbackAggregator.add,
+          })
+          .then(function () {
+            payload.addEvent(event);
+            return consent.awaitConsent();
+          })
+          .then(function () {
+            try {
+              // NOTE: this calls onBeforeEventSend callback (if configured)
+              // @ts-ignore
+              event.finalize(onBeforeEventSend);
+            } catch (error) {
+              var throwError = function throwError() {
+                throw error;
+              };
 
-            onRequestFailureCallbackAggregator.add(lifecycle.onRequestFailure);
-            return onRequestFailureCallbackAggregator.call({
-              error: error
-            }).then(throwError, throwError);
-          } // if the callback returns false, the event should not be sent
+              onRequestFailureCallbackAggregator.add(
+                lifecycle.onRequestFailure
+              );
+              return onRequestFailureCallbackAggregator
+                .call({
+                  error: error,
+                })
+                .then(throwError, throwError);
+            } // if the callback returns false, the event should not be sent
 
+            // @ts-ignore
+            if (!event.shouldSend()) {
+              onRequestFailureCallbackAggregator.add(
+                lifecycle.onRequestFailure
+              );
+              logger.info(EVENT_CANCELLATION_MESSAGE);
+              var error = new Error(EVENT_CANCELLATION_MESSAGE);
+              return onRequestFailureCallbackAggregator
+                .call({
+                  error: error,
+                })
+                .then(function () {
+                  // Ensure the promise gets resolved with undefined instead
+                  // of an array of return values from the callbacks.
+                });
+            }
 
-          if (!event.shouldSend()) {
-            onRequestFailureCallbackAggregator.add(lifecycle.onRequestFailure);
-            logger.info(EVENT_CANCELLATION_MESSAGE);
-            var error = new Error(EVENT_CANCELLATION_MESSAGE);
-            return onRequestFailureCallbackAggregator.call({
-              error: error
-            }).then(function () {// Ensure the promise gets resolved with undefined instead
-              // of an array of return values from the callbacks.
+            return sendEdgeNetworkRequest({
+              request: request,
+              runOnResponseCallbacks: onResponseCallbackAggregator.call,
+              runOnRequestFailureCallbacks:
+                onRequestFailureCallbackAggregator.call,
             });
-          }
-
-          return sendEdgeNetworkRequest({
-            request: request,
-            runOnResponseCallbacks: onResponseCallbackAggregator.call,
-            runOnRequestFailureCallbacks: onRequestFailureCallbackAggregator.call
           });
-        });
       },
+      // @ts-ignore
       applyResponse: function applyResponse(event) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var options =
+          arguments.length > 1 && arguments[1] !== undefined
+            ? arguments[1]
+            : {};
         var _options$renderDecisi2 = options.renderDecisions,
-            renderDecisions = _options$renderDecisi2 === void 0 ? false : _options$renderDecisi2,
-            _options$responseHead = options.responseHeaders,
-            responseHeaders = _options$responseHead === void 0 ? {} : _options$responseHead,
-            _options$responseBody = options.responseBody,
-            responseBody = _options$responseBody === void 0 ? {
-          handle: []
-        } : _options$responseBody;
+          renderDecisions =
+            _options$renderDecisi2 === void 0 ? false : _options$renderDecisi2,
+          _options$responseHead = options.responseHeaders,
+          responseHeaders =
+            _options$responseHead === void 0 ? {} : _options$responseHead,
+          _options$responseBody = options.responseBody,
+          responseBody =
+            _options$responseBody === void 0
+              ? {
+                  handle: [],
+                }
+              : _options$responseBody;
         var payload = createDataCollectionRequestPayload();
         var request = createDataCollectionRequest(payload);
         var onResponseCallbackAggregator = createCallbackAggregator();
-        return lifecycle.onBeforeEvent({
-          event: event,
-          renderDecisions: renderDecisions,
-          decisionScopes: [PAGE_WIDE_SCOPE],
-          personalization: {},
-          onResponse: onResponseCallbackAggregator.add,
-          onRequestFailure: noop$1
-        }).then(function () {
-          payload.addEvent(event);
-          return _applyResponse({
-            request: request,
-            responseHeaders: responseHeaders,
-            responseBody: responseBody,
-            runOnResponseCallbacks: onResponseCallbackAggregator.call
+        return lifecycle
+          .onBeforeEvent({
+            event: event,
+            renderDecisions: renderDecisions,
+            decisionScopes: [PAGE_WIDE_SCOPE],
+            personalization: {},
+            onResponse: onResponseCallbackAggregator.add,
+            onRequestFailure: noop$1,
+          })
+          .then(function () {
+            payload.addEvent(event);
+            return _applyResponse({
+              request: request,
+              responseHeaders: responseHeaders,
+              responseBody: responseBody,
+              runOnResponseCallbacks: onResponseCallbackAggregator.call,
+            });
           });
-        });
-      }
+      },
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -10951,37 +12934,42 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var STATE_STORE_HANDLE_TYPE = "state:store";
-  var createCookieTransfer = (function (_ref) {
+  var STATE_STORE_HANDLE_TYPE = 'state:store';
+  // @ts-ignore
+  var createCookieTransfer = function (_ref) {
     var cookieJar = _ref.cookieJar,
-        shouldTransferCookie = _ref.shouldTransferCookie,
-        apexDomain = _ref.apexDomain,
-        dateProvider = _ref.dateProvider;
+      shouldTransferCookie = _ref.shouldTransferCookie,
+      apexDomain = _ref.apexDomain,
+      dateProvider = _ref.dateProvider;
     return {
       /**
        * When sending to a third-party endpoint, the endpoint won't be able to
        * access first-party cookies, therefore we transfer cookies into
        * the request body so they can be read by the server.
        */
+      // @ts-ignore
       cookiesToPayload: function cookiesToPayload(payload, endpointDomain) {
         var isEndpointFirstParty = endsWith(endpointDomain, apexDomain);
         var state = {
           domain: apexDomain,
-          cookiesEnabled: true
+          cookiesEnabled: true,
         }; // If the endpoint is first-party, there's no need to transfer cookies
         // to the payload since they'll be automatically passed through cookie
         // headers.
 
         if (!isEndpointFirstParty) {
           var cookies = cookieJar.get();
-          var entries = Object.keys(cookies).filter(shouldTransferCookie).map(function (qualifyingCookieName) {
-            return {
-              key: qualifyingCookieName,
-              value: cookies[qualifyingCookieName]
-            };
-          });
+          var entries = Object.keys(cookies)
+            .filter(shouldTransferCookie)
+            .map(function (qualifyingCookieName) {
+              return {
+                key: qualifyingCookieName,
+                value: cookies[qualifyingCookieName],
+              };
+            });
 
           if (entries.length) {
+            // @ts-ignore
             state.entries = entries;
           }
         }
@@ -10994,33 +12982,44 @@
        * write first-party cookies, therefore we write first-party cookies
        * as directed in the response body.
        */
+      // @ts-ignore
       responseToCookies: function responseToCookies(response) {
-        response.getPayloadsByType(STATE_STORE_HANDLE_TYPE).forEach(function (stateItem) {
-          var options = {
-            domain: apexDomain
-          };
-          var sameSite = stateItem.attrs && stateItem.attrs.SameSite && stateItem.attrs.SameSite.toLowerCase();
+        response
+          .getPayloadsByType(STATE_STORE_HANDLE_TYPE)
+          // @ts-ignore
+          .forEach(function (stateItem) {
+            var options = {
+              domain: apexDomain,
+            };
+            var sameSite =
+              stateItem.attrs &&
+              stateItem.attrs.SameSite &&
+              stateItem.attrs.SameSite.toLowerCase();
 
-          if (stateItem.maxAge !== undefined) {
-            // cookieJar expects "expires" as a date object
-            options.expires = new Date(dateProvider().getTime() + stateItem.maxAge * 1000);
-          }
+            if (stateItem.maxAge !== undefined) {
+              // cookieJar expects "expires" as a date object
+              // @ts-ignore
+              options.expires = new Date(
+                dateProvider().getTime() + stateItem.maxAge * 1000
+              );
+            }
 
-          if (sameSite !== undefined) {
-            options.sameSite = sameSite;
-          } // When sameSite is set to none, the secure flag must be set.
-          // Experience edge will not set the secure flag in these cases.
+            if (sameSite !== undefined) {
+              // @ts-ignore
+              options.sameSite = sameSite;
+            } // When sameSite is set to none, the secure flag must be set.
+            // Experience edge will not set the secure flag in these cases.
 
+            if (sameSite === 'none') {
+              // @ts-ignore
+              options.secure = true;
+            }
 
-          if (sameSite === "none") {
-            options.secure = true;
-          }
-
-          cookieJar.set(stateItem.key, stateItem.value, options);
-        });
-      }
+            cookieJar.set(stateItem.key, stateItem.value, options);
+          });
+      },
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -11033,9 +13032,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var MBOX_EDGE_CLUSTER = "mboxEdgeCluster";
-  var AT_QA_MODE = "at_qa_mode";
-  var MBOX = "mbox";
+  var MBOX_EDGE_CLUSTER = 'mboxEdgeCluster';
+  var AT_QA_MODE = 'at_qa_mode';
+  var MBOX = 'mbox';
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -11048,18 +13047,24 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectShouldTransferCookie = (function (_ref) {
+  // @ts-ignore
+  var injectShouldTransferCookie = function (_ref) {
     var orgId = _ref.orgId,
-        targetMigrationEnabled = _ref.targetMigrationEnabled;
+      targetMigrationEnabled = _ref.targetMigrationEnabled;
+    // @ts-ignore
     return function (name) {
       // We have a contract with the server that we will pass
       // all cookies whose names are namespaced according to the
       // logic in isNamespacedCookieName as well as any legacy
       // cookie names (so that the server can handle migrating
       // identities on websites previously using Visitor.js)
-      return isNamespacedCookieName(orgId, name) || name === AT_QA_MODE || targetMigrationEnabled && name === MBOX;
+      return (
+        isNamespacedCookieName(orgId, name) ||
+        name === AT_QA_MODE ||
+        (targetMigrationEnabled && name === MBOX)
+      );
     };
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -11072,16 +13077,25 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var apiVersion = "v1";
+  var apiVersion = 'v1';
 
-  var mergeLifecycleResponses = (function (returnValues) {
+  // @ts-ignore
+  var mergeLifecycleResponses = function (returnValues) {
     // Merges all returned objects from all `onResponse` callbacks into
     // a single object that can later be returned to the customer.
     var lifecycleOnResponseReturnValues = returnValues.shift() || [];
     var consumerOnResponseReturnValues = returnValues.shift() || [];
     var lifecycleOnBeforeRequestReturnValues = returnValues;
-    return reactorObjectAssign.apply(void 0, [{}].concat(_toConsumableArray(lifecycleOnResponseReturnValues), _toConsumableArray(consumerOnResponseReturnValues), _toConsumableArray(lifecycleOnBeforeRequestReturnValues)));
-  });
+    return reactorObjectAssign.apply(
+      void 0,
+      [{}].concat(
+        // @ts-ignore
+        _toConsumableArray(lifecycleOnResponseReturnValues),
+        _toConsumableArray(consumerOnResponseReturnValues),
+        _toConsumableArray(lifecycleOnBeforeRequestReturnValues)
+      )
+    );
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -11094,7 +13108,9 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var handleRequestFailure = (function (onRequestFailureCallbackAggregator) {
+  // @ts-ignore
+  var handleRequestFailure = function (onRequestFailureCallbackAggregator) {
+    // @ts-ignore
     return function (error) {
       // Regardless of whether the network call failed, an unexpected status
       // code was returned, or the response body was malformed, we want to call
@@ -11103,11 +13119,13 @@
         throw error;
       };
 
-      return onRequestFailureCallbackAggregator.call({
-        error: error
-      }).then(throwError, throwError);
+      return onRequestFailureCallbackAggregator
+        .call({
+          error: error,
+        })
+        .then(throwError, throwError);
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -11120,74 +13138,110 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectSendEdgeNetworkRequest = (function (_ref) {
+  // @ts-ignore
+  var injectSendEdgeNetworkRequest = function (_ref) {
     var config = _ref.config,
-        lifecycle = _ref.lifecycle,
-        cookieTransfer = _ref.cookieTransfer,
-        sendNetworkRequest = _ref.sendNetworkRequest,
-        createResponse = _ref.createResponse,
-        processWarningsAndErrors = _ref.processWarningsAndErrors,
-        getLocationHint = _ref.getLocationHint,
-        getAssuranceValidationTokenParams = _ref.getAssuranceValidationTokenParams;
+      lifecycle = _ref.lifecycle,
+      cookieTransfer = _ref.cookieTransfer,
+      sendNetworkRequest = _ref.sendNetworkRequest,
+      createResponse = _ref.createResponse,
+      processWarningsAndErrors = _ref.processWarningsAndErrors,
+      getLocationHint = _ref.getLocationHint,
+      getAssuranceValidationTokenParams =
+        _ref.getAssuranceValidationTokenParams;
     var edgeDomain = config.edgeDomain,
-        edgeBasePath = config.edgeBasePath,
-        edgeConfigId = config.edgeConfigId;
+      edgeBasePath = config.edgeBasePath,
+      edgeConfigId = config.edgeConfigId;
     /**
      * Sends a network request that is aware of payload interfaces,
      * lifecycle methods, configured edge domains, response structures, etc.
      */
 
+    // @ts-ignore
     return function (_ref2) {
       var request = _ref2.request,
-          _ref2$runOnResponseCa = _ref2.runOnResponseCallbacks,
-          runOnResponseCallbacks = _ref2$runOnResponseCa === void 0 ? noop$1 : _ref2$runOnResponseCa,
-          _ref2$runOnRequestFai = _ref2.runOnRequestFailureCallbacks,
-          runOnRequestFailureCallbacks = _ref2$runOnRequestFai === void 0 ? noop$1 : _ref2$runOnRequestFai;
+        _ref2$runOnResponseCa = _ref2.runOnResponseCallbacks,
+        runOnResponseCallbacks =
+          _ref2$runOnResponseCa === void 0 ? noop$1 : _ref2$runOnResponseCa,
+        _ref2$runOnRequestFai = _ref2.runOnRequestFailureCallbacks,
+        runOnRequestFailureCallbacks =
+          _ref2$runOnRequestFai === void 0 ? noop$1 : _ref2$runOnRequestFai;
       var onResponseCallbackAggregator = createCallbackAggregator();
       onResponseCallbackAggregator.add(lifecycle.onResponse);
       onResponseCallbackAggregator.add(runOnResponseCallbacks);
       var onRequestFailureCallbackAggregator = createCallbackAggregator();
       onRequestFailureCallbackAggregator.add(lifecycle.onRequestFailure);
       onRequestFailureCallbackAggregator.add(runOnRequestFailureCallbacks);
-      return lifecycle.onBeforeRequest({
-        request: request,
-        onResponse: onResponseCallbackAggregator.add,
-        onRequestFailure: onRequestFailureCallbackAggregator.add
-      }).then(function () {
-        var endpointDomain = request.getUseIdThirdPartyDomain() ? ID_THIRD_PARTY : edgeDomain;
-        var locationHint = getLocationHint();
-        var edgeBasePathWithLocationHint = locationHint ? edgeBasePath + "/" + locationHint : edgeBasePath;
-        var url = "https://" + endpointDomain + "/" + edgeBasePathWithLocationHint + "/" + apiVersion + "/" + request.getAction() + "?configId=" + edgeConfigId + "&requestId=" + request.getId() + getAssuranceValidationTokenParams();
-        cookieTransfer.cookiesToPayload(request.getPayload(), endpointDomain);
-        return sendNetworkRequest({
-          requestId: request.getId(),
-          url: url,
-          payload: request.getPayload(),
-          useSendBeacon: request.getUseSendBeacon()
-        });
-      }).then(function (networkResponse) {
-        processWarningsAndErrors(networkResponse);
-        return networkResponse;
-      }).catch(handleRequestFailure(onRequestFailureCallbackAggregator)).then(function (_ref3) {
-        var parsedBody = _ref3.parsedBody,
-            getHeader = _ref3.getHeader;
-        // Note that networkResponse.parsedBody may be undefined if it was a
-        // 204 No Content response. That's fine.
-        var response = createResponse({
-          content: parsedBody,
-          getHeader: getHeader
-        });
-        cookieTransfer.responseToCookies(response); // Notice we're calling the onResponse lifecycle method even if there are errors
-        // inside the response body. This is because the full request didn't actually fail--
-        // only portions of it that are considered non-fatal (a specific, non-critical
-        // Konductor plugin, for example).
+      return (
+        lifecycle
+          .onBeforeRequest({
+            request: request,
+            onResponse: onResponseCallbackAggregator.add,
+            onRequestFailure: onRequestFailureCallbackAggregator.add,
+          })
+          .then(function () {
+            var endpointDomain = request.getUseIdThirdPartyDomain()
+              ? ID_THIRD_PARTY
+              : edgeDomain;
+            var locationHint = getLocationHint();
+            var edgeBasePathWithLocationHint = locationHint
+              ? edgeBasePath + '/' + locationHint
+              : edgeBasePath;
+            var url =
+              'https://' +
+              endpointDomain +
+              '/' +
+              edgeBasePathWithLocationHint +
+              '/' +
+              apiVersion +
+              '/' +
+              request.getAction() +
+              '?configId=' +
+              edgeConfigId +
+              '&requestId=' +
+              request.getId() +
+              getAssuranceValidationTokenParams();
+            cookieTransfer.cookiesToPayload(
+              request.getPayload(),
+              endpointDomain
+            );
+            return sendNetworkRequest({
+              requestId: request.getId(),
+              url: url,
+              payload: request.getPayload(),
+              useSendBeacon: request.getUseSendBeacon(),
+            });
+          })
+          // @ts-ignore
+          .then(function (networkResponse) {
+            processWarningsAndErrors(networkResponse);
+            return networkResponse;
+          })
+          .catch(handleRequestFailure(onRequestFailureCallbackAggregator))
+          // @ts-ignore
+          .then(function (_ref3) {
+            var parsedBody = _ref3.parsedBody,
+              getHeader = _ref3.getHeader;
+            // Note that networkResponse.parsedBody may be undefined if it was a
+            // 204 No Content response. That's fine.
+            var response = createResponse({
+              content: parsedBody,
+              getHeader: getHeader,
+            });
+            cookieTransfer.responseToCookies(response); // Notice we're calling the onResponse lifecycle method even if there are errors
+            // inside the response body. This is because the full request didn't actually fail--
+            // only portions of it that are considered non-fatal (a specific, non-critical
+            // Konductor plugin, for example).
 
-        return onResponseCallbackAggregator.call({
-          response: response
-        }).then(mergeLifecycleResponses);
-      });
+            return onResponseCallbackAggregator
+              .call({
+                response: response,
+              })
+              .then(mergeLifecycleResponses);
+          })
+      );
     };
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -11217,34 +13271,52 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var MESSAGE_PREFIX = "The server responded with a";
-  var injectProcessWarningsAndErrors = (function (_ref) {
+  var MESSAGE_PREFIX = 'The server responded with a';
+  // @ts-ignore
+  var injectProcessWarningsAndErrors = function (_ref) {
     var logger = _ref.logger;
+    // @ts-ignore
     return function (networkResponse) {
       var statusCode = networkResponse.statusCode,
-          body = networkResponse.body,
-          parsedBody = networkResponse.parsedBody;
+        body = networkResponse.body,
+        parsedBody = networkResponse.parsedBody;
 
-      if (statusCode < 200 || statusCode >= 300 || !parsedBody && statusCode !== NO_CONTENT || parsedBody && !Array.isArray(parsedBody.handle)) {
+      if (
+        statusCode < 200 ||
+        statusCode >= 300 ||
+        (!parsedBody && statusCode !== NO_CONTENT) ||
+        (parsedBody && !Array.isArray(parsedBody.handle))
+      ) {
         var bodyToLog = parsedBody ? JSON.stringify(parsedBody, null, 2) : body;
-        var messageSuffix = bodyToLog ? "response body:\n" + bodyToLog : "no response body.";
-        throw new Error(MESSAGE_PREFIX + " status code " + statusCode + " and " + messageSuffix);
+        var messageSuffix = bodyToLog
+          ? 'response body:\n' + bodyToLog
+          : 'no response body.';
+        throw new Error(
+          MESSAGE_PREFIX +
+            ' status code ' +
+            statusCode +
+            ' and ' +
+            messageSuffix
+        );
       }
 
       if (parsedBody) {
         var _parsedBody$warnings = parsedBody.warnings,
-            warnings = _parsedBody$warnings === void 0 ? [] : _parsedBody$warnings,
-            _parsedBody$errors = parsedBody.errors,
-            errors = _parsedBody$errors === void 0 ? [] : _parsedBody$errors;
+          warnings =
+            _parsedBody$warnings === void 0 ? [] : _parsedBody$warnings,
+          _parsedBody$errors = parsedBody.errors,
+          errors = _parsedBody$errors === void 0 ? [] : _parsedBody$errors;
+        // @ts-ignore
         warnings.forEach(function (warning) {
-          logger.warn(MESSAGE_PREFIX + " warning:", warning);
+          logger.warn(MESSAGE_PREFIX + ' warning:', warning);
         });
+        // @ts-ignore
         errors.forEach(function (error) {
-          logger.error(MESSAGE_PREFIX + " non-fatal error:", error);
+          logger.error(MESSAGE_PREFIX + ' non-fatal error:', error);
         });
       }
     };
-  });
+  };
 
   /*
   Copyright 2022 Adobe. All rights reserved.
@@ -11257,9 +13329,10 @@
   OF ANY KIND, either express or implied. See the License for the specific language
   governing permissions and limitations under the License.
   */
-  var injectGetLocationHint = (function (_ref) {
+  // @ts-ignore
+  var injectGetLocationHint = function (_ref) {
     var orgId = _ref.orgId,
-        cookieJar = _ref.cookieJar;
+      cookieJar = _ref.cookieJar;
     var clusterCookieName = getNamespacedCookieName(orgId, CLUSTER);
 
     var fromClusterCookie = function fromClusterCookie() {
@@ -11270,7 +13343,7 @@
       var mboxEdgeCluster = cookieJar.get(MBOX_EDGE_CLUSTER);
 
       if (mboxEdgeCluster) {
-        return "t" + mboxEdgeCluster;
+        return 't' + mboxEdgeCluster;
       }
 
       return undefined;
@@ -11279,7 +13352,7 @@
     return function () {
       return fromClusterCookie() || fromTarget();
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -11293,14 +13366,23 @@
   governing permissions and limitations under the License.
   */
   var MAX_RETRIES = 3;
-  var RETRYABLE_STATUS_CODES = [TOO_MANY_REQUESTS, SERVICE_UNAVAILABLE, BAD_GATEWAY, GATEWAY_TIMEOUT]; // These rules are in accordance with
+  var RETRYABLE_STATUS_CODES = [
+    TOO_MANY_REQUESTS,
+    SERVICE_UNAVAILABLE,
+    BAD_GATEWAY,
+    GATEWAY_TIMEOUT,
+  ]; // These rules are in accordance with
   // https://git.corp.adobe.com/pages/experience-edge/konductor/#/apis/errors?id=handling-4xx-and-5xx-responses
 
-  var isRequestRetryable = (function (_ref) {
+  // @ts-ignore
+  var isRequestRetryable = function (_ref) {
     var response = _ref.response,
-        retriesAttempted = _ref.retriesAttempted;
-    return retriesAttempted < MAX_RETRIES && includes(RETRYABLE_STATUS_CODES, response.statusCode);
-  });
+      retriesAttempted = _ref.retriesAttempted;
+    return (
+      retriesAttempted < MAX_RETRIES &&
+      includes(RETRYABLE_STATUS_CODES, response.statusCode)
+    );
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -11319,15 +13401,20 @@
 
   var MAX_RANDOM_VARIANCE_PERCENTAGE = 0.3;
 
+  // @ts-ignore
   var calculateRetryDelay = function calculateRetryDelay(retriesAttempted) {
-    var targetDelay = FIRST_DELAY_MILLIS + retriesAttempted * INCREMENTAL_DELAY_MILLIS;
+    var targetDelay =
+      FIRST_DELAY_MILLIS + retriesAttempted * INCREMENTAL_DELAY_MILLIS;
     var maxVariance = targetDelay * MAX_RANDOM_VARIANCE_PERCENTAGE;
     var minDelay = targetDelay - maxVariance;
     var maxDelay = targetDelay + maxVariance;
-    var randomizedDelayWithinRange = Math.round(minDelay + Math.random() * (maxDelay - minDelay));
+    var randomizedDelayWithinRange = Math.round(
+      minDelay + Math.random() * (maxDelay - minDelay)
+    );
     return randomizedDelayWithinRange;
   };
 
+  // @ts-ignore
   var getDelayFromHeader = function getDelayFromHeader(response) {
     // According to the HTTP spec, if the header is defined, its value will be a string that
     // represents either:
@@ -11345,7 +13432,10 @@
       if (isInteger(headerValueInt)) {
         delayInMillis = headerValueInt * 1000;
       } else {
-        delayInMillis = Math.max(0, new Date(headerValue).getTime() - new Date().getTime());
+        delayInMillis = Math.max(
+          0,
+          new Date(headerValue).getTime() - new Date().getTime()
+        );
       }
     }
 
@@ -11357,10 +13447,10 @@
   //  * Incremental retry
   //  * Random interval
 
-
-  var getRequestRetryDelay = (function (_ref) {
+  // @ts-ignore
+  var getRequestRetryDelay = function (_ref) {
     var response = _ref.response,
-        retriesAttempted = _ref.retriesAttempted;
+      retriesAttempted = _ref.retriesAttempted;
     // Technically, only 429 or 503 responses should have a Retry-After header, but we'll respect the
     // header if we find it on any response.
     var delayInMillis = getDelayFromHeader(response); // Note that the value of delay may be 0 at this point, which would be a valid delay we want to use
@@ -11372,7 +13462,7 @@
     }
 
     return delayInMillis;
-  });
+  };
 
   /*
   Copyright 2023 Adobe. All rights reserved.
@@ -11386,19 +13476,23 @@
   governing permissions and limitations under the License.
   */
   var HTTP_STATUS_OK = 200;
-  var injectApplyResponse = (function (_ref) {
+  // @ts-ignore
+  var injectApplyResponse = function (_ref) {
     var cookieTransfer = _ref.cookieTransfer,
-        lifecycle = _ref.lifecycle,
-        createResponse = _ref.createResponse,
-        processWarningsAndErrors = _ref.processWarningsAndErrors;
+      lifecycle = _ref.lifecycle,
+      createResponse = _ref.createResponse,
+      processWarningsAndErrors = _ref.processWarningsAndErrors;
+    // @ts-ignore
     return function (_ref2) {
       var request = _ref2.request,
-          responseHeaders = _ref2.responseHeaders,
-          responseBody = _ref2.responseBody,
-          _ref2$runOnResponseCa = _ref2.runOnResponseCallbacks,
-          runOnResponseCallbacks = _ref2$runOnResponseCa === void 0 ? noop$1 : _ref2$runOnResponseCa,
-          _ref2$runOnRequestFai = _ref2.runOnRequestFailureCallbacks,
-          runOnRequestFailureCallbacks = _ref2$runOnRequestFai === void 0 ? noop$1 : _ref2$runOnRequestFai;
+        responseHeaders = _ref2.responseHeaders,
+        responseBody = _ref2.responseBody,
+        _ref2$runOnResponseCa = _ref2.runOnResponseCallbacks,
+        runOnResponseCallbacks =
+          _ref2$runOnResponseCa === void 0 ? noop$1 : _ref2$runOnResponseCa,
+        _ref2$runOnRequestFai = _ref2.runOnRequestFailureCallbacks,
+        runOnRequestFailureCallbacks =
+          _ref2$runOnRequestFai === void 0 ? noop$1 : _ref2$runOnRequestFai;
       var onResponseCallbackAggregator = createCallbackAggregator();
       onResponseCallbackAggregator.add(lifecycle.onResponse);
       onResponseCallbackAggregator.add(runOnResponseCallbacks);
@@ -11406,34 +13500,41 @@
       onRequestFailureCallbackAggregator.add(lifecycle.onRequestFailure);
       onRequestFailureCallbackAggregator.add(runOnRequestFailureCallbacks);
 
+      // @ts-ignore
       var getHeader = function getHeader(key) {
         return responseHeaders[key];
       };
 
-      return lifecycle.onBeforeRequest({
-        request: request,
-        onResponse: onResponseCallbackAggregator.add,
-        onRequestFailure: onRequestFailureCallbackAggregator.add
-      }).then(function () {
-        return processWarningsAndErrors({
-          statusCode: HTTP_STATUS_OK,
-          getHeader: getHeader,
-          body: JSON.stringify(responseBody),
-          parsedBody: responseBody
-        });
-      }).catch(handleRequestFailure(onRequestFailureCallbackAggregator)).then(function () {
-        var response = createResponse({
-          content: responseBody,
-          getHeader: getHeader
-        }); // This will clobber any cookies set via HTTP from the server.  So care should be given to remove any state:store handles if that is not desirable
+      return lifecycle
+        .onBeforeRequest({
+          request: request,
+          onResponse: onResponseCallbackAggregator.add,
+          onRequestFailure: onRequestFailureCallbackAggregator.add,
+        })
+        .then(function () {
+          return processWarningsAndErrors({
+            statusCode: HTTP_STATUS_OK,
+            getHeader: getHeader,
+            body: JSON.stringify(responseBody),
+            parsedBody: responseBody,
+          });
+        })
+        .catch(handleRequestFailure(onRequestFailureCallbackAggregator))
+        .then(function () {
+          var response = createResponse({
+            content: responseBody,
+            getHeader: getHeader,
+          }); // This will clobber any cookies set via HTTP from the server.  So care should be given to remove any state:store handles if that is not desirable
 
-        cookieTransfer.responseToCookies(response);
-        return onResponseCallbackAggregator.call({
-          response: response
-        }).then(mergeLifecycleResponses);
-      });
+          cookieTransfer.responseToCookies(response);
+          return onResponseCallbackAggregator
+            .call({
+              response: response,
+            })
+            .then(mergeLifecycleResponses);
+        });
     };
-  });
+  };
 
   /*
   Copyright 2019 Adobe. All rights reserved.
@@ -11448,48 +13549,55 @@
   */
   var createNamespacedStorage = injectStorage(window);
   var _window = window,
-      console$1 = _window.console,
-      fetch = _window.fetch,
-      navigator$1 = _window.navigator,
-      XMLHttpRequest = _window.XMLHttpRequest; // set this up as a function so that monitors can be added at anytime
+    console$1 = _window.console,
+    fetch = _window.fetch,
+    navigator$1 = _window.navigator,
+    XMLHttpRequest = _window.XMLHttpRequest; // set this up as a function so that monitors can be added at anytime
   // eslint-disable-next-line no-underscore-dangle
 
   var getMonitors = function getMonitors() {
+    // @ts-ignore
     return window.__alloyMonitors || [];
   };
 
   var coreConfigValidators = createCoreConfigs();
   var apexDomain = getApexDomain(window, cookieJar);
-  var sendFetchRequest = isFunction(fetch) ? injectSendFetchRequest({
-    fetch: fetch
-  }) : injectSendXhrRequest({
-    XMLHttpRequest: XMLHttpRequest
-  });
+  var sendFetchRequest = isFunction(fetch)
+    ? injectSendFetchRequest({
+        fetch: fetch,
+      })
+    : injectSendXhrRequest({
+        XMLHttpRequest: XMLHttpRequest,
+      });
   var fireReferrerHideableImage = injectFireReferrerHideableImage();
-  var getAssuranceValidationTokenParams = createGetAssuranceValidationTokenParams({
-    window: window,
-    createNamespacedStorage: createNamespacedStorage
-  });
+  var getAssuranceValidationTokenParams =
+    createGetAssuranceValidationTokenParams({
+      window: window,
+      createNamespacedStorage: createNamespacedStorage,
+    });
+  // @ts-ignore
   var createExecuteCommand = function createExecuteCommand(_ref) {
     var instanceName = _ref.instanceName,
-        _ref$logController = _ref.logController,
-        setDebugEnabled = _ref$logController.setDebugEnabled,
-        logger = _ref$logController.logger,
-        createComponentLogger = _ref$logController.createComponentLogger;
+      _ref$logController = _ref.logController,
+      setDebugEnabled = _ref$logController.setDebugEnabled,
+      logger = _ref$logController.logger,
+      createComponentLogger = _ref$logController.createComponentLogger;
     var componentRegistry = createComponentRegistry();
     var lifecycle = createLifecycle(componentRegistry);
 
+    // @ts-ignore
     var setDebugCommand = function setDebugCommand(options) {
       setDebugEnabled(options.enabled, {
-        fromConfig: false
+        fromConfig: false,
       });
     };
 
     var loggingCookieJar = createLoggingCookieJar({
       logger: logger,
-      cookieJar: cookieJar
+      cookieJar: cookieJar,
     });
 
+    // @ts-ignore
     var configureCommand = function configureCommand(options) {
       var config = buildAndValidateConfig({
         options: options,
@@ -11497,13 +13605,13 @@
         coreConfigValidators: coreConfigValidators,
         createConfig: createConfig,
         logger: logger,
-        setDebugEnabled: setDebugEnabled
+        setDebugEnabled: setDebugEnabled,
       });
       var orgId = config.orgId,
-          targetMigrationEnabled = config.targetMigrationEnabled;
+        targetMigrationEnabled = config.targetMigrationEnabled;
       var shouldTransferCookie = injectShouldTransferCookie({
         orgId: orgId,
-        targetMigrationEnabled: targetMigrationEnabled
+        targetMigrationEnabled: targetMigrationEnabled,
       });
       var cookieTransfer = createCookieTransfer({
         cookieJar: loggingCookieJar,
@@ -11511,34 +13619,36 @@
         apexDomain: apexDomain,
         dateProvider: function dateProvider() {
           return new Date();
-        }
+        },
       });
-      var sendBeaconRequest = isFunction(navigator$1.sendBeacon) ? injectSendBeaconRequest({
-        // Without the bind(), the browser will complain about an
-        // illegal invocation.
-        sendBeacon: navigator$1.sendBeacon.bind(navigator$1),
-        sendFetchRequest: sendFetchRequest,
-        logger: logger
-      }) : sendFetchRequest;
+      var sendBeaconRequest = isFunction(navigator$1.sendBeacon)
+        ? injectSendBeaconRequest({
+            // Without the bind(), the browser will complain about an
+            // illegal invocation.
+            sendBeacon: navigator$1.sendBeacon.bind(navigator$1),
+            sendFetchRequest: sendFetchRequest,
+            logger: logger,
+          })
+        : sendFetchRequest;
       var sendNetworkRequest = injectSendNetworkRequest({
         logger: logger,
         sendFetchRequest: sendFetchRequest,
         sendBeaconRequest: sendBeaconRequest,
         isRequestRetryable: isRequestRetryable,
-        getRequestRetryDelay: getRequestRetryDelay
+        getRequestRetryDelay: getRequestRetryDelay,
       });
       var processWarningsAndErrors = injectProcessWarningsAndErrors({
-        logger: logger
+        logger: logger,
       });
       var extractEdgeInfo = injectExtractEdgeInfo({
-        logger: logger
+        logger: logger,
       });
       var createResponse = injectCreateResponse({
-        extractEdgeInfo: extractEdgeInfo
+        extractEdgeInfo: extractEdgeInfo,
       });
       var getLocationHint = injectGetLocationHint({
         orgId: orgId,
-        cookieJar: cookieJar
+        cookieJar: cookieJar,
       });
       var sendEdgeNetworkRequest = injectSendEdgeNetworkRequest({
         config: config,
@@ -11548,20 +13658,20 @@
         createResponse: createResponse,
         processWarningsAndErrors: processWarningsAndErrors,
         getLocationHint: getLocationHint,
-        getAssuranceValidationTokenParams: getAssuranceValidationTokenParams
+        getAssuranceValidationTokenParams: getAssuranceValidationTokenParams,
       });
       var applyResponse = injectApplyResponse({
         lifecycle: lifecycle,
         cookieTransfer: cookieTransfer,
         createResponse: createResponse,
-        processWarningsAndErrors: processWarningsAndErrors
+        processWarningsAndErrors: processWarningsAndErrors,
       });
       var generalConsentState = createConsentStateMachine({
-        logger: logger
+        logger: logger,
       });
       var consent = createConsent({
         generalConsentState: generalConsentState,
-        logger: logger
+        logger: logger,
       });
       var eventManager = createEventManager({
         config: config,
@@ -11572,13 +13682,16 @@
         createDataCollectionRequestPayload: createDataCollectionRequestPayload,
         createDataCollectionRequest: createDataCollectionRequest,
         sendEdgeNetworkRequest: sendEdgeNetworkRequest,
-        applyResponse: applyResponse
+        applyResponse: applyResponse,
       });
       return initializeComponents({
         componentCreators: componentCreators,
         lifecycle: lifecycle,
         componentRegistry: componentRegistry,
-        getImmediatelyAvailableTools: function getImmediatelyAvailableTools(componentName) {
+        getImmediatelyAvailableTools: function getImmediatelyAvailableTools(
+          // @ts-ignore
+          componentName
+        ) {
           var componentLogger = createComponentLogger(componentName);
           return {
             config: config,
@@ -11590,34 +13703,36 @@
             lifecycle: lifecycle,
             sendEdgeNetworkRequest: sendEdgeNetworkRequest,
             handleError: injectHandleError({
-              errorPrefix: "[" + instanceName + "] [" + componentName + "]",
-              logger: componentLogger
+              errorPrefix: '[' + instanceName + '] [' + componentName + ']',
+              logger: componentLogger,
             }),
             createNamespacedStorage: createNamespacedStorage,
-            apexDomain: apexDomain
+            apexDomain: apexDomain,
           };
-        }
+        },
       });
     };
 
     var handleError = injectHandleError({
-      errorPrefix: "[" + instanceName + "]",
-      logger: logger
+      errorPrefix: '[' + instanceName + ']',
+      logger: logger,
     });
     var executeCommand = injectExecuteCommand({
       logger: logger,
       configureCommand: configureCommand,
       setDebugCommand: setDebugCommand,
       handleError: handleError,
-      validateCommandOptions: validateCommandOptions
+      validateCommandOptions: validateCommandOptions,
     });
     return executeCommand;
   };
-  var core = (function () {
+  var core = function () {
     // eslint-disable-next-line no-underscore-dangle
+    // @ts-ignore
     var instanceNames = window.__alloyNS;
 
     if (instanceNames) {
+      // @ts-ignore
       instanceNames.forEach(function (instanceName) {
         var logController = createLogController({
           console: console$1,
@@ -11625,22 +13740,23 @@
           createLogger: createLogger,
           instanceName: instanceName,
           createNamespacedStorage: createNamespacedStorage,
-          getMonitors: getMonitors
+          getMonitors: getMonitors,
         });
         var executeCommand = createExecuteCommand({
           instanceName: instanceName,
-          logController: logController
+          logController: logController,
         });
         var instance = createInstanceFunction(executeCommand);
+        // @ts-ignore
         var queue = window[instanceName].q;
         queue.push = instance;
         logController.logger.logOnInstanceCreated({
-          instance: instance
+          instance: instance,
         });
         queue.forEach(instance);
       });
     }
-  });
+  };
 
   /*
   Copyright 2020 Adobe. All rights reserved.
@@ -11654,5 +13770,4 @@
   governing permissions and limitations under the License.
   */
   core();
-
 })();

@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable */
 import {
   sampleRUM,
   buildBlock,
@@ -58,9 +60,11 @@ export function isBlockLibrary() {
 export function createTag(tag, attributes, children) {
   const element = document.createElement(tag);
   if (children) {
-    if (children instanceof HTMLElement
-      || children instanceof SVGElement
-      || children instanceof DocumentFragment) {
+    if (
+      children instanceof HTMLElement ||
+      children instanceof SVGElement ||
+      children instanceof DocumentFragment
+    ) {
       element.append(children);
     } else if (Array.isArray(children)) {
       element.append(...children);
@@ -80,7 +84,11 @@ function buildHeroBlock(main) {
   const h1 = main.querySelector('main > div > h1');
   const picture = main.querySelector('main > div > p > picture');
   // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+  if (
+    h1 &&
+    picture &&
+    h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING
+  ) {
     const section = document.createElement('div');
     section.append(buildBlock('hero', { elems: [picture, h1] }));
     main.prepend(section);
@@ -101,7 +109,10 @@ function buildAutoBlocks(main) {
 }
 
 function patchDemoBlocks(config) {
-  if (window.wknd.demoConfig.blocks && window.wknd.demoConfig.blocks[config.blockName]) {
+  if (
+    window.wknd.demoConfig.blocks &&
+    window.wknd.demoConfig.blocks[config.blockName]
+  ) {
     const url = window.wknd.demoConfig.blocks[config.blockName];
     const splits = new URL(url).pathname.split('/');
     const [, owner, repo, , branch] = splits;
@@ -114,15 +125,20 @@ function patchDemoBlocks(config) {
       cssPath: `${franklinPath}/${config.blockName}.css`,
     };
   }
-  return (config);
+  return config;
 }
 
 async function loadDemoConfig() {
   const demoConfig = {};
   const pathSegments = window.location.pathname.split('/');
-  if (window.location.pathname.startsWith('/drafts/') && pathSegments.length > 4) {
+  if (
+    window.location.pathname.startsWith('/drafts/') &&
+    pathSegments.length > 4
+  ) {
     const demoBase = pathSegments.slice(0, 4).join('/');
-    const resp = await fetch(`${demoBase}/theme.json?sheet=default&sheet=blocks&`);
+    const resp = await fetch(
+      `${demoBase}/theme.json?sheet=default&sheet=blocks&`
+    );
     if (resp.status === 200) {
       const json = await resp.json();
       const tokens = json.data || json.default.data;
@@ -238,17 +254,26 @@ async function loadLazy(doc) {
   } else {
     loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   }
-  addFavIcon(`${window.wknd.demoConfig.demoBase || window.hlx.codeBasePath}/favicon.png`);
+  addFavIcon(
+    `${window.wknd.demoConfig.demoBase || window.hlx.codeBasePath}/favicon.png`
+  );
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
 
   // Load experimentation preview overlay
-  if (window.location.hostname === 'localhost' || window.location.hostname.endsWith('.hlx.page')) {
-    const preview = await import(`${window.hlx.codeBasePath}/tools/preview/preview.js`);
+  if (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname.endsWith('.hlx.page')
+  ) {
+    const preview = await import(
+      `${window.hlx.codeBasePath}/tools/preview/preview.js`
+    );
     await preview.default();
     if (window.hlx.experiment) {
-      const experimentation = await import(`${window.hlx.codeBasePath}/tools/preview/experimentation.js`);
+      const experimentation = await import(
+        `${window.hlx.codeBasePath}/tools/preview/experimentation.js`
+      );
       experimentation.default();
     }
   }
@@ -261,7 +286,9 @@ async function loadLazy(doc) {
     toClassName,
   };
   // eslint-disable-next-line import/no-relative-packages
-  const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
+  const { initConversionTracking } = await import(
+    '../plugins/rum-conversion/src/index.js'
+  );
   await initConversionTracking.call(context, document);
 }
 
@@ -320,9 +347,10 @@ sampleRUM.always.on('convert', (data) => {
       event: 'Form Complete',
     };
 
-    if (conversionEvent.event === 'Form Complete'
+    if (
+      conversionEvent.event === 'Form Complete' &&
       // Check for undefined, since target can contain value 0 as well, which is falsy
-      && (data.target === undefined || data.source === undefined)
+      (data.target === undefined || data.source === undefined)
     ) {
       // If a buffer has already been set and tempConversionEvent exists,
       // merge the two conversionEvent objects to send to alloy

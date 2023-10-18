@@ -1,3 +1,4 @@
+// @ts-nocheck
 // eslint-disable-next-line import/no-cycle
 import { fetchPlaceholders, sampleRUM } from './lib-franklin.js';
 import loadCookieConsent from './cookie-consent/lib-cookie-consent.js';
@@ -11,7 +12,9 @@ sampleRUM('cwv');
 // CMP consent
 try {
   await fetchPlaceholders();
-} catch (e) { /* ignore */ }
+} catch (e) {
+  /* ignore */
+}
 loadCookieConsent();
 
 // also check consent stored in localstorage used while developing

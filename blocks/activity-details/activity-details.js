@@ -10,8 +10,8 @@ export default function decorate(block) {
     // const def = row.lastElementChild.textContent;
     const dt = document.createElement('dt');
     const dd = document.createElement('dd');
-    dt.append(...row.firstElementChild.childNodes);
-    dd.append(...row.lastElementChild.childNodes);
+    if (row.firstElementChild) dt.append(...row.firstElementChild.childNodes);
+    if (row.lastElementChild) dd.append(...row.lastElementChild.childNodes);
     dl.append(dt, dd);
   });
   block.replaceChildren(dl);

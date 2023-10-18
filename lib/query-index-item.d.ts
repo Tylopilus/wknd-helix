@@ -19,7 +19,7 @@ export type QueryIndexItemProps = {
 
   twitter: string | undefined;
 
-  lastModified: number;
+  lastModified: string;
 };
 
 export type QueryIndexItemReturnType = Modify<
