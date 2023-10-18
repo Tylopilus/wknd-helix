@@ -8,7 +8,6 @@ export default function decorate(block) {
   const blockquote = document.createElement('blockquote');
   blockquote.innerHTML = `<strong>${quoteDiv.innerHTML}</strong>`;
   quoteDiv.replaceWith(blockquote);
-
   const authorDiv = block.querySelector('div:nth-child(2)');
   if (authorDiv) {
     const author = document.createElement('p');

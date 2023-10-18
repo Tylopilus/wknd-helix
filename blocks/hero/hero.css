@@ -44,3 +44,7 @@ main .hero img {
 body.activity .hero-container {
   grid-area: hero;
 }
+
+body.article .hero-container {
+  grid-column: 1 / -1;
+}

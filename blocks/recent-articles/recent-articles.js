@@ -15,7 +15,7 @@ export default async function decorate(block) {
   magazines.sort((a, b) => (a.lastModified > b.lastModified ? -1 : 1));
 
   const config = readBlockConfig(block);
-  const amount = Number(config.amount) || 3;
+  const amount = Number(config.amount) || magazines.length || 3;
   const $item = document.createElement('div');
   for (let i = 0; i < amount; i += 1) {
     const magazine = magazines[i];
