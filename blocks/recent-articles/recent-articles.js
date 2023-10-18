@@ -12,7 +12,7 @@ export default async function decorate(block) {
   const magazines = index.items.filter((item) =>
     item.path?.startsWith('/magazine/'),
   );
-  magazines.sort((a, b) => (a.lastModified > b.lastModified ? 1 : -1));
+  magazines.sort((a, b) => (a.lastModified > b.lastModified ? -1 : 1));
 
   const config = readBlockConfig(block);
   const amount = Number(config.amount) || 3;
