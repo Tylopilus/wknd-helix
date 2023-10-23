@@ -1,37 +1,47 @@
 /**
  * Loads a fragment.
  * @param {string} path The path to the fragment
- * @returns {Document} The document
+ * @returns {Promise<Document>} The document
  */
 async function loadFragment(path) {
   if (path && path.startsWith('/')) {
-    const resp = await fetch(path);
-    if (resp.ok) {
-      const parser = new DOMParser();
-      return parser.parseFromString(await resp.text(), 'text/html');
+    try {
+      const resp = await fetch(path);
+      if (resp.ok) {
+        const parser = new DOMParser();
+        return parser.parseFromString(await resp.text(), 'text/html');
+      }
+    } catch (err) {
+      throw new Error(`Failed to load fragment: ${path}`);
     }
   }
-  return null;
+  throw new Error(`Invalid path: ${path}`);
 }
 
 /**
  * Retrieves the content of metadata tags.
  * @param {string} name The metadata name (or property)
- * @param doc Document object to query for the metadata. Defaults to the window's document
+ * @param {Document} doc Document object to query for the metadata. Defaults to the window's document
  * @returns {string} The metadata value(s)
  */
 function getMetadata(name, doc = document) {
   const attr = name && name.includes(':') ? 'property' : 'name';
-  const meta = [...doc.head.querySelectorAll(`meta[${attr}="${name}"]`)].map((m) => m.content).join(', ');
+  const attributes = /** @type {NodeListOf<HTMLMetaElement>} */ (
+    doc.head.querySelectorAll(`meta[${attr}="${name}"]`)
+  );
+
+  const meta = [...attributes].map((m) => m.content).join(', ');
   return meta || '';
 }
 
 /**
  * @param {HTMLElement} $block The header block element
+ * @returns void;
  */
 export default async function decorate($block) {
   const link = $block.querySelector('a');
-  const path = link ? link.getAttribute('href') : $block.textContent.trim();
+  const path =
+    (link ? link.getAttribute('href') : $block.textContent?.trim()) || '';
   const doc = await loadFragment(path);
   if (!doc) {
     return;
@@ -51,9 +61,11 @@ export default async function decorate($block) {
   $p.textContent = desc;
 
   const $link = document.createElement('div');
-  $link.append(link);
-  link.textContent = 'Read More';
-  link.className = 'button primary';
+  if (link) {
+    $link.append(link);
+    link.textContent = 'Read More';
+    link.className = 'button primary';
+  }
 
   const $text = document.createElement('div');
   $text.classList.add('text');

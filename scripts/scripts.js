@@ -137,7 +137,7 @@ async function loadDemoConfig() {
   ) {
     const demoBase = pathSegments.slice(0, 4).join('/');
     const resp = await fetch(
-      `${demoBase}/theme.json?sheet=default&sheet=blocks&`
+      `${demoBase}/theme.json?sheet=default&sheet=blocks&`,
     );
     if (resp.status === 200) {
       const json = await resp.json();
@@ -255,7 +255,7 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   }
   addFavIcon(
-    `${window.wknd.demoConfig.demoBase || window.hlx.codeBasePath}/favicon.png`
+    `${window.wknd.demoConfig.demoBase || window.hlx.codeBasePath}/favicon.png`,
   );
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
