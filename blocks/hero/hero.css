@@ -12,7 +12,8 @@ main .hero {
   position: relative;
   padding: 32px;
   min-height: 300px;
-  color: var(--background-color);
+  /* color: var(--background-color); */
+  color: red;
 }
 
 main .hero .hero-body {
